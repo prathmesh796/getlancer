@@ -24,7 +24,7 @@ export default function Home() {
         <div className='pt-20'>
           <h1 className='text-5xl font-semibold p-2'>Have <span className='text-yellow'>Company...</span></h1>
           <h2 className='text-4xl font-normal p-2'>Lets get you right talent...</h2>
-          <button className='rounded-full bg-yellow text-black font-semibold p-3 my-5 mx-2'><Link href='/signin'>Signin as Client</Link></button>
+          <button className='rounded-full bg-yellow text-black font-semibold p-3 my-5 mx-2 hover:bg-light_yellow transition-all duration-200'><Link href='/signin'>Signin as Client</Link></button>
         </div>
 
       </div>

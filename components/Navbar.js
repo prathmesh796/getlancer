@@ -21,7 +21,7 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <button className='rounded-full bg-yellow text-black font-semibold p-3'><Link href='/signin'>Signin/Login</Link></button>
+      <button className='rounded-full bg-yellow text-black font-semibold p-3'><Link href='/join'>Signin/Login</Link></button>
     </nav>
   )
 }
