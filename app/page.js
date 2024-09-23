@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className='text-black'>
+    <main className='text-black mx-24'>
       <div className='flex justify-between px-10'>
         <div className='pt-24'>
           <h1 className='text-5xl font-semibold p-2'>Have <span className='text-yellow'>Skills...</span></h1>
