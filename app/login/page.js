@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const SignIn = () => {
+const login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -13,9 +13,9 @@ const SignIn = () => {
   };
 
   return (
-    <div className='flex justify-center items-center h-screen bg-gray-100'>
+    <div className='flex justify-center items-center h-screen bg-white'>
       <div className='bg-white p-8 rounded-lg shadow-lg max-w-md w-full'>
-        <h2 className='text-3xl font-bold mb-8 text-center'>Sign In</h2>
+        <h2 className='text-3xl font-bold mb-8 text-center'>Log In</h2>
         <form onSubmit={handleSubmit}>
           <div className='mb-6'>
             <label htmlFor='email' className='block text-sm font-semibold mb-2'>
@@ -51,9 +51,9 @@ const SignIn = () => {
           </button>
         </form>
         <p className='text-center mt-6'>
-          Already have an account?{' '}
-          <Link href='/login' className='text-yellow font-semibold hover:underline'>
-            Log In
+          Don't have an account?{' '}
+          <Link href='/signin' className='text-yellow font-semibold hover:underline'>
+            Sign In
           </Link>
         </p>
       </div>
@@ -61,4 +61,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default login;
