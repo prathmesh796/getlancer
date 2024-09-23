@@ -9,10 +9,16 @@ const Navbar = () => {
         <h4 className='text-light_yellow pt-4 font-medium'>.com</h4>
       </Link>
 
-      <ul className='gap-4'>
-        <Link href='/'>Home</Link>
-        <Link href='/about'>About</Link>
-        <Link href='/contact'>Contact</Link>
+      <ul className='flex gap-8 items-center'>
+        <li>
+          <Link href='/' className='hover:text-yellow transition'>Home</Link>
+        </li>
+        <li>
+          <Link href='/about' className='hover:text-yellow transition'>About</Link>
+        </li>
+        <li>
+          <Link href='/contact' className='hover:text-yellow transition'>Contact</Link>
+        </li>
       </ul>
 
       <button className='rounded-full bg-yellow text-black font-semibold p-3'><Link href='/signin'>Signin/Login</Link></button>
