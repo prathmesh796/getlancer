@@ -15,6 +15,7 @@ const AccountTypeSelection = () => {
     if (selectedAccount) {
       // Navigate to the signin page with the selected role as a query parameter
       router.push(`/signin?role=${selectedAccount}`);
+      
     }
   };
 

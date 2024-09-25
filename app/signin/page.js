@@ -1,19 +1,31 @@
 "use client"
-import { useState } from 'react';
-import { useRouter, useNavigation, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { sendError } from 'next/dist/server/api-utils';
 
 const SignIn = () => {
   const router = useRouter();
-  const [searchParams] = useSearchParams();
-  const  role  = searchParams.role
-  console.log(role)
-  const [roleName, setRoleName] = useState(role);
+  const searchParams = useSearchParams()
+  const [roleName, setRoleName] = useState("");
   const [Name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, seterror] = useState("")
+
+  const role  = searchParams.get('role')
+      console.log(role)
+
+  useEffect(() => {
+    
+        if (role === 'client') {
+          setRoleName('Client');
+        } else if (role === 'freelancer') {
+          setRoleName('Freelancer');
+        }
+      
+    
+  }, []);
 
   const isValidEmail = (email) => {
     const emailRegex = /[a-z0-9\._%+!$&*=^|~#%'`?{}/\-]+@([a-z0-9\-]+\.){1,}([a-z]{2,16})/
@@ -25,7 +37,7 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // You can add authentication logic here
-    console.log({ email, password });
+    console.log({ Name, email, password, roleName });
 
     if(!isValidEmail){
       seterror('This email is invalid')
