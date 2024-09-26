@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { sendError } from 'next/dist/server/api-utils';
 
 const SignIn = () => {
   const router = useRouter();
@@ -13,18 +12,18 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, seterror] = useState("")
 
-  const role  = searchParams.get('role')
-      console.log(role)
+  const role = searchParams.get('role')
+  console.log(role)
 
   useEffect(() => {
-    
-        if (role === 'client') {
-          setRoleName('Client');
-        } else if (role === 'freelancer') {
-          setRoleName('Freelancer');
-        }
-      
-    
+
+    if (role === 'client') {
+      setRoleName('Client');
+    } else if (role === 'freelancer') {
+      setRoleName('Freelancer');
+    }
+
+
   }, []);
 
   const isValidEmail = (email) => {
@@ -39,13 +38,18 @@ const SignIn = () => {
     // You can add authentication logic here
     console.log({ Name, email, password, roleName });
 
-    if(!isValidEmail){
+    if (!email || !password || !Name || !roleName) {
+      seterror('Please fill in all fields');
+      return;
+    }
+
+    if (!isValidEmail) {
       seterror('This email is invalid')
       return;
     }
 
-    if(password.length <= 8){
-      seterror('The password must be greater than 8 characters')
+    if (password.length < 8) {
+      seterror('The password must be greater than or equal to 8 characters')
       return;
     }
 
@@ -60,19 +64,22 @@ const SignIn = () => {
           email,
           password,
           roleName,
-        })
+        }),
       })
 
-      if(res.status === 400){
+      const data = await res.json();
+
+      if (res.status === 400) {
         seterror('This email is already registeredd')
       }
 
-      if(res.status === 200){
+      if (res.status === 200) {
         seterror("")
         router.push('/login')
       }
     } catch (error) {
-      
+      console.error('Error occurred during sign-in:', error);
+      seterror('An unexpected error occurred. Please try again.');
     }
   };
 
@@ -81,7 +88,7 @@ const SignIn = () => {
       <div className='bg-white p-8 rounded-lg shadow-lg max-w-md w-full'>
         <h2 className='text-3xl font-bold mb-8 text-center'>Sign in as a {roleName || '...'}</h2>
         <form onSubmit={handleSubmit}>
-        <div className='mb-6'>
+          <div className='mb-6'>
             <label htmlFor='name' className='block text-sm font-semibold mb-2'>
               Name
             </label>
