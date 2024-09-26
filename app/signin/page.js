@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import axios from 'axios';
 
 const SignIn = () => {
   const router = useRouter();
@@ -16,14 +17,11 @@ const SignIn = () => {
   console.log(role)
 
   useEffect(() => {
-
     if (role === 'client') {
       setRoleName('Client');
     } else if (role === 'freelancer') {
       setRoleName('Freelancer');
     }
-
-
   }, []);
 
   const isValidEmail = (email) => {
@@ -54,7 +52,7 @@ const SignIn = () => {
     }
 
     try {
-      const res = await fetch('api/signin', {
+      const res = await fetch('/api/signin', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
