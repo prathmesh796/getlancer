@@ -55,8 +55,9 @@ const login = () => {
 
       if (res?.url) router.replace("/dashboard")
     }
-    else {
+    else if (res?.ok) {
       seterror("")
+      router.replace('/dashboard');
     }
   };
 
