@@ -3,13 +3,15 @@ import Link from 'next/link'
 
 const Navbar = () => {
   return (
-    <nav className='bg-black text-white flex h-100 py-8 px-10 justify-between'>
-      <Link href='/' className='flex'>
-        <h1 className='text-5xl font-bold'>getLancer</h1>
-        <h4 className='text-light_yellow pt-6 font-semibold'>.com</h4>
+    <nav className='w-[100vw] bg-black text-white flex flex-col md:flex-row h-auto md:h-100 py-4 md:py-8 px-5 md:px-10 justify-between items-center w-full'>
+      {/* Logo Section */}
+      <Link href='/' className='flex items-center flex-shrink-0'>
+        <h1 className='text-3xl md:text-5xl font-bold'>getLancer</h1>
+        <h4 className='text-light_yellow pt-1 md:pt-6 font-semibold text-xl md:text-2xl'>.com</h4>
       </Link>
 
-      <ul className='flex gap-8 items-center'>
+      {/* Navigation Links */}
+      <ul className='flex  md:flex-row gap-4 md:gap-8 items-center mt-4 md:mt-0'>
         <li>
           <Link href='/' className='hover:text-light_yellow transition-all duration-200'>Home</Link>
         </li>
@@ -21,11 +23,13 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <div className='flex gap-5 justify-center items-center'>
+      {/* Auth Section */}
+      <div className='flex gap-3 md:gap-5 justify-center items-center mt-4 md:mt-0 flex-shrink-0'>
         <Link className='hover:text-light_yellow transition-all duration-200' href='/login'>Login</Link>
-        <button className='rounded-full bg-yellow text-black p-3 hover:bg-light_yellow transition-all duration-200'><Link href='/join'>Signin</Link></button>
+        <button className='rounded-full bg-yellow text-black px-5 py-2 md:p-3 hover:bg-light_yellow transition-all duration-200'>
+          <Link href='/join'>Signin</Link>
+        </button>
       </div>
-
     </nav>
   )
 }
