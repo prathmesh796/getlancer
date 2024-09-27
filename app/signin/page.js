@@ -41,7 +41,7 @@ const SignIn = () => {
       return;
     }
 
-    if (!isValidEmail) {
+    if (!isValidEmail(email)) {
       seterror('This email is invalid')
       return;
     }
@@ -71,13 +71,17 @@ const SignIn = () => {
         seterror('This email is already registeredd')
       }
 
-      if (res.status === 200) {
+      else if (res.status === 200) {
         seterror("")
         router.push('/login')
+      }
+      else {
+        seterror('An unexpected error occurred');
       }
     } catch (error) {
       console.error('Error occurred during sign-in:', error);
       seterror('An unexpected error occurred. Please try again.');
+      return NextResponse.json({error: error.message, stack: error.stack}, {status: 500});
     }
   };
 

@@ -1,7 +1,6 @@
 import {connect} from '@/utils/db'
-import {User} from '@/models/User'
+import User from '@/models/User'
 import { NextRequest, NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs/dist/bcrypt'
 import bcryptjs from 'bcryptjs'
 
 
@@ -10,7 +9,7 @@ export async function POST(request) {
     try {
         let conn = await connect()
         const req = await request.json()
-        const {name, email, password, role} = req
+        const {Name: name, email, password, roleName: role} = req
         console.log(req)
 
         const user = await User.findOne({email})
