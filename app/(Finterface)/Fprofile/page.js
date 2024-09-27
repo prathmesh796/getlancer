@@ -1,7 +1,7 @@
-import Navbar from '@/components/Navbar'
+
 import React from 'react'
-import FImage from '../../components/FImage'
-import Fbutton from '@/components/Fbutton'
+import FImage from '../../../components/FImage'
+
 
 
 export default function page() {
@@ -176,7 +176,8 @@ export default function page() {
                     text-[12px] 
                     pt-1 py-2 text-center
                     "
-                     key={skill} variant="secondary">{skill}</div>
+                     key={skill} variant="secondary">{skill}
+                     </div>
                   ))}
                 </div>
               </div>
