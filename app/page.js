@@ -15,7 +15,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className='mb-10 h-1 rounded-full opacity-15 bg-gray-400'></div>
+      <div className='mb-10 h-1 rounded-full opacity-15 bg-gray-400'></div> 
 
       <div className='flex justify-between px-10'>
         <div className="img">
@@ -28,6 +28,9 @@ export default function Home() {
         </div>
 
       </div>
+
+
     </main>
+    
   );
 }
