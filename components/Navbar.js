@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 const Navbar = () => {
   return (
+
     <nav className='bg-black text-white flex h-100 py-8 px-10 justify-between '>
       
       <Link href='/' className='flex'>
@@ -11,6 +12,7 @@ const Navbar = () => {
       </Link>
 
       <ul className='flex gap-8 items-center text-md'>
+
         <li>
           <Link href='/' className='hover:text-light_yellow transition-all duration-200'>Home</Link>
         </li>
@@ -22,11 +24,13 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <div className='flex gap-5 justify-center items-center'>
+      {/* Auth Section */}
+      <div className='flex gap-3 md:gap-5 justify-center items-center mt-4 md:mt-0 flex-shrink-0'>
         <Link className='hover:text-light_yellow transition-all duration-200' href='/login'>Login</Link>
-        <button className='rounded-full bg-yellow text-black p-3 hover:bg-light_yellow transition-all duration-200'><Link href='/join'>Signin</Link></button>
+        <button className='rounded-full bg-yellow text-black px-5 py-2 md:p-3 hover:bg-light_yellow transition-all duration-200'>
+          <Link href='/join'>Signin</Link>
+        </button>
       </div>
-
     </nav>
   )
 }

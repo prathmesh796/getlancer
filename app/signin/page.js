@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
 
 const SignIn = () => {
   const router = useRouter();

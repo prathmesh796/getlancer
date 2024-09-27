@@ -1,15 +1,64 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import fa from 'fontawesome';
 
 const login = () => {
+  const router = useRouter()
+  const session = useSession()
+  const [error, seterror] = useState("")
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if(session?.status === 'authenticated'){
+      router.replace('/dashboard')
+    }
+  }, [session, router])
+  
+
+  const isValidEmail = (email) => {
+    const emailRegex = /[a-z0-9\._%+!$&*=^|~#%'`?{}/\-]+@([a-z0-9\-]+\.){1,}([a-z]{2,16})/
+    return emailRegex.test(email)
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // You can add authentication logic here
     console.log({ email, password });
+
+    if (!email || !password) {
+      seterror('Please fill in all fields');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      seterror('This email is invalid')
+      return;
+    }
+
+    if (password.length < 8) {
+      seterror('The password must be greater than or equal to 8 characters')
+      return;
+    }
+
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password
+    })
+
+    if (res?.error) {
+      seterror("Invalid email or password")
+
+      if (res?.url) router.replace("/dashboard")
+    }
+    else if (res?.ok) {
+      seterror("")
+      router.replace('/dashboard');
+    }
   };
 
   return (
@@ -47,7 +96,7 @@ const login = () => {
             type='submit'
             className='w-full bg-yellow text-black p-3 rounded-lg font-semibold'
           >
-            Sign In
+            Log In
           </button>
         </form>
         <p className='text-center mt-6'>
