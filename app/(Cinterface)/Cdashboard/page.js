@@ -7,21 +7,25 @@ export default function page() {
             <aside className="w-64 bg-white p-6 hidden md:block">
                 <h2 className="text-2xl font-bold mb-6">FreelanceHub</h2>
                 <nav className="space-y-2">
-                    <Link
+
+                    <div className='h-5 w-5'>
                         href="#"
                         className="flex items-center space-x-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg"
-                    >
-                        <Layout className="h-5 w-5" />
                         <span>Dashboard</span>
-                    </Link>
-                    <Link href="#" className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg">
-                        <MessageSquare className="h-5 w-5" />
+                    </div>
+
+                    <div className='h-5 w-5'>
+                        href="#"
+                        className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg"
                         <span>Messages</span>
-                    </Link>
-                    <Link href="#" className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg">
-                        <Calendar className="h-5 w-5" />
+                    </div>
+
+                    <div className="h-5 w-5">
+                        href="#"
+                        className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg"
+                        {/* <Calendar className="h-5 w-5" /> */}
                         <span>Schedule</span>
-                    </Link>
+                    </div>
                 </nav>
             </aside>
 
@@ -256,6 +260,6 @@ export default function page() {
                     </Card>
                 </div>
             </main>
-        </div>
+        </div >
     )
 }

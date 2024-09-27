@@ -1,11 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faFacebook, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   return (
-    <footer className='bg-black text-white flex h-21 py-7 px-10 justify-between items-center'>
+    <footer className='bg-black text-white flex h-21 py-7 px-10 mt-5 justify-between items-center bottom-0 static'>
       <div className='flex flex-col'>
         <h2 className='text-2xl font-semibold'>Connect with us</h2>
         <ul className='flex gap-1 pt-1'>
