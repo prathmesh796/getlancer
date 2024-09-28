@@ -41,6 +41,7 @@ export const authOptions = {
         signIn: '/login', // Ensure this matches your custom login page
         error: '/login'   // Redirect to the same login page on error
     },
+    
     callbacks: {
         async session({ session, token, user }) {
             // Attach additional user info to the session
@@ -52,6 +53,7 @@ export const authOptions = {
         },
         async jwt({ token, user }) {
             if (user) {
+                secret: process.env.NEXTAUTH_SECRET,
                 token.id = user.id;
                 token.role = user.role;
             }

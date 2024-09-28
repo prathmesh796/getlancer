@@ -14,9 +14,9 @@ const login = () => {
 
   useEffect(() => {
     if(session?.status === 'authenticated'){
-      router.replace('/dashboard')
+      router.replace('/Fdash')
     }
-  }, [session, router])
+  }, [session?.status])
   
 
   const isValidEmail = (email) => {
@@ -53,11 +53,11 @@ const login = () => {
     if (res?.error) {
       seterror("Invalid email or password")
 
-      if (res?.url) router.replace("/dashboard")
+      if (res?.url) router.replace("/Fdash")
     }
     else if (res?.ok) {
       seterror("")
-      router.replace('/dashboard');
+      router.replace('/Fdash');
     }
   };
 

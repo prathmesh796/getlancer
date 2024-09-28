@@ -1,9 +1,25 @@
+"use client";
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
 import FDcard from '@/components/FDcard';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function page() {
+  const { data: session, status } = useSession();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // If user is not authenticated, redirect to login page
+    if (session?.status === "unauthenticated") {
+      router.replace("/login");
+    }
+  }, [session?.status]);
+
+  if (status === "authenticated") {
   return (
     <div>
       <div className="min-h-screen bg-background">
@@ -11,7 +27,7 @@ export default function page() {
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <h1 className="text-2xl font-bold">Freelancer Dashboard</h1>
             <div className="flex items-center space-x-4">
-
+              <div>{session?.user?.email}</div>
 
               <div className='text-black'>
                 <FontAwesomeIcon icon={faUser} style={{ fontSize: '1px', width: '20px' }} className='mr-6' />
@@ -59,4 +75,6 @@ export default function page() {
       </div>
     </div>
   )
+}
+else{return null}
 }
