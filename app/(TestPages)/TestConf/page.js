@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 export default function page() {
   return (
@@ -154,8 +155,8 @@ export default function page() {
         </div>
         <div className="flex justify-between items-center">
           <p className="text-sm text-muted-foreground">By applying, you agree to our terms and conditions.</p>
-          <button className="bg-black text-white border-2 border-black rounded-lg px-4 py-2">
-        Apply For Test..
+          <button className="bg-black text-white border-2 border-black rounded-lg px-4 py-2"><Link href='/contest'>
+        Apply For Test..</Link>
     </button>
         </div>
       </div>
