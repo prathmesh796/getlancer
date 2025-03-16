@@ -44,19 +44,8 @@ export default function page() {
 
           <section>
             <h2 className="text-4xl font-semibold mb-4">Job Recommendations</h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-1 md:grid-cols-1 lg:grid-cols-1">
               {/* {jobRecommendations.map((job) => ( */}
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
               <FDcard />
 
               {/* ))} */}
