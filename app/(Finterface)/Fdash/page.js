@@ -10,6 +10,8 @@ import { useEffect } from 'react';
 export default function page() {
   const { data: session, status } = useSession();
 
+  const [showDiv, setShowDiv] = React.useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -18,6 +20,11 @@ export default function page() {
       router.replace("/login");
     }
   }, [session?.status]);
+
+
+  const handleClick = () => {
+    setShowDiv(!showDiv);
+  };
 
   if (status === "authenticated") {
   return (
@@ -59,13 +66,7 @@ export default function page() {
               <FDcard />
               <FDcard />
               <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
-              <FDcard />
+              
 
               {/* ))} */}
             </div>
