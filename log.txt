@@ -1,0 +1,42 @@
+prathmesh@LAPTOP-DD9UJ4NT MINGW64 /c/Codes/getlancer (main)
+$ git log
+commit cdf8e6336a0047d076335c66b25e5e9ca4892f64 (HEAD -> main)
+Author: Prathmesh Ravindra Salunkhe <salunkheprathmesh0@gmail.com>
+Date:   Sat Mar 29 17:39:07 2025 +0530
+
+    adding .env.local
+
+commit a5386cdf0a2f3fd6d6d270ef5a0dd98063e5a88f
+Author: Prathmesh Ravindra Salunkhe <salunkheprathmesh0@gmail.com>
+Date:   Sat Mar 29 17:12:11 2025 +0530
+
+    remove sensitive data
+
+commit e36750321cad0d8fe1131fcbcabe95fdcac617bd
+Author: Prathmesh Ravindra Salunkhe <salunkheprathmesh0@gmail.com>
+Date:   Fri Mar 21 23:03:11 2025 +0530
+    Oauth setup
+
+commit af7f9bb91ca55c39e6ea911bd74def07ad1d0f12 (origin/main, origin/HEAD)
+Author: Prathmesh Ravindra Salunkhe <salunkheprathmesh0@gmail.com>
+Date:   Thu Mar 20 09:38:39 2025 +0530
+
+    login completed
+
+commit 4badf423dcb76266fcb83824c0fd4e0955243e61
+Merge: 9407cc9 e48a7e8
+Author: Prathmesh Ravindra Salunkhe <salunkheprathmesh0@gmail.com>
+Date:   Fri Mar 14 12:35:15 2025 +0530
+
+    added contest and tests
+
+commit 9407cc9b50855d5f51d9823fb8b39d62361f1832
+Author: Prathmesh Ravindra Salunkhe <salunkheprathmesh0@gmail.com>
+Date:   Sat Sep 28 06:10:45 2024 +0530
+
+    adding next auth credentials
+
+commit e48a7e8e2dd24daf090ecc4d417f17e73a2073be
+Merge: b2c3900 7363707
+Author: Prathmesh Ravindra Salunkhe <145089371+prathmesh796@users.noreply.github.com>
+Date:   Sat Sep 28 06:07:37 2024 +0530

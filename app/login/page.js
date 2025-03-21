@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Login = () => {
   const router = useRouter();
   const session = useSession();
-  const [error, seterror] = useState("");
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,28 +17,12 @@ const Login = () => {
     }
   }, [session?.status]);
 
-  const isValidEmail = (email) => {
-    const emailRegex =
-      /[a-z0-9\._%+!$&*=^|~#%'`?{}/\-]+@([a-z0-9\-]+\.){1,}([a-z]{2,16})/;
-    return emailRegex.test(email);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    seterror(""); // Reset error state
+    setError(""); // Reset error state
 
     if (!email || !password) {
-      seterror("Please fill in all fields");
-      return;
-    }
-
-    if (!isValidEmail(email)) {
-      seterror("This email is invalid");
-      return;
-    }
-
-    if (password.length < 8) {
-      seterror("The password must be at least 8 characters long");
+      setError("Please fill in all fields");
       return;
     }
 
@@ -49,12 +33,12 @@ const Login = () => {
     });
 
     if (res?.error) {
-      seterror("Invalid email or password");
+      setError("Invalid email or password");
       return;
     }
 
     if (res?.ok) {
-      seterror("");
+      setError("");
       router.replace("/Fdash");
     }
   };
@@ -63,6 +47,7 @@ const Login = () => {
     <div className="flex justify-center items-center h-screen bg-white">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-bold mb-8 text-center">Log In</h2>
+        
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label htmlFor="email" className="block text-sm font-semibold mb-2">
@@ -101,6 +86,23 @@ const Login = () => {
             Log In
           </button>
         </form>
+
+        <div className="text-center mt-4">
+          <p>Or continue with:</p>
+          <button
+            onClick={() => signIn("google")}
+            className="w-full bg-red-500 text-white p-3 rounded-lg mt-2"
+          >
+            Login with Google
+          </button>
+          <button
+            onClick={() => signIn("github")}
+            className="w-full bg-gray-800 text-white p-3 rounded-lg mt-2"
+          >
+            Login with GitHub
+          </button>
+        </div>
+
         <p className="text-center mt-6">
           Don't have an account?{" "}
           <Link href="/signin" className="text-yellow font-thin hover:underline">

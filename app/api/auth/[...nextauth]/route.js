@@ -1,27 +1,25 @@
-import NextAuth from "next-auth"
-import GithubProvider from "next-auth/providers/github"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { connect } from '@/utils/db'
-import User from '@/models/User'
-import bcrypt from "bcryptjs/dist/bcrypt"
-import bcryptjs from "bcryptjs"
+import NextAuth from "next-auth";
+import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { connect } from "@/utils/db";
+import User from "@/models/User";
+import bcryptjs from "bcryptjs";
 
 export const authOptions = {
-    // Configure one or more authentication providers
+    // Configure authentication providers
     providers: [
         CredentialsProvider({
             id: "credentials",
             name: "Credentials",
-
             credentials: {
                 email: { label: "email", type: "text", placeholder: "email" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials, req) {
-                let conn = await connect()
-
+            async authorize(credentials) {
+                await connect();
                 try {
-                    const user = await User.findOne({ email: credentials.email })
+                    const user = await User.findOne({ email: credentials.email });
 
                     if (user && bcryptjs.compareSync(credentials.password, user.password)) {
                         return {
@@ -29,22 +27,35 @@ export const authOptions = {
                             name: user.name,
                             email: user.email,
                             role: user.role,
-                          };
+                        };
                     }
                 } catch (error) {
-                    console.log(error)
+                    console.log(error);
                 }
+                return null; // Return null if login fails
             }
         }),
+
+        // **Google Authentication**
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        }),
+
+        // **GitHub Authentication**
+        GithubProvider({
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        }),
     ],
-    pages: {
-        signIn: '/login', // Ensure this matches your custom login page
-        error: '/login'   // Redirect to the same login page on error
-    },
     
+    pages: {
+        signIn: "/login", // Custom login page
+        error: "/login"   // Redirect to login on error
+    },
+
     callbacks: {
-        async session({ session, token, user }) {
-            // Attach additional user info to the session
+        async session({ session, token }) {
             if (token) {
                 session.user.id = token.id;
                 session.user.role = token.role;
@@ -53,16 +64,36 @@ export const authOptions = {
         },
         async jwt({ token, user }) {
             if (user) {
-                secret: process.env.NEXTAUTH_SECRET,
-                token.id = user.id;
-                token.role = user.role;
+              // Check if user exists in the database
+              await connect();
+              let dbUser = await User.findOne({ email: user.email });
+      
+              if (!dbUser) {
+                // If user doesn't exist, create a new user
+                dbUser = await User.create({
+                  name: user.name,
+                  email: user.email,
+                  role: user.role, 
+                });
+              }
+      
+              // Assign role from database to the session token
+              token.id = dbUser._id;
+              token.role = dbUser.role;
             }
             return token;
         },
-        async redirect({ url, baseUrl }) {
-            return baseUrl; // This ensures the redirection goes to your app's base URL
+        async redirect({ baseUrl, token }) {
+            // Redirect based on role
+            if (token?.role === "Freelancer") {
+              return `${baseUrl}/Fdash`;
+            } else if (token?.role === "Client") {
+              return `${baseUrl}/Cdash`;
+            }
+            return baseUrl; // Ensures redirection to the main app
         }
     }
-}
-export const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
+};
+
+export const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
