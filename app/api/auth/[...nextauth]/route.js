@@ -83,15 +83,9 @@ export const authOptions = {
             }
             return token;
         },
-        async redirect({ baseUrl, token }) {
-            // Redirect based on role
-            if (token?.role === "Freelancer") {
-              return `${baseUrl}/Fdash`;
-            } else if (token?.role === "Client") {
-              return `${baseUrl}/Cdash`;
-            }
-            return baseUrl; // Ensures redirection to the main app
-        }
+        async redirect({ url, baseUrl }) {
+            return url.startsWith(baseUrl) ? url : baseUrl;
+        }        
     }
 };
 

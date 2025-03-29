@@ -39,7 +39,7 @@ const Navbar = () => {
           <>
             <p className="text-light_yellow">Hello, {session.user.name}</p>
             <button
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: "/" })}
               className="rounded-full bg-red-500 text-white px-5 py-2 md:p-3 hover:bg-red-600 transition-all duration-200"
             >
               Logout

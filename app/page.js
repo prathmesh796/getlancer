@@ -1,7 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+      if (session?.user?.role) {
+        if (session.user.role === "Freelancer") {
+          router.push("/Fdash");
+        } else if (session.user.role === "Client") {
+          router.push("/Cdash");
+        }
+      }
+  }, [session, router]);
+
   return (
     <main className='text-black mx-24 p-5'>
       <div className='flex justify-between px-10'>
