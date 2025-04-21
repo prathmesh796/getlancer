@@ -55,8 +55,7 @@ export default function page() {
               />
             </div>
           </div>
-
-
+          
           <section>
             <h2 className="text-4xl font-semibold mb-4">Job Recommendations</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

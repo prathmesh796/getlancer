@@ -12,7 +12,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (session?.status === "authenticated") {
+    const userRole = session?.data?.user?.role;
+
+    if (userRole === "Client") {
+      router.replace("/Cdash");
+    } else if (userRole === "Freelancer") {
       router.replace("/Fdash");
     }
   }, [session?.status]);
@@ -32,6 +36,12 @@ const Login = () => {
       password,
     });
 
+    if (res?.error === "UserNotFound") {
+      router.replace("/join");
+      setError("User not found. Please sign up.");
+      return;
+    }
+
     if (res?.error) {
       setError("Invalid email or password");
       return;
@@ -39,7 +49,16 @@ const Login = () => {
 
     if (res?.ok) {
       setError("");
-      router.replace("/Fdash");
+
+      const userRole = session?.data?.user?.role;
+
+      if (userRole === "Client") {
+        router.replace("/Cdash");
+      } else if (userRole === "Freelancer") {
+        router.replace("/Fdash");
+      } else {
+        router.replace("/"); // fallback
+      }
     }
   };
 
@@ -47,7 +66,7 @@ const Login = () => {
     <div className="flex justify-center items-center h-screen bg-white">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-bold mb-8 text-center">Log In</h2>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label htmlFor="email" className="block text-sm font-semibold mb-2">

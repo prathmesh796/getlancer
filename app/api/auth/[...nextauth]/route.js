@@ -18,21 +18,23 @@ export const authOptions = {
             },
             async authorize(credentials) {
                 await connect();
-                try {
-                    const user = await User.findOne({ email: credentials.email });
+                const user = await User.findOne({ email: credentials.email });
 
-                    if (user && bcryptjs.compareSync(credentials.password, user.password)) {
-                        return {
-                            id: user._id,
-                            name: user.name,
-                            email: user.email,
-                            role: user.role,
-                        };
-                    }
-                } catch (error) {
-                    console.log(error);
+                if (!user) {
+                    throw new Error("UserNotFound");
                 }
-                return null; // Return null if login fails
+
+                if (user && bcryptjs.compareSync(credentials.password, user.password)) {
+                    return {
+                        id: user._id,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                    };
+                }
+                else{
+                    throw new Error("InvalidCredentials");
+                }
             }
         }),
 
@@ -48,7 +50,7 @@ export const authOptions = {
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
         }),
     ],
-    
+
     pages: {
         signIn: "/login", // Custom login page
         error: "/login"   // Redirect to login on error
@@ -64,28 +66,28 @@ export const authOptions = {
         },
         async jwt({ token, user }) {
             if (user) {
-              // Check if user exists in the database
-              await connect();
-              let dbUser = await User.findOne({ email: user.email });
-      
-              if (!dbUser) {
-                // If user doesn't exist, create a new user
-                dbUser = await User.create({
-                  name: user.name,
-                  email: user.email,
-                  role: user.role, 
-                });
-              }
-      
-              // Assign role from database to the session token
-              token.id = dbUser._id;
-              token.role = dbUser.role;
+                // Check if user exists in the database
+                await connect();
+                let dbUser = await User.findOne({ email: user.email });
+
+                if (!dbUser) {
+                    // If user doesn't exist, create a new user
+                    dbUser = await User.create({
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                    });
+                }
+
+                // Assign role from database to the session token
+                token.id = dbUser._id;
+                token.role = dbUser.role;
             }
             return token;
         },
         async redirect({ url, baseUrl }) {
             return url.startsWith(baseUrl) ? url : baseUrl;
-        }        
+        }
     }
 };
 

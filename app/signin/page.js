@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { signIn } from "next-auth/react";
 import Link from 'next/link';
 
 const SignIn = () => {
@@ -13,7 +14,6 @@ const SignIn = () => {
   const [error, seterror] = useState("")
 
   const role = searchParams.get('role')
-  console.log(role)
 
   useEffect(() => {
     if (role === 'client') {
@@ -28,12 +28,8 @@ const SignIn = () => {
     return emailRegex.test(email)
   }
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can add authentication logic here
-    console.log({ Name, email, password, roleName });
 
     if (!email || !password || !Name || !roleName) {
       seterror('Please fill in all fields');
@@ -72,7 +68,23 @@ const SignIn = () => {
 
       else if (res.status === 200) {
         seterror("")
-        router.push('/login')
+
+        const loginResult = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (loginResult.ok) {
+          if (roleName === "Client") {
+            router.replace("/Cdash");
+          } else {
+            router.replace("/Fdash");
+          } // or redirect to dashboard
+        } else {
+          // Fallback if login fails for some reason
+          router.push("/login");
+        }
       }
       else {
         seterror('An unexpected error occurred');
@@ -80,7 +92,7 @@ const SignIn = () => {
     } catch (error) {
       console.error('Error occurred during sign-in:', error);
       seterror('An unexpected error occurred. Please try again.');
-      return NextResponse.json({error: error.message, stack: error.stack}, {status: 500});
+      return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
     }
   };
 
