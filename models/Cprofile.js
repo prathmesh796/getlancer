@@ -27,7 +27,23 @@ const CprofileSchema = new mongoose.Schema(
           createdAt: {
             type: Date,
             default: Date.now
-          }
+          },
+          banner: {
+            type: Object,
+          },
+          logo: {
+            type: Object,
+          },
+          socialLinks: {
+            type: Object,
+            default: {
+              facebook: "",
+              twitter: "",
+              linkedin: "",
+              instagram: "",
+              github: ""
+            }
+          },
     }
 )
 

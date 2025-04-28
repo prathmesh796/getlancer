@@ -3,6 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import React from "react";
 import Link from "next/link";
+import { CgProfile } from "react-icons/cg";
 
 const Navbar = () => {
   const { data: session } = useSession(); // Get session data
@@ -38,6 +39,8 @@ const Navbar = () => {
           // If user is logged in, show Logout button
           <>
             <p className="text-light_yellow">Hello, {session.user.name}</p>
+            <Link href={(session.user.role == "Client") ? "/Cprofile" : "Fprofile"} ><CgProfile className="w-8 h-8" /></Link>
+            
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
               className="rounded-full bg-red-500 text-white px-5 py-2 md:p-3 hover:bg-red-600 transition-all duration-200"
