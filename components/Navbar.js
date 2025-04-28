@@ -9,8 +9,8 @@ const Navbar = () => {
   const { data: session } = useSession(); // Get session data
 
   return (
-    <nav className="bg-black text-white flex h-100 py-8 px-10 justify-between">
-      <Link href="/" className="flex">
+    <nav className="bg-black text-white flex h-24 py-4 px-10 justify-between">
+      <Link href="/" className="flex outline-none">
         <h1 className="text-5xl font-bold">getLancer</h1>
         <h4 className="text-light_yellow pt-6 font-semibold">.com</h4>
       </Link>
