@@ -23,10 +23,6 @@ const FprofileSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  Links: {
-    type: [String],
-    default: []
-  },
   experience: {
     type: [Object],
     default: []
@@ -38,7 +34,29 @@ const FprofileSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  profilePic: {
+    type: Object,
+  },
+  socialLinks: {
+    type: Object,
+    default: {
+      facebook: "",
+      twitter: "",
+      linkedin: "",
+      instagram: "",
+      github: ""
+    }
+  },
+  projects: {
+    type: [Object],
+    default: []
+  },
+  Jobs: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Job",
+    default: []
+  },
 });
 
 export default mongoose.models.Fprofile || mongoose.model("Fprofile", FprofileSchema);

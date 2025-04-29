@@ -27,7 +27,7 @@ export default async function RootLayout({ children }) {
       <body className={popins.className}>
         <SessionProvider session={session}>
         <Navbar/>
-        <div className="container mx-auto min-h-[87.8vh]">
+        <div className="container mx-auto min-h-screen">
             {children}
           </div>
         <Footer/>

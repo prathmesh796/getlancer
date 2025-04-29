@@ -1,104 +1,33 @@
+"use client"
 
 import React from 'react'
-import FImage from '../../../components/FImage'
-
-
+import { useSession } from "next-auth/react";
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function page() {
+  const { data: session } = useSession();
+
   return (
     <div>
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Profile Header */}
           <div className="md:col-span-3">
-            <div className="justify-around flex flex-col md:flex-row items-center gap-6 bg-muted bg-gray-200 p-6 rounded-lg">
-              <img
-                src="https://tse4.mm.bing.net/th?id=OIP.hGSCbXlcOjL_9mmzerqAbQHaHa&pid=Api&P=0&h=180"
-                alt="img"
-                width={128}
-                height={128}
-                className="rounded-full bg-cover border-gray-200"
-              />
-              <div className="text-center md:text-left">
-                <h1 className="text-3xl font-bold">Jane Doe</h1>
-                <p className="text-xl text-muted-foreground text-gray-500">Full Stack Developer</p>
-                <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
-                  <div class="
-                    w-[90px]
-                    h-[30px]
-                    appearance-none 
-                    bg-black 
-                    border-2 border-gray-800 
-                    rounded-[15px] 
-                    box-border 
-                    text-white 
-                    cursor-pointer 
-                    inline-block 
-                    font-sans 
-                    font-semibold 
-                    text-[16px] 
-                    text-center
-                    ">React</div>
-
-                  <div class="
-                    w-[90px]
-                    h-[30px]
-                    appearance-none 
-                    bg-black 
-                    border-2 border-gray-800 
-                    rounded-[15px] 
-                    box-border 
-                    text-white 
-                    cursor-pointer 
-                    inline-block 
-                    font-sans 
-                    font-semibold 
-                    text-[16px] 
-                    text-center
-                    ">Node.js</div>
-
-                  <div class="
-                    
-                    appearance-none 
-                    bg-black 
-                    border-2 border-gray-800 
-                    rounded-[15px] 
-                    box-border 
-                    text-white 
-                    cursor-pointer 
-                    inline-block 
-                    font-sans 
-                    font-semibold 
-                    w-[90px]
-                    h-[30px]
-                    text-[16px] 
-                    text-center
-                    ">UI/UX</div>
-
-                  <div class="
-                    w-[90px]
-                    h-[30px]
-                    appearance-none 
-                    bg-black 
-                    border-2 border-gray-800 
-                    rounded-[15px] 
-                    box-border 
-                    text-white 
-                    cursor-pointer 
-                    inline-block 
-                    font-sans 
-                    font-semibold 
-                    text-[16px] 
-                    text-center
-                    ">Python</div>
+            <div className="justify-between flex flex-col md:flex-row items-center gap-6 bg-muted bg-gray-200 m-3 px-10 p-6 rounded-lg">
+              <div className="flex flex-col md:flex-row justify-start items-center gap-10">
+                <Image src="/profilepic.jpeg" alt="img" width={128} height={128} className="rounded-full bg-cover border-gray-200" />
+                <div className="text-center md:text-left">
+                  <h1 className="text-3xl font-bold">{session?.user?.name}</h1>
+                  <p className="text-xl text-muted-foreground text-gray-500">{session?.user?.name}</p>
+                  <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
+                    <div class="w-[90px] h-[30px] appearance-none bg-black border-2 border-gray-800 rounded-[15px] box-border text-white cursor-pointer inline-block font-sans font-semibold text-[16px] text-center">React</div>
+                  </div>
                 </div>
               </div>
-              <div class="right-10">
-                <button class="bg-black text-white border-2 border-gray-200 rounded-lg px-4 py-2 ">
-                  <i class="fa-regular fa-envelope"></i>Contact Me
-                </button>
-              </div>
-
+              <Link href="/Fprofile/updateFprofile" className="flex justify-center items-center">
+                <button  className="bg-yellow m-10 text-black px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200">Update Profile</button>
+              </Link>
             </div>
           </div>
 
@@ -120,7 +49,6 @@ export default function page() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[1, 2, 3, 4].map((item) => (
                     <div key={item} className="relative aspect-video">
-                      <FImage />
                     </div>
                   ))}
                 </div>
@@ -176,8 +104,8 @@ export default function page() {
                     text-[12px] 
                     pt-1 py-2 text-center
                     "
-                     key={skill} variant="secondary">{skill}
-                     </div>
+                      key={skill} variant="secondary">{skill}
+                    </div>
                   ))}
                 </div>
               </div>

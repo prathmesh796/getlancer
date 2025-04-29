@@ -1,6 +1,7 @@
 import { connect } from "@/utils/db";
 import Freelancer from "@/models/Freelancer";
 import { NextResponse } from "next/server";
+import Fprofile from "@/models/Fprofile";
 
 export async function GET(req) {
     await connect();
@@ -13,7 +14,7 @@ export async function GET(req) {
             return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
         }
 
-        const freelancerProfile = await Freelancer.findOne({ userId });
+        const freelancerProfile = await Fprofile.findOne({ userId });
 
         if (!freelancerProfile) {
             return NextResponse.json({ success: false, error: "Freelancer profile not found" }, { status: 404 });
@@ -30,11 +31,11 @@ export async function POST(req) {
 
     try {
         const body = await req.json();
-        const { userId, skills, experience, portfolioLink, availability, bio } = body;
+        const { userId, title, skills, experience, portfolioLink, availability, bio } = body;
 
-        const updated = await Freelancer.findOneAndUpdate(
+        const updated = await Fprofile.findOneAndUpdate(
             { userId },
-            { skills, experience, portfolioLink, availability, bio },
+            { title, skills, experience, portfolioLink, availability, bio },
             { new: true, upsert: true }
         );
 
