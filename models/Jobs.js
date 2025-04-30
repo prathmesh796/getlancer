@@ -30,6 +30,20 @@ const jobsSchema = new mongoose.Schema(
             type: [String],
             required: true,
         },
+        applications: {
+            type: [
+                {
+                  userId: mongoose.Schema.Types.ObjectId,
+                  proposal: String,
+                },
+              ],
+            default: [],
+        },
+        status: {
+            type: String,
+            enum: ["open", "assigned", "closed"],
+            default: "open",
+        },
     }
 )
 

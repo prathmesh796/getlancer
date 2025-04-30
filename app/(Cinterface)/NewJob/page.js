@@ -2,10 +2,13 @@
 
 import React from 'react'
 import { useSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
 
 
 const page = () => {
     const { data: session } = useSession();
+
+    const router = useRouter();
 
     const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent page reload
@@ -30,6 +33,8 @@ const page = () => {
         });
 
         const responseData = await res.json();
+
+        router.push("/Cdash");
     };
 
 

@@ -7,11 +7,13 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { cat } from 'fontawesome';
 
 export default function page() {
   const { data: session, status } = useSession();
 
   const [showDiv, setShowDiv] = React.useState(false);
+  const [jobRecommendations, setJobRecommendations] = React.useState([]);
 
   const router = useRouter();
 
@@ -22,6 +24,29 @@ export default function page() {
     }
   }, [session?.status]);
 
+  useEffect(() => {
+    const fetchJobRecommendations = async () => {
+      try {
+        const response = await fetch('/api/jobs/recommendations', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setJobRecommendations(data);
+      } catch (error) {
+        console.error("Error fetching job recommendations:", error);
+      }
+    };
+
+    fetchJobRecommendations();
+  }, []);
 
   const handleClick = () => {
     setShowDiv(!showDiv);
@@ -79,11 +104,9 @@ export default function page() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">Recently Posted Jobs</h2>
               <div className="">
-                {/* {jobRecommendations.map((job) => ( */}
-                <Jobs/>
-
-
-                {/* ))} */}
+                {jobRecommendations.map((job) => (
+                  <Jobs key={job._id} job={job} />
+                ))}
               </div>
             </section>
           </div>
