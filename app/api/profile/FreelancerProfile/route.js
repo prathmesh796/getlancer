@@ -1,5 +1,4 @@
 import { connect } from "@/utils/db";
-import Freelancer from "@/models/Freelancer";
 import { NextResponse } from "next/server";
 import Fprofile from "@/models/Fprofile";
 
@@ -31,11 +30,11 @@ export async function POST(req) {
 
     try {
         const body = await req.json();
-        const { userId, title, skills, experience, portfolioLink, availability, bio } = body;
+        const { userId, title, skills, bio, hourlyRate, experience, location, profilePic, socialLinks, projects } = body;
 
         const updated = await Fprofile.findOneAndUpdate(
             { userId },
-            { title, skills, experience, portfolioLink, availability, bio },
+            { title, bio, skills, hourlyRate, experience, location, profilePic, socialLinks, projects},
             { new: true, upsert: true }
         );
 

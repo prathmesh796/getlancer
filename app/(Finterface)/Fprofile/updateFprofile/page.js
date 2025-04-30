@@ -14,6 +14,7 @@ const UpdateFProfile = () => {
   const [skills, setSkills] = useState([]);
   const [bio, setBio] = useState("");
   const [hourlyRate, setHourlyRate] = useState("");
+  const [profilePic, setProfilePic] = useState(null);
   const [location, setLocation] = useState("");
   const [socialLinks, setSocialLinks] = useState({});
   const [platform, setPlatform] = useState("Facebook");
@@ -23,6 +24,10 @@ const UpdateFProfile = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [newProject, setNewProject] = useState({ name: "", description: "", link: "", tags: [] });
   const [projectTagsInput, setProjectTagsInput] = useState("");
+  const [experience, setExperience] = useState([]);
+  const [editingExperienceIndex, setEditingExperienceIndex] = useState(null);
+  const [newExperience, setNewExperience] = useState({ role: "", company: "", startDate: "", endDate: "", description: "" });
+
   const [newProfile, setNewProfile] = useState(false);
 
   useEffect(() => {
@@ -71,11 +76,14 @@ const UpdateFProfile = () => {
       body: JSON.stringify({
         userId: session.user.id,
         title,
-        skills,
         bio,
+        skills,
         hourlyRate,
+        experience,
         location,
-        socialLinks
+        profilePic,
+        socialLinks,
+        projects,
       }),
     });
 
@@ -97,13 +105,15 @@ const UpdateFProfile = () => {
       <form onSubmit={handleSubmit}>
 
         <label className="block mb-1">Title</label>
-        <input
-          type="text"
-          placeholder="Your Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+        <input type="text" placeholder="Your Title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full mb-4 p-2 border rounded" required />
+
+        <label className="block mb-1">Bio</label>
+        <textarea
+          placeholder="A little about yourself..."
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
           className="w-full mb-4 p-2 border rounded"
-          required
+          rows={4}
         />
 
         <label className="block mb-1">Skills (comma separated)</label>
@@ -115,15 +125,6 @@ const UpdateFProfile = () => {
           className="w-full mb-4 p-2 border rounded"
         />
 
-        <label className="block mb-1">Bio</label>
-        <textarea
-          placeholder="A little about yourself..."
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          className="w-full mb-4 p-2 border rounded"
-          rows={4}
-        />
-
         <label className="block mb-1">Hourly Rate (in USD)</label>
         <input
           type="number"
@@ -132,6 +133,104 @@ const UpdateFProfile = () => {
           onChange={(e) => setHourlyRate(e.target.value)}
           className="w-full mb-4 p-2 border rounded"
         />
+
+        <label htmlFor="">Experience</label>
+        <div className="border p-4 rounded mb-6">
+          <input
+            type="text"
+            placeholder="Role"
+            value={newExperience.role}
+            onChange={(e) => setNewExperience({ ...newExperience, role: e.target.value })}
+            className="w-full border p-2 rounded mb-2"
+          />
+
+          <input
+            type="text"
+            placeholder="Company"
+            value={newExperience.company}
+            onChange={(e) => setNewExperience({ ...newExperience, company: e.target.value })}
+            className="w-full border p-2 rounded mb-2"
+          />
+
+          <input
+            type="month"
+            placeholder="Start Date"
+            value={newExperience.startDate}
+            onChange={(e) => setNewExperience({ ...newExperience, startDate: e.target.value })}
+            className="w-full border p-2 rounded mb-2"
+          />
+
+          <input
+            type="month"
+            placeholder="End Date"
+            value={newExperience.endDate}
+            onChange={(e) => setNewExperience({ ...newExperience, endDate: e.target.value })}
+            className="w-full border p-2 rounded mb-2"
+          />
+
+          <textarea
+            placeholder="Description"
+            value={newExperience.description}
+            onChange={(e) => setNewExperience({ ...newExperience, description: e.target.value })}
+            className="w-full border p-2 rounded mb-4"
+          />
+
+          <button
+            type="button"
+            onClick={() => {
+              const experienceData = { ...newExperience };
+              if (editingExperienceIndex !== null) {
+                const updated = [...experience];
+                updated[editingExperienceIndex] = experienceData;
+                setExperience(updated);
+                setEditingExperienceIndex(null);
+              } else {
+                setExperience([...experience, experienceData]);
+              }
+              setNewExperience({ role: "", company: "", startDate: "", endDate: "", description: "" });
+            }}
+            className="bg-green-600 text-white px-4 py-2 rounded"
+          >
+            {editingExperienceIndex !== null ? "Update Experience" : "Add Experience"}
+          </button>
+        </div>
+
+        <ul className="space-y-3">
+          {experience.map((exp, index) => (
+            <li key={index} className="border p-3 rounded bg-gray-50">
+              <div className="font-medium">{exp.role} at {exp.company}</div>
+              <div className="text-sm text-gray-600">
+                {exp.startDate} - {exp.endDate}
+              </div>
+              <p className="text-sm mt-1">{exp.description}</p>
+
+              <div className="mt-2 space-x-2">
+                <button
+                  className="bg-yellow-400 text-black px-3 py-1 rounded text-sm"
+                  onClick={() => {
+                    setNewExperience(exp);
+                    setEditingExperienceIndex(index);
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  className="bg-red-500 text-white px-3 py-1 rounded text-sm"
+                  onClick={() => {
+                    const updated = experience.filter((_, i) => i !== index);
+                    setExperience(updated);
+                    if (editingExperienceIndex === index) {
+                      setNewExperience({ role: "", company: "", startDate: "", endDate: "", description: "" });
+                      setEditingExperienceIndex(null);
+                    }
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
 
         <label className="block mb-1">Location</label>
         <input
@@ -252,10 +351,7 @@ const UpdateFProfile = () => {
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="bg-yellow text-black font-semibold p-2 rounded w-full"
-        >
+        <button type="submit" className="bg-yellow text-black font-semibold p-2 rounded w-full">
           Save Profile
         </button>
       </form>

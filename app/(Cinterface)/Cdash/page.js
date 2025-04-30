@@ -38,7 +38,9 @@ export default function page() {
                     <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                         <h1 className="text-4xl font-semibold text-gray-900">Let's get Some work done...</h1>
                         <div className="flex items-center space-x-4">
-                            <button className="flex bg-yellow m-10 text-black px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200"><IoMdAddCircleOutline className='w-6 h-6 mr-2' />Post New Job</button>
+                            <Link href="/NewJob" className="flex justify-center items-center">
+                                <button className="flex bg-yellow m-10 text-black px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200"><IoMdAddCircleOutline className='w-6 h-6 mr-2' />Post New Job</button>
+                            </Link>
                         </div>
                     </div>
                 </header>
