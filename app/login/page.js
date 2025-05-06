@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -10,6 +10,26 @@ const Login = () => {
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [turnstileLoaded, setTurnstileLoaded] = useState(false);
+  const tokenRef = useRef('');
+
+  useEffect(() => {
+    // Load Turnstile script
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+    script.async = true;
+    script.onload = () => setTurnstileLoaded(true);
+    document.body.appendChild(script);
+
+    // Set global callback
+    window.onTurnstileSuccess = (token) => {
+      tokenRef.current = token;
+    };
+
+    return () => {
+      delete window.onTurnstileSuccess;
+    };
+  }, []);
 
   useEffect(() => {
     const userRole = session?.data?.user?.role;
@@ -34,6 +54,7 @@ const Login = () => {
       redirect: false,
       email,
       password,
+      'cf-turnstile-response': tokenRef.current,
     });
 
     if (res?.error === "UserNotFound") {
@@ -94,6 +115,15 @@ const Login = () => {
               required
             />
           </div>
+
+          {turnstileLoaded && (
+            <div
+              className="cf-turnstile"
+              data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              data-callback="onTurnstileSuccess"
+            ></div>
+          )}
+
 
           {/* Error Message Display */}
           {error && <p className="text-red-500 text-center mt-2">{error}</p>}

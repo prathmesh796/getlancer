@@ -50,7 +50,7 @@ const FprofileSchema = new mongoose.Schema({
   },
   Jobs: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "Job",
+    ref: "Jobs",
     default: []
   },
 });

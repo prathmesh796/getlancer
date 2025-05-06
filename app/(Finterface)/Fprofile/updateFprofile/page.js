@@ -3,6 +3,11 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { MdDeleteForever } from "react-icons/md";
+import { FiEdit3 } from "react-icons/fi";
+import { IoAddCircleOutline } from "react-icons/io5";
+import { MdOutlineSaveAs } from "react-icons/md";
 
 const socialPlatforms = ["Facebook", "Twitter", "LinkedIn", "Instagram", "Github"];
 
@@ -189,33 +194,34 @@ const UpdateFProfile = () => {
               }
               setNewExperience({ role: "", company: "", startDate: "", endDate: "", description: "" });
             }}
-            className="bg-green-600 text-white px-4 py-2 rounded"
+            className="bg-yellow p-2 rounded-full"
           >
-            {editingExperienceIndex !== null ? "Update Experience" : "Add Experience"}
+            {editingExperienceIndex !== null ? <MdOutlineSaveAs className="w-6 h-6" /> : <IoAddCircleOutline className="w-6 h-6" />}
           </button>
         </div>
 
         <ul className="space-y-3">
           {experience.map((exp, index) => (
-            <li key={index} className="border p-3 rounded bg-gray-50">
-              <div className="font-medium">{exp.role} at {exp.company}</div>
-              <div className="text-sm text-gray-600">
-                {exp.startDate} - {exp.endDate}
+            <li key={index} className="flex justify-between border p-3 rounded">
+              <div className="flex flex-col justify-start">
+                <div className="font-medium">{exp.role} at {exp.company}</div>
+                <div className="text-sm text-gray-600">
+                  {exp.startDate} - {exp.endDate}
+                </div>
+                <p className="text-sm mt-1">{exp.description}</p>
               </div>
-              <p className="text-sm mt-1">{exp.description}</p>
-
-              <div className="mt-2 space-x-2">
+              <div className="flex flex-col justify-center gap-2">
                 <button
-                  className="bg-yellow-400 text-black px-3 py-1 rounded text-sm"
+                  className="bg-light_yellow text-black px-2 py-2 rounded-full"
                   onClick={() => {
                     setNewExperience(exp);
                     setEditingExperienceIndex(index);
                   }}
                 >
-                  Edit
+                  <FiEdit3 />
                 </button>
                 <button
-                  className="bg-red-500 text-white px-3 py-1 rounded text-sm"
+                  className="bg-red-500 text-white px-2 py-2 rounded-full"
                   onClick={() => {
                     const updated = experience.filter((_, i) => i !== index);
                     setExperience(updated);
@@ -225,7 +231,7 @@ const UpdateFProfile = () => {
                     }
                   }}
                 >
-                  Delete
+                  <MdDeleteForever />
                 </button>
               </div>
             </li>
@@ -264,7 +270,7 @@ const UpdateFProfile = () => {
             <button
               type="button"
               onClick={handleSocialAdd}
-              className="bg-blue-500 text-white px-3 rounded"
+              className="bg-yellow px-3 rounded"
             >
               Add
             </button>
@@ -273,83 +279,128 @@ const UpdateFProfile = () => {
           {Object.keys(socialLinks).length > 0 && (
             <ul className="list-disc list-inside text-sm text-gray-600">
               {Object.entries(socialLinks).map(([key, link]) => (
-                <li key={key}>
-                  <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {link}
+                <li key={key} className="flex justify-between" >
+                  <div>
+                    <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {link}
+                  </div>
+                  <button onClick={() => {
+                    const updated = Object.entries(socialLinks).filter((_, i) => i !== key);
+                    setSocialLinks(updated);
+                    if (editingIndex === index) {
+                      setNewProject({ name: "", description: "", link: "", tags: [] });
+                      setEditingIndex(null);
+                    }
+                  }}>
+                    <MdDeleteForever className="w-6 h-6" />
+                  </button>
                 </li>
               ))}
             </ul>
           )}
-
-          {/* Projects Section */}
-          <div className="mb-6">
-            <label className="block mb-2 font-medium">Projects</label>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
-              <input
-                type="text"
-                placeholder="Project Name"
-                value={newProject.name}
-                onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
-                className="border p-2 rounded"
-              />
-              <input
-                type="text"
-                placeholder="Description"
-                value={newProject.description}
-                onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                className="border p-2 rounded"
-              />
-              <input
-                type="url"
-                placeholder="Link"
-                value={newProject.link}
-                onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
-                className="border p-2 rounded"
-              />
-            </div>
-            <div className="mb-2">
-              <input
-                type="text"
-                placeholder="Tags (comma-separated)"
-                value={projectTagsInput}
-                onChange={(e) => setProjectTagsInput(e.target.value)}
-                className="w-full border p-2 rounded"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                const tags = projectTagsInput
-                  .split(",")
-                  .map(tag => tag.trim())
-                  .filter(tag => tag.length > 0);
-
-                if (newProject.name || newProject.description || newProject.link) {
-                  setProjects([...projects, { ...newProject, tags }]);
-                  setNewProject({ name: "", description: "", link: "", tags: [] });
-                  setProjectTagsInput("");
-                }
-              }}
-              className="bg-green-600 text-white px-4 py-1 rounded"
-            >
-              Add Project
-            </button>
-
-            {projects.length > 0 && (
-              <ul className="mt-3 text-sm text-gray-700 list-disc list-inside space-y-1">
-                {projects.map((proj, idx) => (
-                  <li key={idx}>
-                    <strong>{proj.name}</strong>: {proj.description} –{" "}
-                    <a className="text-blue-600 underline" href={proj.link} target="_blank">{proj.link}</a>
-                    {proj.tags && proj.tags.length > 0 && (
-                      <div className="text-xs text-gray-500">Tags: {proj.tags.join(", ")}</div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
         </div>
+
+        <label htmlFor="">Projects</label>
+        <div className="border p-4 rounded mb-6">
+          <input
+            type="text"
+            placeholder="Project Name"
+            value={newProject.name}
+            onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+            className="w-full border p-2 rounded mb-2"
+          />
+          <textarea
+            type="text"
+            placeholder="Description"
+            value={newProject.description}
+            onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+            className="w-full border p-2 rounded mb-2"
+          />
+          <input
+            type="url"
+            placeholder="Link"
+            value={newProject.link}
+            onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
+            className="w-full border p-2 rounded mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Tags (comma-separated)"
+            value={projectTagsInput}
+            onChange={(e) => setProjectTagsInput(e.target.value)}
+            className="w-full border p-2 rounded mb-2"
+          />
+
+          <button
+            type="button"
+            onClick={() => {
+              const tags = projectTagsInput.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0);
+
+              if (newProject.name || newProject.description || newProject.link) {
+                setProjects([...projects, { ...newProject, tags }]);
+              }
+
+              const projectsData = { ...projects };
+              if (editingIndex !== null) {
+                const updated = [...projects];
+                updated[editingIndex] = projectsData;
+                setProjects(updated);
+                setEditingIndex(null);
+              } else {
+                setExperience([...projects, projectsData]);
+              }
+              setNewProject({ name: "", description: "", link: "", tags: [] });
+              setProjectTagsInput("");
+            }}
+            className="bg-yellow p-2 rounded-full"
+          >
+            {editingIndex !== null ? <MdOutlineSaveAs className="w-6 h-6" /> : <IoAddCircleOutline className="w-6 h-6" />}
+          </button>
+        </div>
+
+        <ul className="space-y-3">
+          {projects.map((proj, index) => (
+            <li key={index} className="flex justify-between border p-3 rounded m-4">
+              <div className="flex flex-col justify-start ">
+                <div className="font-medium">Project Name : <Link href={proj.link} target="_blank" className="underline" >{proj.name}</Link></div>
+
+
+                <p className="text-sm mt-1">Project description : {proj.description}</p>
+
+                <div>
+                  Tags :
+
+                  {proj.tags.map((tag) => (
+                    <span class="w-fit px-1 py-[1px] bg-gray-300 rounded-full box-border text-white text-center mx-1 ">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="flex flex-col justify-center gap-2">
+                <button
+                  className="bg-light_yellow text-black p-2 rounded-full"
+                  onClick={() => {
+                    setNewProject(proj);
+                    setEditingIndex(index);
+                  }}
+                >
+                  <FiEdit3 className="" />
+                </button>
+                <button
+                  className="bg-red-500 text-white p-2 rounded-full "
+                  onClick={() => {
+                    const updated = projects.filter((_, i) => i !== index);
+                    setProjects(updated);
+                    if (editingIndex === index) {
+                      setNewProject({ name: "", description: "", link: "", tags: [] });
+                      setEditingIndex(null);
+                    }
+                  }}
+                >
+                  <MdDeleteForever className="" />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
 
         <button type="submit" className="bg-yellow text-black font-semibold p-2 rounded w-full">
           Save Profile

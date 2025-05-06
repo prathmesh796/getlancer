@@ -13,11 +13,28 @@ export const authOptions = {
             id: "credentials",
             name: "Credentials",
             credentials: {
-                email: { label: "email", type: "text", placeholder: "email" },
-                password: { label: "Password", type: "password" }
-            },
+                email: { label: "Email", type: "text" },
+                password: { label: "Password", type: "password" },
+                'cf-turnstile-response': { label: "Turnstile", type: "text" }
+              },
             async authorize(credentials) {
                 await connect();
+
+                const token = credentials?.['cf-turnstile-response'];
+                const ip = credentials?.['ip']; // optional, for logging
+
+                const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `secret=${process.env.TURNSTILE_SECRET_KEY}&response=${token}`,
+                });
+
+                const verifyData = await verifyRes.json();
+
+                if (!verifyData.success) {
+                    throw new Error('Turnstile verification failed');
+                }
+
                 const user = await User.findOne({ email: credentials.email });
 
                 if (!user) {
@@ -32,7 +49,7 @@ export const authOptions = {
                         role: user.role,
                     };
                 }
-                else{
+                else {
                     throw new Error("InvalidCredentials");
                 }
             }
