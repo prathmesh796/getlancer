@@ -23,6 +23,7 @@ const UpdateFProfile = () => {
   const [location, setLocation] = useState("");
   const [socialLinks, setSocialLinks] = useState({});
   const [platform, setPlatform] = useState("Facebook");
+  const [socialLinkIndex, setSocialLinkIndex] = useState("");
   const [linkInput, setLinkInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
@@ -70,6 +71,29 @@ const UpdateFProfile = () => {
     }
   };
 
+  const handleSocialDelete = (key) => {
+    // Create new object excluding the deleted key
+    const updatedLinks = Object.fromEntries(
+      Object.entries(socialLinks).filter(([k]) => k !== key)
+    );
+    setSocialLinks(updatedLinks);
+    if (editingIndex === key) {
+      setNewProject({ name: "", description: "", link: "", tags: [] });
+      setEditingIndex(null);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]; // Get the selected file
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePic(reader.result); // Set the profile picture to the file's data URL
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -108,6 +132,23 @@ const UpdateFProfile = () => {
       )}
       <h1 className="text-2xl font-bold mb-4">Update Freelancer Profile</h1>
       <form onSubmit={handleSubmit}>
+        <label className="block mb-1">Profile Picture</label>
+        <div className="flex justify-between items-center mb-4 p-2 border rounded">
+          {profilePic && (
+            <img
+              width={100}
+              height={100}
+              src={profilePic}
+              alt="Profile Picture"
+              className="w-44 h-44 rounded-full object-cover border-2 border-yellow-400"
+            />
+          )}
+          <input
+            type="file"
+            onChange={handleFileChange}
+            className=""
+          />
+        </div>
 
         <label className="block mb-1">Title</label>
         <input type="text" placeholder="Your Title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full mb-4 p-2 border rounded" required />
@@ -139,6 +180,7 @@ const UpdateFProfile = () => {
           className="w-full mb-4 p-2 border rounded"
         />
 
+        {/* experience section */}
         <label htmlFor="">Experience</label>
         <div className="border p-4 rounded mb-6">
           <input
@@ -283,14 +325,7 @@ const UpdateFProfile = () => {
                   <div>
                     <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {link}
                   </div>
-                  <button onClick={() => {
-                    const updated = Object.entries(socialLinks).filter((_, i) => i !== key);
-                    setSocialLinks(updated);
-                    if (editingIndex === index) {
-                      setNewProject({ name: "", description: "", link: "", tags: [] });
-                      setEditingIndex(null);
-                    }
-                  }}>
+                  <button onClick={() => handleSocialDelete(key)} aria-label={`Delete ${key} link`}>
                     <MdDeleteForever className="w-6 h-6" />
                   </button>
                 </li>

@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
   const router = useRouter();
@@ -130,7 +132,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-yellow text-black p-3 rounded-lg font-semibold mt-4"
+            className="w-full bg-yellow text-black p-3 rounded-lg mt-4"
           >
             Log In
           </button>
@@ -140,16 +142,20 @@ const Login = () => {
           <p>Or continue with:</p>
           <button
             onClick={() => signIn("google")}
-            className="w-full bg-red-500 text-white p-3 rounded-lg mt-2"
+            className="flex items-center justify-center gap-2 w-full border border-yellow p-3 rounded-lg mt-2"
           >
-            Login with Google
+            <FcGoogle className="w-6 h-6" />
+            <span>Login with Google</span>
           </button>
+
           <button
             onClick={() => signIn("github")}
-            className="w-full bg-gray-800 text-white p-3 rounded-lg mt-2"
+            className="flex items-center justify-center gap-2 w-full border border-yellow p-3 rounded-lg mt-2"
           >
-            Login with GitHub
+            <FaGithub className="w-6 h-6" />
+            <span>Login with GitHub</span>
           </button>
+
         </div>
 
         <p className="text-center mt-6">
