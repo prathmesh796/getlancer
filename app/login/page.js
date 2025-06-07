@@ -16,14 +16,18 @@ const Login = () => {
   const tokenRef = useRef('');
 
   useEffect(() => {
-    // Load Turnstile script
-    const script = document.createElement("script");
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    script.async = true;
-    script.onload = () => setTurnstileLoaded(true);
-    document.body.appendChild(script);
+    const existingScript = document.querySelector('script[src="https://challenges.cloudflare.com/turnstile/v0/api.js"]');
 
-    // Set global callback
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      script.onload = () => setTurnstileLoaded(true);
+      document.body.appendChild(script);
+    } else {
+      setTurnstileLoaded(true); // Already loaded
+    }
+
     window.onTurnstileSuccess = (token) => {
       tokenRef.current = token;
     };
