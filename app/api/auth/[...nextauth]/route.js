@@ -16,7 +16,7 @@ export const authOptions = {
                 email: { label: "Email", type: "text" },
                 password: { label: "Password", type: "password" },
                 'cf-turnstile-response': { label: "Turnstile", type: "text" }
-              },
+            },
             async authorize(credentials) {
                 await connect();
 
@@ -59,6 +59,13 @@ export const authOptions = {
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            authorization: {
+                params: {
+                    scope: "openid email profile https://www.googleapis.com/auth/calendar",
+                    access_type: "offline",  // Request refresh_token
+                    prompt: "consent",       // Force re-consent to get refresh_token
+                },
+            },
         }),
 
         // **GitHub Authentication**
@@ -78,17 +85,17 @@ export const authOptions = {
             if (token) {
                 session.user.id = token.id;
                 session.user.role = token.role;
+                session.accessToken = token.accessToken;      
+                session.refreshToken = token.refreshToken || null;
             }
             return session;
         },
-        async jwt({ token, user }) {
+        async jwt({ token, user, account }) {
             if (user) {
-                // Check if user exists in the database
                 await connect();
                 let dbUser = await User.findOne({ email: user.email });
 
                 if (!dbUser) {
-                    // If user doesn't exist, create a new user
                     dbUser = await User.create({
                         name: user.name,
                         email: user.email,
@@ -96,10 +103,16 @@ export const authOptions = {
                     });
                 }
 
-                // Assign role from database to the session token
                 token.id = dbUser._id;
                 token.role = dbUser.role;
             }
+
+            // 🆕 Save Google tokens
+            if (account?.provider === "google") {
+                token.accessToken = account.access_token;
+                token.refreshToken = account.refresh_token;
+            }
+
             return token;
         },
         async redirect({ url, baseUrl }) {

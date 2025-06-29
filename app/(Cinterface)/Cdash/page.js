@@ -20,11 +20,11 @@ export default function page() {
                         {/* <Layout className="h-5 w-5" /> */}
                         <span>Dashboard</span>
                     </Link>
-                    <Link href="#" className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg">
+                    <Link href="/messages" className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg">
                         {/* <MessageSquare className="h-5 w-5" /> */}
                         <span>Messages</span>
                     </Link>
-                    <Link href="#" className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg">
+                    <Link href="/schedule" className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg">
                         {/* <Calendar className="h-5 w-5" /> */}
                         <span>Schedule</span>
                     </Link>
