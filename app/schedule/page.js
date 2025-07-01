@@ -35,7 +35,7 @@ const CalendarEvents = () => {
                 <nav className="space-y-2">
 
                     <Link
-                        href="#"
+                        href="/"
                         className="flex items-center space-x-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg"
                     >
                         {/* <Layout className="h-5 w-5" /> */}

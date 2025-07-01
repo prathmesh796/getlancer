@@ -4,6 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import React from "react";
 import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
+import Tab from "@/components/theme-switch"; // Import the theme switch component
 
 const Navbar = () => {
   const { data: session } = useSession(); // Get session data
@@ -35,6 +36,7 @@ const Navbar = () => {
 
       {/* Authentication Section */}
       <div className="flex gap-3 md:gap-5 justify-center items-center mt-4 md:mt-0 flex-shrink-0">
+        <Tab /> {/* Theme switch component */}
         {session ? (
           // If user is logged in, show Logout button
           <>
