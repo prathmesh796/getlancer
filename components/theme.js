@@ -1,20 +1,29 @@
+// theme.js
 "use client";
 
 import { setCookie } from "cookies-next";
 import { ThemeProvider, useTheme } from "next-themes";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-// Application theme provider
 function AppThemeProvider({ children, ...props }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <ThemeProvider enableColorScheme {...props}>
-      <AppThemeProviderHelper />
-      {children}
+    <ThemeProvider {...props}>
+      {mounted ? (
+        <>
+          <AppThemeProviderHelper />
+          {children}
+        </>
+      ) : null}
     </ThemeProvider>
   );
 }
 
-// Helper component to set theme in cookie
 function AppThemeProviderHelper() {
   const { theme } = useTheme();
 

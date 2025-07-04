@@ -9,9 +9,7 @@ import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 
-const AppThemeProvider = dynamic(() => import("@/components/theme"), {
-  ssr: false,
-});
+import AppThemeProvider from "@/components/theme";
 
 const popins = Poppins({
   weight: '500',
@@ -31,18 +29,19 @@ export default async function RootLayout({ children }) {
   return (
     <html className={theme} lang="en" style={theme !== "system" ? { colorScheme: theme } : {}}>
       <body className={popins.className}>
-        <SessionProvider session={session}>
-        <Navbar/>
-        <div className="container mx-auto min-h-screen">
-            {children}
-            <AppThemeProvider 
-           attribute="class" 
-           defaultTheme={theme} 
-           enableSystem 
+        <AppThemeProvider
+          attribute="class"
+          defaultTheme={theme}
+          enableSystem
         />
-          </div>
-        <Footer/>
-        </SessionProvider>
+          <SessionProvider session={session}>
+            <Navbar />
+            <div className="container mx-auto min-h-screen">
+              {children}
+
+            </div>
+            <Footer />
+          </SessionProvider>
       </body>
     </html>
   );
