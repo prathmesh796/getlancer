@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Sidebar from '@/components/Sidebar';
+import MyCalendar from "@/components/Calendar";
 
 const CalendarEvents = () => {
     const { data: session } = useSession();
@@ -34,7 +35,8 @@ const CalendarEvents = () => {
             <Sidebar />
 
             <main className="flex-1 overflow-y-auto">
-                <h1 className="text-2xl font-bold mb-4">Your Google Calendar Events</h1>
+                <h1 className="text-2xl font-bold my-10">Your Google Calendar Events</h1>
+                <MyCalendar />
 
                 {events.map((event) => (
                     <div key={event.id} className="mb-2">
