@@ -4,42 +4,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link"
 import CJobs from '@/components/CJobs';
+import Sidebar from '@/components/Sidebar';
 
 export default function page() {
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
-            <aside className="w-64 bg-white p-6 hidden md:block">
-                <h2 className="text-2xl font-bold mb-6">Menu</h2>
-                <nav className="space-y-2">
-
-                    <Link
-                        href="#"
-                        className="flex items-center space-x-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg"
-                    >
-                        {/* <Layout className="h-5 w-5" /> */}
-                        <span>Dashboard</span>
-                    </Link>
-                    <Link href="/messages" className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg">
-                        {/* <MessageSquare className="h-5 w-5" /> */}
-                        <span>Messages</span>
-                    </Link>
-                    <Link href="/schedule" className="flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-lg">
-                        {/* <Calendar className="h-5 w-5" /> */}
-                        <span>Schedule</span>
-                    </Link>
-                </nav>
-            </aside>
+            <Sidebar />
 
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto">
                 {/* Header */}
-                <header className="bg-white shadow-sm">
+                <header className="shadow-sm">
                     <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                        <h1 className="text-4xl font-semibold text-gray-900">Let's get Some work done...</h1>
+                        <h1 className="text-4xl font-semibold">Let's get Some work done...</h1>
                         <div className="flex items-center space-x-4">
                             <Link href="/NewJob" className="flex justify-center items-center">
-                                <button className="flex bg-yellow m-10 text-black px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200"><IoMdAddCircleOutline className='w-6 h-6 mr-2' />Post New Job</button>
+                                <button className="flex bg-yellow m-10 px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200"><IoMdAddCircleOutline className='w-6 h-6 mr-2' />Post New Job</button>
                             </Link>
                         </div>
                     </div>
