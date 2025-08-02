@@ -23,7 +23,6 @@ const UpdateFProfile = () => {
   const [location, setLocation] = useState("");
   const [socialLinks, setSocialLinks] = useState({});
   const [platform, setPlatform] = useState("Facebook");
-  const [socialLinkIndex, setSocialLinkIndex] = useState("");
   const [linkInput, setLinkInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);

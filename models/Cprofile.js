@@ -30,6 +30,12 @@ const CprofileSchema = new mongoose.Schema(
     },
     logo: {
       type: Object,
+      default: {
+        name: "",
+        url: "",
+        type: "",
+        key: "" 
+      }
     },
     socialLinks: {
       type: Object,
@@ -49,6 +55,6 @@ const CprofileSchema = new mongoose.Schema(
   }
 )
 
-const Cprofile = mongoose.models.User || mongoose.model("Cprofile", CprofileSchema)
+const Cprofile = mongoose.models.Cprofile || mongoose.model("Cprofile", CprofileSchema);
 
 export default Cprofile

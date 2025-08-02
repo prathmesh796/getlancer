@@ -15,6 +15,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
+    "client-s3": "github:aws-sdk/client-s3",
     "cookies-next": "^4.3.0",
     "crypto": "^1.0.1",
     "date-fns": "^4.1.0",

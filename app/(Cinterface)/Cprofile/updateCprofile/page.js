@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { MdDeleteForever } from "react-icons/md";
+
+
+const socialPlatforms = ["Facebook", "Twitter", "LinkedIn", "Instagram", "Github"];
 
 const UpdateCProfile = () => {
   const { data: session } = useSession();
@@ -12,13 +16,9 @@ const UpdateCProfile = () => {
   const [website, setWebsite] = useState("");
   const [bio, setBio] = useState("");
   const [location, setLocation] = useState("");
-  const [socialLinks, setSocialLinks] = useState({
-    facebook: "",
-    twitter: "",
-    linkedin: "",
-    instagram: "",
-    github: "",
-  });
+  const [socialLinks, setSocialLinks] = useState({});
+  const [platform, setPlatform] = useState("Facebook");
+  const [linkInput, setLinkInput] = useState("");
   const [logo, setLogo] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +26,10 @@ const UpdateCProfile = () => {
     if (session?.user?.id) {
       fetch(`/api/profile/ClientProfile/`, {
         method: "GET",
-        data: { userId: session.user.id },
+        body: JSON.stringify({ userId: session.user.id }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
         .then(res => res.json())
         .then(data => {
@@ -40,14 +43,33 @@ const UpdateCProfile = () => {
     }
   }, [session]);
 
-  const handleSocialChange = (field, value) => {
-    setSocialLinks(prev => ({ ...prev, [field]: value }));
+  const handleSocialAdd = () => {
+    if (linkInput.trim() !== "") {
+      setSocialLinks(prev => ({
+        ...prev,
+        [platform.toLowerCase()]: linkInput.trim()
+      }));
+      setLinkInput("");
+    }
+  };
+
+  const handleSocialDelete = (key) => {
+    // Create new object excluding the deleted key
+    const updatedLinks = Object.fromEntries(
+      Object.entries(socialLinks).filter(([k]) => k !== key)
+    );
+    setSocialLinks(updatedLinks);
+    if (editingIndex === key) {
+      setNewProject({ name: "", description: "", link: "", tags: [] });
+      setEditingIndex(null);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
+    formData.append("userId", session.user.id);
     formData.append("companyName", companyName);
     formData.append("website", website);
     formData.append("bio", bio);
@@ -63,7 +85,7 @@ const UpdateCProfile = () => {
     });
 
     if (res.ok) {
-      router.push("/Cinterface/Cdash");
+      router.push("/Cprofile");
     }
   };
 
@@ -102,16 +124,49 @@ const UpdateCProfile = () => {
         />
 
         {/* Social links */}
-        {["facebook", "twitter", "linkedin", "instagram", "github"].map((platform) => (
-          <input
-            key={platform}
-            type="text"
-            placeholder={`${platform.charAt(0).toUpperCase() + platform.slice(1)} URL`}
-            value={socialLinks[platform]}
-            onChange={(e) => handleSocialChange(platform, e.target.value)}
-            className="w-full mb-3 p-2 border rounded"
-          />
-        ))}
+        <div className="mb-4">
+          <label className="block mb-2">Social Links</label>
+          <div className="flex gap-2 mb-2">
+            <select
+              value={platform}
+              onChange={(e) => setPlatform(e.target.value)}
+              className="border p-2 rounded"
+            >
+              {socialPlatforms.map((plat, idx) => (
+                <option key={idx} value={plat}>{plat}</option>
+              ))}
+            </select>
+            <input
+              type="url"
+              placeholder="Enter URL"
+              value={linkInput}
+              onChange={(e) => setLinkInput(e.target.value)}
+              className="border p-2 rounded w-full"
+            />
+            <button
+              type="button"
+              onClick={handleSocialAdd}
+              className="bg-yellow px-3 rounded"
+            >
+              Add
+            </button>
+          </div>
+          {/* Show added links */}
+          {Object.keys(socialLinks).length > 0 && (
+            <ul className="list-disc list-inside text-sm text-gray-600">
+              {Object.entries(socialLinks).map(([key, link]) => (
+                <li key={key} className="flex justify-between" >
+                  <div>
+                    <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {link}
+                  </div>
+                  <button onClick={() => handleSocialDelete(key)} aria-label={`Delete ${key} link`}>
+                    <MdDeleteForever className="w-6 h-6" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         {/* Logo Upload */}
         <input
