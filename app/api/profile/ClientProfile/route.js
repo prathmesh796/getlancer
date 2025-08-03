@@ -1,7 +1,8 @@
 import { connect } from "@/utils/db";
 import Cprofile from "@/models/Cprofile";
 import { NextResponse } from "next/server";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const r2 = new S3Client({
   region: "auto",
@@ -16,18 +17,28 @@ export async function GET(req) {
   await connect();
 
   try {
-    const userId = req.data.userId;
-    console.log("user found")
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
 
     if (!userId) {
       return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
     }
 
-    const clientProfile = await Cprofile.findOne({ userId });
+    const clientProfile = await Cprofile.findOne({ user: userId });
     console.log("profile found")
 
     if (!clientProfile) {
       return NextResponse.json({ success: false, error: "Client profile not found" }, { status: 404 });
+    }
+
+    if (clientProfile.logo?.key) {
+      const command = new GetObjectCommand({
+        Bucket: "getlancer",
+        Key: clientProfile.logo.key,
+      });
+
+      const signedUrl = await getSignedUrl(r2, command, { expiresIn: 3600 });
+      clientProfile.logo.url = signedUrl;
     }
 
     return NextResponse.json({ success: true, clientProfile }, { status: 200 });
@@ -48,7 +59,7 @@ export async function PUT(req) {
     const bio = formData.get("bio");
     const location = formData.get("location");
     const socialLinksJSON = formData.get("socialLinks");
-    if(socialLinksJSON) {
+    if (socialLinksJSON) {
       try {
         JSON.parse(socialLinksJSON);
       } catch (e) {
@@ -91,7 +102,7 @@ export async function PUT(req) {
 
       // Store the R2 URL or key in your DB
       updateFields.logo = {
-        url: `${process.env.R2_URL}/${fileName}`,
+        url: `${process.env.R2_ENDPOINT}/${fileName}`,
         key: fileName,
       };
       console.log("Logo updated:", updateFields.logo);

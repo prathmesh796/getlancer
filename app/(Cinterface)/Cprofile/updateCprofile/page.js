@@ -19,25 +19,28 @@ const UpdateCProfile = () => {
   const [socialLinks, setSocialLinks] = useState({});
   const [platform, setPlatform] = useState("Facebook");
   const [linkInput, setLinkInput] = useState("");
-  const [logo, setLogo] = useState(null);
+  const [logo, setLogo] = useState({});
   const [loading, setLoading] = useState(true);
+  //66f642599ae31b037ff0765d
 
   useEffect(() => {
     if (session?.user?.id) {
-      fetch(`/api/profile/ClientProfile/`, {
+      fetch(`/api/profile/ClientProfile/?userId=${encodeURIComponent(session.user.id)}`, {
         method: "GET",
-        body: JSON.stringify({ userId: session.user.id }),
         headers: {
           "Content-Type": "application/json"
         }
       })
         .then(res => res.json())
         .then(data => {
-          setCompanyName(data.companyName || "");
-          setWebsite(data.website || "");
-          setBio(data.bio || "");
-          setLocation(data.location || "");
-          setSocialLinks(data.socialLinks || {});
+          const { clientProfile } = data;
+          console.log("Client Profile Data:", clientProfile);
+          setCompanyName(clientProfile.companyName || "");
+          setWebsite(clientProfile.website || "");
+          setBio(clientProfile.bio || "");
+          setLocation(clientProfile.location || "");
+          setSocialLinks(clientProfile.socialLinks || {});
+          setLogo(clientProfile.logo || {});
           setLoading(false);
         });
     }
@@ -175,6 +178,16 @@ const UpdateCProfile = () => {
           onChange={(e) => setLogo(e.target.files?.[0] || null)}
           className="w-full mb-4 p-2 border rounded"
         />
+
+        {logo?.url && (
+          <div className="flex justify-center mb-4">
+            <img
+              src={logo.url}
+              alt="Company Logo"
+              className="w-24 h-24 rounded-full object-cover border"
+            />
+          </div>
+        )}
 
         <button
           className="bg-yellow text-black font-semibold p-2 rounded w-full"

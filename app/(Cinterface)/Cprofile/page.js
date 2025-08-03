@@ -4,7 +4,7 @@ import React from 'react';
 import { useSession } from "next-auth/react";
 import Link from 'next/link';
 
-const Cdash = () => {
+const Cprofile = () => {
   const { data: session } = useSession();
 
   return (
@@ -45,4 +45,4 @@ const Cdash = () => {
   );
 };
 
-export default Cdash;
+export default Cprofile;
