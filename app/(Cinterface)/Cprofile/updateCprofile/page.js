@@ -34,7 +34,6 @@ const UpdateCProfile = () => {
         .then(res => res.json())
         .then(data => {
           const { clientProfile } = data;
-          console.log("Client Profile Data:", clientProfile);
           setCompanyName(clientProfile.companyName || "");
           setWebsite(clientProfile.website || "");
           setBio(clientProfile.bio || "");

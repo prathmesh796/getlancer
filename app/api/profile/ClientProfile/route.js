@@ -1,7 +1,7 @@
 import { connect } from "@/utils/db";
 import Cprofile from "@/models/Cprofile";
 import { NextResponse } from "next/server";
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand  } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const r2 = new S3Client({
@@ -25,7 +25,6 @@ export async function GET(req) {
     }
 
     const clientProfile = await Cprofile.findOne({ user: userId });
-    console.log("profile found")
 
     if (!clientProfile) {
       return NextResponse.json({ success: false, error: "Client profile not found" }, { status: 404 });
@@ -66,7 +65,7 @@ export async function PUT(req) {
         return NextResponse.json({ success: false, error: "Invalid social links format" }, { status: 400 });
       }
     }
-    const logo = formData.get("logo"); // File object
+    const logo = formData.get("logo"); 
 
     if (!userId) {
       return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
@@ -82,9 +81,23 @@ export async function PUT(req) {
     if (socialLinksJSON) {
       updateFields.socialLinks = JSON.parse(socialLinksJSON);
     }
-    console.log("Update Fields:", updateFields);
+
+    const existingProfile = await Cprofile.findOne({ user: userId });
 
     if (logo && typeof logo === "object") {
+      if (existingProfile?.logo?.key) {
+        try {
+          await r2.send(
+            new DeleteObjectCommand({
+              Bucket: "getlancer",
+              Key: existingProfile.logo.key,
+            })
+          );
+        } catch (err) {
+          console.warn("Failed to delete old logo:", err.message);
+        }
+      }
+
       const bytes = await logo.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const fileName = `${userId}-${Date.now()}-${logo.name}`;
@@ -98,14 +111,12 @@ export async function PUT(req) {
           ContentType: logo.type,
         })
       );
-      console.log(`File uploaded successfully: ${fileName}`);
 
       // Store the R2 URL or key in your DB
       updateFields.logo = {
         url: `${process.env.R2_ENDPOINT}/${fileName}`,
         key: fileName,
       };
-      console.log("Logo updated:", updateFields.logo);
     }
 
     const updatedProfile = await Cprofile.findOneAndUpdate(
@@ -113,7 +124,6 @@ export async function PUT(req) {
       { $set: updateFields },
       { new: true, upsert: true }
     );
-    console.log("Updated Profile:", updatedProfile);
 
     return NextResponse.json({ success: true, profile: updatedProfile });
   } catch (err) {
