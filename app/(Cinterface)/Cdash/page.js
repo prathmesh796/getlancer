@@ -27,9 +27,9 @@ export default function page() {
                     console.error("Failed to fetch client jobs:", err);
                 });
                 const data = await response.json();
-                setJobs(data);
+                setJobs(data.ClientJobs || []);
             };
-            
+
             fetchCprofile();
         }
 
@@ -78,7 +78,7 @@ export default function page() {
                                 <h2 className="text-2xl font-semibold mb-4">Your Jobs</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {jobs.map((job) => (
-                                        <CJobs job={job} />
+                                        <CJobs key={job._id} job={job} />
                                     ))}
                                 </div>
                             </div>

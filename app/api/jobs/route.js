@@ -8,7 +8,6 @@ export async function POST(request) {
         let conn = await connect()
         const body = await request.json()
         const { jobTitle, jobDescription, bounty, location, skills, company, userId } = body;
-        console.log("Received job data:", body);
 
         const newJob = new Jobs({
             title: jobTitle,
@@ -20,14 +19,12 @@ export async function POST(request) {
         });
 
         const savedJob = await newJob.save()
-        console.log("Job saved successfully:", savedJob);
 
         const updatedProfile = await Cprofile.findOneAndUpdate(
             { user: userId },
             { $push: { postedJobs: savedJob._id } },
             { new: true }
         )
-        console.log("Client profile updated with new job:", updatedProfile);
 
         return NextResponse.json({ message: "New Job created successfully", job: savedJob, success: true }, { status: 200 })
     } catch (error) {

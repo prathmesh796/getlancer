@@ -20,13 +20,7 @@ export async function GET(req) {
       return NextResponse.json({ success: false, error: "Client profile not found" }, { status: 404 });
     }
 
-    const ClientJobs = [];
-
-    for(let i = 0; i < clientProfile.postedJobs.length; i++) {
-      const job = await Jobs.find({ _id: clientProfile.postedJobs[i] });
-      ClientJobs.append(job);
-    }
-    console.log("Client jobs fetched:", ClientJobs);
+    const ClientJobs = await Jobs.find({ _id: { $in: clientProfile.postedJobs } });
 
     return NextResponse.json({ success: true, ClientJobs }, { status: 200 });
   } catch (err) {
