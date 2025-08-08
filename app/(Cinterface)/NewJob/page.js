@@ -4,7 +4,6 @@ import React from 'react'
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 
-
 const page = () => {
     const { data: session } = useSession();
 
@@ -18,10 +17,11 @@ const page = () => {
         const jobData = {
             jobTitle: data.jobTitle,
             jobDescription: data.jobDescription,
-            budget: data.budget,
+            bounty: data.bounty,
             location: data.location,
-            skills: data.skills.split(',').map(skill => skill.trim()), // Optional: convert comma-separated string to array
+            skills: data.skills.split(',').map(skill => skill.trim()),
             company: session?.user?.name || "Unknown",
+            userId: data.userId || session?.user?.id
         };
 
         const res = await fetch("/api/jobs", {
@@ -54,8 +54,8 @@ const page = () => {
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="budget" className="block text-gray-700 text-sm font-bold mb-2">Budget</label>
-                    <input type="number" id="budget" name="budget" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                    <label htmlFor="bounty" className="block text-gray-700 text-sm font-bold mb-2">Bounty</label>
+                    <input type="number" id="bounty" name="bounty" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
                 </div>
 
                 <div className="mb-4">

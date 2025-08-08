@@ -13,6 +13,7 @@ const Cprofile = () => {
   const [companyName, setCompanyName] = useState("");
   const [website, setWebsite] = useState("");
   const [bio, setBio] = useState("");
+  const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [socialLinks, setSocialLinks] = useState({});
   const [logo, setLogo] = useState({});
@@ -32,6 +33,7 @@ const Cprofile = () => {
           setCompanyName(clientProfile.companyName || "");
           setWebsite(clientProfile.website || "");
           setBio(clientProfile.bio || "");
+          setDescription(clientProfile.description || "");
           setLocation(clientProfile.location || "");
           setSocialLinks(clientProfile.socialLinks || {});
           setLogo(clientProfile.logo || {});
@@ -52,26 +54,31 @@ const Cprofile = () => {
           <h1 className="text-4xl font-bold mb-4">{companyName}</h1>
           <p className="text-lg text-gray-600">{bio}</p>
           <p className="text-md text-gray-500 mt-2">{location}</p>
-          <button className="flex bg-yellow px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200" onClick={() => window.open(website, "_blank")}>Visit Website <MdOpenInNew className="ml-2" size={24}/></button>
+          <div className="flex space-x-4 mt-4">
+            <button className="flex bg-yellow my-2 px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200" onClick={() => window.open(website, "_blank")}>Visit Website <MdOpenInNew className="ml-2" size={24}/></button>
+            <Link href="/Cprofile/updateCprofile" className="bg-yellow my-2 px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200">Update Profile</Link>
+          </div>
         </div>
         <div className='flex flex-col justify-center items-center'>
           <Image src={logo?.url || "/office-building.jpg"} alt={`${companyName} logo`} className="my-4 object-cover rounded-full" height={200} width={200} priority style={{ aspectRatio: "1 / 1" }} />
-          <Link href="/Cprofile/updateCprofile" className="bg-yellow my-2 px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200">Update Profile</Link>
+          
         </div>
       </section>
 
-      {/* Actions Section */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-        {/* View Profile */}
-        <Link href="/Cprofile" className="block p-8 bg-white rounded-lg shadow-md hover:shadow-xl transition">
-          <h2 className="text-2xl font-semibold mb-2">View Profile</h2>
-          <p className="text-gray-500">See and manage your profile details.</p>
-        </Link>
+      <section className="text-center flex justify-between items-center shadow-xl px-6 rounded-lg">
+        <h2 className="text-2xl font-semibold mb-2">Description</h2>
+        <p className="text-gray-600">{description}</p>
+      </section>
 
-        {/* Update Profile */}
-        
-
-
+      <section className="text-center flex justify-between items-center shadow-xl px-6 rounded-lg">
+        <h2 className="text-2xl font-semibold mb-2">Social Links</h2>
+        <div className="flex flex-col space-y-2">
+          {Object.entries(socialLinks).map(([platform, link]) => (
+            <Link key={platform} href={link} className="text-blue-500 hover:underline">
+              {platform}
+            </Link>
+          ))}
+        </div>
       </section>
     </main>
   );

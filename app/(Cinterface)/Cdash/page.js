@@ -1,4 +1,7 @@
+"use client";
+
 import React from 'react'
+import { useSession } from "next-auth/react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +10,31 @@ import CJobs from '@/components/CJobs';
 import Sidebar from '@/components/Sidebar';
 
 export default function page() {
+    const { data: session } = useSession();
+
+    const [query, setQuery] = React.useState("");
+    const [jobs, setJobs] = React.useState([]);
+
+    React.useEffect(() => {
+        if (session?.user?.id) {
+            const fetchCprofile = async () => {
+                const response = await fetch(`/api/jobs/ClientJobs?userId=${encodeURIComponent(session?.user?.id)}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).catch(err => {
+                    console.error("Failed to fetch client jobs:", err);
+                });
+                const data = await response.json();
+                setJobs(data);
+            };
+            
+            fetchCprofile();
+        }
+
+    }, [session]);
+
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
@@ -45,7 +73,21 @@ export default function page() {
                     </div>
                     {/* Overview Section */}
                     <div className="flex flex-row gap-4 w-full">
-                        <CJobs/>
+                        {jobs.length > 0 ? (
+                            <div className="w-full">
+                                <h2 className="text-2xl font-semibold mb-4">Your Jobs</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {jobs.map((job) => (
+                                        <CJobs job={job} />
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="w-full">
+                                <h2 className="text-2xl font-semibold mb-4">Your Jobs</h2>
+                                <p>No jobs found.</p>
+                            </div>
+                        )}
 
                     </div>
                 </div>

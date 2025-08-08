@@ -15,6 +15,7 @@ const UpdateCProfile = () => {
   const [companyName, setCompanyName] = useState("");
   const [website, setWebsite] = useState("");
   const [bio, setBio] = useState("");
+  const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [socialLinks, setSocialLinks] = useState({});
   const [platform, setPlatform] = useState("Facebook");
@@ -37,6 +38,7 @@ const UpdateCProfile = () => {
           setCompanyName(clientProfile.companyName || "");
           setWebsite(clientProfile.website || "");
           setBio(clientProfile.bio || "");
+          setDescription(clientProfile.description || "");
           setLocation(clientProfile.location || "");
           setSocialLinks(clientProfile.socialLinks || {});
           setLogo(clientProfile.logo || {});
@@ -75,6 +77,7 @@ const UpdateCProfile = () => {
     formData.append("companyName", companyName);
     formData.append("website", website);
     formData.append("bio", bio);
+    formData.append("description", description);
     formData.append("location", location);
     formData.append("socialLinks", JSON.stringify(socialLinks));
     if (logo) {
@@ -124,6 +127,14 @@ const UpdateCProfile = () => {
           onChange={(e) => setBio(e.target.value)}
           className="w-full mb-4 p-2 border rounded"
         />
+
+        <textarea
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full mb-4 p-2 border rounded"
+        />
+        
 
         {/* Social links */}
         <div className="mb-4">

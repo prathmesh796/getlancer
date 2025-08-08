@@ -56,6 +56,7 @@ export async function PUT(req) {
     const companyName = formData.get("companyName");
     const website = formData.get("website");
     const bio = formData.get("bio");
+    const description = formData.get("description");
     const location = formData.get("location");
     const socialLinksJSON = formData.get("socialLinks");
     if (socialLinksJSON) {
@@ -75,6 +76,7 @@ export async function PUT(req) {
       companyName,
       website,
       bio,
+      description,
       location,
     };
 

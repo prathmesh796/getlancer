@@ -18,7 +18,7 @@ const jobsSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        salary: {
+        bounty: {
             type: Number,
             required: true,
         },
