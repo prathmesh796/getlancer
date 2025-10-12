@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react'
+import { useState, useEffect} from 'react'
 import { useSession } from "next-auth/react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,13 +9,13 @@ import Link from "next/link"
 import CJobs from '@/components/CJobs';
 import Sidebar from '@/components/Sidebar';
 
-export default function page() {
+export default function Page() {
     const { data: session } = useSession();
 
-    const [query, setQuery] = React.useState("");
-    const [jobs, setJobs] = React.useState([]);
+    const [query, setQuery] = useState("");
+    const [jobs, setJobs] = useState([]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (session?.user?.id) {
             const fetchCprofile = async () => {
                 const response = await fetch(`/api/jobs/ClientJobs?userId=${encodeURIComponent(session?.user?.id)}`, {
@@ -45,7 +45,7 @@ export default function page() {
                 {/* Header */}
                 <header className="shadow-sm">
                     <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                        <h1 className="text-4xl font-semibold">Let's get Some work done...</h1>
+                        <h1 className="text-4xl font-semibold">Let&apos;s get Some work done...</h1>
                         <div className="flex items-center space-x-4">
                             <Link href="/NewJob" className="flex justify-center items-center">
                                 <button className="flex bg-yellow m-10 px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200"><IoMdAddCircleOutline className='w-6 h-6 mr-2' />Post New Job</button>

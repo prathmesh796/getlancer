@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { MdDeleteForever } from "react-icons/md";
 import { FiEdit3 } from "react-icons/fi";
 import { IoAddCircleOutline } from "react-icons/io5";
@@ -134,7 +135,7 @@ const UpdateFProfile = () => {
         <label className="block mb-1">Profile Picture</label>
         <div className="flex justify-between items-center mb-4 p-2 border rounded">
           {profilePic && (
-            <img
+            <Image
               width={100}
               height={100}
               src={profilePic}
@@ -404,7 +405,7 @@ const UpdateFProfile = () => {
                   Tags :
 
                   {proj.tags.map((tag) => (
-                    <span class="w-fit px-1 py-[1px] bg-gray-300 rounded-full box-border text-white text-center mx-1 ">{tag}</span>
+                    <span key={tag} className="w-fit px-1 py-[1px] bg-gray-300 rounded-full box-border text-white text-center mx-1 ">{tag}</span>
                   ))}
                 </div>
               </div>

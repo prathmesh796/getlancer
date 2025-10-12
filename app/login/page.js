@@ -37,15 +37,15 @@ const Login = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const userRole = session?.data?.user?.role;
+useEffect(() => {
+  const userRole = session?.data?.user?.role;
 
-    if (userRole === "Client") {
-      router.replace("/Cdash");
-    } else if (userRole === "Freelancer") {
-      router.replace("/Fdash");
-    }
-  }, [session?.status]);
+  if (userRole === "Client") {
+    router.replace("/Cdash");
+  } else if (userRole === "Freelancer") {
+    router.replace("/Fdash");
+  }
+}, [session, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -169,7 +169,7 @@ const Login = () => {
         </div>
 
         <p className="text-center mt-6">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signin" className="text-yellow font-thin hover:underline">
             Sign In
           </Link>

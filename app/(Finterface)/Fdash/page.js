@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 
-export default function page() {
+export default function Page() {
   const { data: session, status } = useSession();
 
   const [showDiv, setShowDiv] = React.useState(false);
@@ -17,11 +17,10 @@ export default function page() {
   const router = useRouter();
 
   useEffect(() => {
-    // If user is not authenticated, redirect to login page
-    if (session?.status === "unauthenticated") {
-      router.replace("/login");
-    }
-  }, [session?.status]);
+  if (session?.status === "unauthenticated") {
+    router.replace("/login");
+  }
+}, [session?.status, router]);
 
   useEffect(() => {
     const fetchJobRecommendations = async () => {
@@ -60,7 +59,7 @@ export default function page() {
         <main className="flex-1 overflow-y-auto min-h-screen">
           <header className="border-b">
             <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Let's find some work...</h1>
+              <h1 className="text-2xl font-bold">Let&apos;s find some work...</h1>
               <div className='m-4 p-2 rounded-full border border-gray-300  flex justify-center gap-2 items-center shadow-md w-2/3 '>
                 <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '30px', height: '30px' }} className='mr-6' />
                 <input

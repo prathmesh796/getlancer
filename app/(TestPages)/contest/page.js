@@ -123,11 +123,11 @@ export default function DeveloperMCQTest() {
       <div className="m-5 w-full p-4 max-w-3xl mx-auto  border-black border-2 rounded-lg">
         <div>
           <div className='p-5 text-center text-3xl font-bold'>Test Results</div>
-          <div>Here's how you performed on the coding ability test</div>
+          <div>Here&apos;s how you performed on the coding ability test</div>
         </div>
 
 
-        <div clas>
+        <div className="">
           <div className="space-y-4">
             <div>
               <div>Your Score</div>

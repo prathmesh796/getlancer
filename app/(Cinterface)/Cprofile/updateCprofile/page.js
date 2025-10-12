@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { MdDeleteForever } from "react-icons/md";
+import Image from "next/image";
 
 
 const socialPlatforms = ["Facebook", "Twitter", "LinkedIn", "Instagram", "Github"];
@@ -191,10 +192,12 @@ const UpdateCProfile = () => {
 
         {logo?.url && (
           <div className="flex justify-center mb-4">
-            <img
+            <Image
               src={logo.url}
               alt="Company Logo"
-              className="w-24 h-24 rounded-full object-cover border"
+              className="rounded-full object-cover border"
+              height={24}
+              width={24}
             />
           </div>
         )}

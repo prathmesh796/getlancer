@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function page() {
+export default function Page() {
   const { data: session } = useSession();
 
   return (
@@ -37,8 +37,8 @@ export default function page() {
             <div class="m-3 p-4 border-2 border-gray-200 rounded-[10px]">
               <h2 className="text-2xl font-semibold mb-4 ">About Me</h2>
               <p className="text-muted-foreground">
-                I'm a passionate full stack developer with over 5 years of experience in creating
-                robust web applications. I specialize in React, Node.js, and Python, and I'm always
+                I&apos;m a passionate full stack developer with over 5 years of experience in creating
+                robust web applications. I specialize in React, Node.js, and Python, and I&apos;m always
                 eager to take on new challenges and learn new technologies.
               </p>
             </div>
@@ -69,7 +69,7 @@ export default function page() {
                         <span className="font-semibold">{review.name}</span>
                         <div className="flex">
                           {[1, 2, 3, 4, 5].map((star) => (
-                            <i class="fa-solid fa-star"></i>
+                            <i className="fa-solid fa-star" key={star}></i>
                           ))}
                         </div>
                       </div>
