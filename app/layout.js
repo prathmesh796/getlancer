@@ -6,7 +6,6 @@ import SessionProvider from "@/utils/SessionProvider";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 
 import AppThemeProvider from "@/components/theme";
