@@ -9,7 +9,7 @@ const CJobs = ({ jobid, job }) => {
             </div>
 
             <div className='flex items-center gap-4'>
-                <p>Jobs Status</p>
+                <p>{job.status}</p>
             </div>
         </div>
     )
