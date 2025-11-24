@@ -89,6 +89,32 @@ useEffect(() => {
     }
   };
 
+  // Turnstile rendering
+useEffect(() => {
+  // Prevent double initialization
+  if (window.__turnstileRendered) return;
+  window.__turnstileRendered = true;
+
+  const renderTurnstile = () => {
+    if (!window.turnstile) return;
+
+    window.turnstile.render("#turnstile-container", {
+      sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+      callback: (token) => (tokenRef.current = token),
+    });
+  };
+
+  if (!window.turnstile) {
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+    script.async = true;
+    script.onload = renderTurnstile;
+    document.body.appendChild(script);
+  } else {
+    renderTurnstile();
+  }
+}, []);
+
   return (
     <div className="flex justify-center items-center h-screen bg-white">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
@@ -122,13 +148,7 @@ useEffect(() => {
             />
           </div>
 
-          {turnstileLoaded && (
-            <div
-              className="cf-turnstile"
-              data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-              data-callback="onTurnstileSuccess"
-            ></div>
-          )}
+          <div id="turnstile-container" className="my-4"></div>
 
 
           {/* Error Message Display */}
