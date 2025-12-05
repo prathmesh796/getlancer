@@ -23,7 +23,9 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const session = await getServerSession()
-  const theme = cookies().get("__theme__")?.value || "system";
+  const cookieStore = await cookies();
+
+  const theme = cookieStore.get("__theme__")?.value || "system";
 
   return (
     <html className={theme} lang="en" style={theme !== "system" ? { colorScheme: theme } : {}}>
