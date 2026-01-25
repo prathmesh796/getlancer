@@ -38,7 +38,7 @@ const UpdateFProfile = () => {
 
   useEffect(() => {
     if (session?.user?.id) {
-      fetch(`/api/FreelancerProfile?userId=${session.user.id}`)
+      fetch(`/api/profile/FreelancerProfile?userId=${session.user.id}`)
         .then(res => res.json())
         .then(data => {
           if (data.success && data.freelancerProfile) {
@@ -49,6 +49,9 @@ const UpdateFProfile = () => {
             setHourlyRate(profile.hourlyRate || "");
             setLocation(profile.location || "");
             setSocialLinks(profile.socialLinks || {});
+            setExperience(profile.experience || []);
+            setProjects(profile.projects || []);
+            setProfilePic(profile.profilePic?.url || null);
           } else {
             setNewProfile(true);
           }
@@ -97,7 +100,7 @@ const UpdateFProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("/api/FreelancerProfile", {
+    const res = await fetch("/api/profile/FreelancerProfile", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -117,7 +120,7 @@ const UpdateFProfile = () => {
     });
 
     if (res.ok) {
-      router.push("/Finterface/Fdash");
+      router.push("/Fprofile");
     }
   };
 

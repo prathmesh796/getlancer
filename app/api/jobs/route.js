@@ -3,6 +3,35 @@ import Jobs from '@/models/Jobs'
 import Cprofile from '@/models/Cprofile'
 import { NextResponse } from 'next/server'
 
+export async function GET(request) {
+    try {
+        await connect();
+
+        const { searchParams } = new URL(request.url);
+        const limit = parseInt(searchParams.get("limit")) || 20;
+        const skip = parseInt(searchParams.get("skip")) || 0;
+        const status = searchParams.get("status");
+
+        const query = status ? { status } : {};
+
+        const jobs = await Jobs.find(query)
+            .sort({ datePosted: -1 }) // newest first
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Jobs.countDocuments(query);
+
+        return NextResponse.json({
+            success: true,
+            jobs,
+            total,
+            hasMore: skip + jobs.length < total
+        }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+}
+
 export async function POST(request) {
     try {
         let conn = await connect()
