@@ -12,6 +12,10 @@ export default function Sidebar() {
   const isFreelancerInterface = pathname.includes('Finterface') || pathname.includes('Fdash') || pathname.includes('Fprofile') || pathname.includes('MyApplications');
   const isClientInterface = pathname.includes('Cinterface') || pathname.includes('Cdash') || pathname.includes('Cprofile') || pathname.includes('NewJob') || pathname.includes('JobApplications');
 
+  // For shared pages (messages, schedule), check if we're coming from a specific interface
+  // If neither is detected, default to showing freelancer interface
+  const isSharedPage = pathname === '/messages' || pathname === '/schedule' || pathname.startsWith('/messages/') || pathname.startsWith('/schedule/');
+
   const freelancerLinks = [
     { href: "/Fdash", label: "Dashboard", icon: faHome },
     { href: "/MyApplications", label: "My Applications", icon: faFileAlt },
@@ -26,7 +30,14 @@ export default function Sidebar() {
     { href: "/schedule", label: "Schedule", icon: faCalendar },
   ];
 
-  const links = isFreelancerInterface ? freelancerLinks : isClientInterface ? clientLinks : [];
+  // Determine which links to show
+  let links = [];
+  if (isClientInterface) {
+    links = clientLinks;
+  } else if (isFreelancerInterface || isSharedPage) {
+    // Default to freelancer links for shared pages or freelancer interface
+    links = freelancerLinks;
+  }
 
   return (
     <aside className="w-64 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 p-6 hidden md:block">
@@ -42,8 +53,8 @@ export default function Sidebar() {
               key={href}
               href={href}
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${isActive
-                  ? "bg-gradient-to-r from-yellow/20 to-light_yellow/20 dark:from-yellow/10 dark:to-light_yellow/10 text-deep_blue dark:text-yellow font-semibold border-l-4 border-yellow"
-                  : "text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700"
+                ? "bg-gradient-to-r from-yellow/20 to-light_yellow/20 dark:from-yellow/10 dark:to-light_yellow/10 text-deep_blue dark:text-yellow font-semibold border-l-4 border-yellow"
+                : "text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700"
                 }`}
             >
               <FontAwesomeIcon icon={icon} className="w-5 h-5" />
