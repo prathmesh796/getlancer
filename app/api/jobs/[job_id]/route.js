@@ -6,8 +6,9 @@ import { NextResponse } from "next/server";
 export async function GET(request, { params }) {
     try {
         await connect();
+        const { job_id } = await params;
 
-        const job = await Jobs.findById(params.job_id);
+        const job = await Jobs.findById(job_id);
 
         if (!job) {
             return NextResponse.json({ message: "Job not found" }, { status: 404 });
@@ -22,6 +23,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
     try {
         await connect();
+        const { job_id } = await params;
 
         const body = await request.json();
         const { user, proposal } = body;
@@ -31,7 +33,7 @@ export async function PUT(request, { params }) {
         }
 
         const updatedJob = await Jobs.findByIdAndUpdate(
-            params.job_id,
+            job_id,
             {
                 $push: {
                     applications: {
@@ -56,6 +58,7 @@ export async function PUT(request, { params }) {
 export async function PATCH(request, { params }) {
     try {
         await connect();
+        const { job_id } = await params;
 
         const body = await request.json();
         const { status, userId } = body;
@@ -65,18 +68,18 @@ export async function PATCH(request, { params }) {
         }
 
         // Verify the user owns this job
-        const job = await Jobs.findById(params.job_id);
+        const job = await Jobs.findById(job_id);
         if (!job) {
             return NextResponse.json({ error: "Job not found" }, { status: 404 });
         }
 
         const clientProfile = await Cprofile.findOne({ user: userId });
-        if (!clientProfile || !clientProfile.postedJobs.includes(params.job_id)) {
+        if (!clientProfile || !clientProfile.postedJobs.includes(job_id)) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
         }
 
         const updatedJob = await Jobs.findByIdAndUpdate(
-            params.job_id,
+            job_id,
             { status },
             { new: true }
         );
@@ -90,6 +93,7 @@ export async function PATCH(request, { params }) {
 export async function DELETE(request, { params }) {
     try {
         await connect();
+        const { job_id } = await params;
 
         const { searchParams } = new URL(request.url);
         const userId = searchParams.get("userId");
@@ -100,11 +104,11 @@ export async function DELETE(request, { params }) {
 
         // Verify the user owns this job
         const clientProfile = await Cprofile.findOne({ user: userId });
-        if (!clientProfile || !clientProfile.postedJobs.includes(params.job_id)) {
+        if (!clientProfile || !clientProfile.postedJobs.includes(job_id)) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
         }
 
-        const deletedJob = await Jobs.findByIdAndDelete(params.job_id);
+        const deletedJob = await Jobs.findByIdAndDelete(job_id);
 
         if (!deletedJob) {
             return NextResponse.json({ error: "Job not found" }, { status: 404 });
@@ -113,7 +117,7 @@ export async function DELETE(request, { params }) {
         // Remove job from client's postedJobs array
         await Cprofile.findOneAndUpdate(
             { user: userId },
-            { $pull: { postedJobs: params.job_id } }
+            { $pull: { postedJobs: job_id } }
         );
 
         return NextResponse.json({

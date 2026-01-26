@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 export default function Page({ params }) {
-  const { job_id } = params;
+  const { job_id } = use(params);
 
   const [proposal, setProposal] = useState("");
   const [jobDetails, setJobDetails] = useState(null);
@@ -74,7 +74,7 @@ export default function Page({ params }) {
         <p className="text-lg mb-2">Description: {jobDetails?.description}</p>
         <p className="text-lg mb-2">Skills: {jobDetails?.skills.join(", ")}</p>
         <p className="text-lg mb-2">Posted on: {new Date(jobDetails?.createdAt).toLocaleDateString()}</p>
-        
+
         {/* Add your job application form here */}
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-full max-w-md">
           {/* Form fields go here */}
