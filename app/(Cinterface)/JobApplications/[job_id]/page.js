@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faUser, faEnvelope, faFileAlt, faCalendar, faBriefcase } from '@fortawesome/free-solid-svg-icons';
+import { ensureConversation } from "@/services/chat";
 
 export default function JobApplicationsPage({ params }) {
     const { job_id } = use(params);
@@ -59,7 +60,7 @@ export default function JobApplicationsPage({ params }) {
     if (status === "authenticated") {
         return (
             <div className="flex min-h-screen">
-                <Sidebar />
+                <Sidebar userId={session?.user?.id} />
 
                 <main className="flex-1 overflow-y-auto min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
                     <header className="border-b bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
@@ -162,8 +163,20 @@ export default function JobApplicationsPage({ params }) {
                                         <div className="mt-4 flex gap-3">
                                             <button
                                                 onClick={() => {
-                                                    // You can add functionality to contact the applicant
-                                                    window.location.href = `mailto:${app.userEmail}`;
+                                                    // Start (or open) a realtime chat with this applicant.
+                                                    // ConversationId is derived deterministically from both participant ids.
+                                                    const currentUserId = session?.user?.id;
+                                                    if (!currentUserId || !app?.userId) return;
+
+                                                    ensureConversation({
+                                                        participants: [currentUserId, app.userId],
+                                                    })
+                                                        .then(({ conversationId }) => {
+                                                            router.push(`/messages/${currentUserId}/${conversationId}`);
+                                                        })
+                                                        .catch((err) => {
+                                                            console.error("Error starting conversation:", err);
+                                                        });
                                                 }}
                                                 className="px-4 py-2 bg-gradient-to-r from-yellow to-light_yellow text-deep_blue rounded-full font-semibold hover:shadow-lg transition-all duration-300"
                                             >

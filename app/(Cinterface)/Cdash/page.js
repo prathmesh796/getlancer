@@ -57,7 +57,7 @@ export default function Page() {
     return (
         <div className="flex min-h-screen">
             {/* Sidebar */}
-            <Sidebar />
+            <Sidebar userId={session?.user?.id} />
 
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
