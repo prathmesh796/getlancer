@@ -32,7 +32,7 @@ const CalendarEvents = () => {
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
-            <Sidebar />
+            <Sidebar userId={session?.user?.id} />
 
             <main className="flex-1 overflow-y-auto">
                 <h1 className="text-2xl font-bold my-10">Your Google Calendar Events</h1>

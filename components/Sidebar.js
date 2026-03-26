@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faEnvelope, faCalendar, faFileAlt, faBriefcase } from '@fortawesome/free-solid-svg-icons';
 
-export default function Sidebar() {
+export default function Sidebar(params) {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const userId = params.userId; // replace with session user ID
+  const userRole = session?.user?.role;
 
   // Determine if user is in Freelancer or Client interface
   const isFreelancerInterface = pathname.includes('Finterface') || pathname.includes('Fdash') || pathname.includes('Fprofile') || pathname.includes('MyApplications');
@@ -19,14 +23,14 @@ export default function Sidebar() {
   const freelancerLinks = [
     { href: "/Fdash", label: "Dashboard", icon: faHome },
     { href: "/MyApplications", label: "My Applications", icon: faFileAlt },
-    { href: "/messages", label: "Messages", icon: faEnvelope },
+    { href: `/messages/${userId}`, label: "Messages", icon: faEnvelope },
     { href: "/schedule", label: "Schedule", icon: faCalendar },
   ];
 
   const clientLinks = [
     { href: "/Cdash", label: "Dashboard", icon: faHome },
     { href: "/NewJob", label: "Post New Job", icon: faBriefcase },
-    { href: "/messages", label: "Messages", icon: faEnvelope },
+    { href: `/messages/${userId}`, label: "Messages", icon: faEnvelope },
     { href: "/schedule", label: "Schedule", icon: faCalendar },
   ];
 
@@ -35,8 +39,9 @@ export default function Sidebar() {
   if (isClientInterface) {
     links = clientLinks;
   } else if (isFreelancerInterface || isSharedPage) {
-    // Default to freelancer links for shared pages or freelancer interface
-    links = freelancerLinks;
+    // For shared pages, use the logged-in user's role.
+    // Otherwise (freelancer interface pages), use freelancer menu.
+    links = isSharedPage && userRole === "Client" ? clientLinks : freelancerLinks;
   }
 
   return (

@@ -71,7 +71,7 @@ export default function MyApplicationsPage() {
     if (status === "authenticated") {
         return (
             <div className="flex min-h-screen">
-                <Sidebar />
+                <Sidebar userId={session?.user?.id} />
 
                 <main className="flex-1 overflow-y-auto min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
                     <header className="border-b bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
