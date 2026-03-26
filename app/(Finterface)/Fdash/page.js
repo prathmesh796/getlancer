@@ -21,10 +21,10 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    if (session?.status === "unauthenticated") {
+    if (status === "unauthenticated") {
       router.replace("/login");
     }
-  }, [session?.status, router]);
+  }, [status, router]);
 
   useEffect(() => {
     const fetchJobRecommendations = async () => {
