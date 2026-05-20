@@ -37,15 +37,15 @@ const Login = () => {
     };
   }, []);
 
-useEffect(() => {
-  const userRole = session?.data?.user?.role;
+  useEffect(() => {
+    const userRole = session?.data?.user?.role;
 
-  if (userRole === "Client") {
-    router.replace("/Cdash");
-  } else if (userRole === "Freelancer") {
-    router.replace("/Fdash");
-  }
-}, [session, router]);
+    if (userRole === "Client") {
+      router.replace("/Cdash");
+    } else if (userRole === "Freelancer") {
+      router.replace("/Fdash");
+    }
+  }, [session, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,30 +90,43 @@ useEffect(() => {
   };
 
   // Turnstile rendering
-useEffect(() => {
-  // Prevent double initialization
-  if (window.__turnstileRendered) return;
-  window.__turnstileRendered = true;
+  useEffect(() => {
+    // Prevent double initialization
+    if (window.__turnstileRendered) return;
+    window.__turnstileRendered = true;
 
-  const renderTurnstile = () => {
-    if (!window.turnstile) return;
+    const renderTurnstile = () => {
+      if (!window.turnstile) return;
 
-    window.turnstile.render("#turnstile-container", {
-      sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-      callback: (token) => (tokenRef.current = token),
+      window.turnstile.render("#turnstile-container", {
+        sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+        callback: (token) => (tokenRef.current = token),
+      });
+    };
+
+    if (!window.turnstile) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      script.onload = renderTurnstile;
+      document.body.appendChild(script);
+    } else {
+      renderTurnstile();
+    }
+  }, []);
+
+  const handleForgotPassword = async () => {
+    const res = await fetch("/api/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ email }),
     });
+    const data = await res.json();
+    if (res.status === 200) {
+      alert(data.message);
+    } else {
+      setError(data.error);
+    }
   };
-
-  if (!window.turnstile) {
-    const script = document.createElement("script");
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    script.async = true;
-    script.onload = renderTurnstile;
-    document.body.appendChild(script);
-  } else {
-    renderTurnstile();
-  }
-}, []);
 
   return (
     <div className="flex justify-center items-center h-screen bg-white">
@@ -163,9 +176,9 @@ useEffect(() => {
         </form>
 
         <div>
-          <Link href="/forgot-password" className="text-yellow font-thin hover:underline">
+          <button onClick={handleForgotPassword} className="text-yellow font-thin hover:underline">
             Forgot Password?
-          </Link>
+          </button>
         </div>
 
         <div className="text-center mt-4">
