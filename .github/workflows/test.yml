@@ -26,10 +26,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 4. Run unit & integration tests
+      # 4. Install Playwright browsers and OS dependencies
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # 5. Run unit & integration tests
       - name: Run unit & integration tests
         run: npm run test
 
-      # 5. Run e2e tests
+      # 6. Run e2e tests
       - name: Run e2e tests
         run: npm run test:e2e
