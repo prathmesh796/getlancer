@@ -1,11 +1,11 @@
-import { connectDB } from "@/lib/db";
+import { connect } from "@/utils/db";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
 export async function POST(req) {
   const { token, password } = await req.json();
 
-  await connectDB();
+  await connect();
 
   const user = await User.findOne({
     resetToken: token,
