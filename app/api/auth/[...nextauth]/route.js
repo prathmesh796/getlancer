@@ -20,19 +20,20 @@ export const authOptions = {
             async authorize(credentials) {
                 await connect();
 
-                const token = credentials?.['cf-turnstile-response'];
-                const ip = credentials?.['ip']; // optional, for logging
+                if (process.env.E2E_TEST !== '1') {
+                    const token = credentials?.['cf-turnstile-response'];
 
-                const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `secret=${process.env.TURNSTILE_SECRET_KEY}&response=${token}`,
-                });
+                    const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `secret=${process.env.TURNSTILE_SECRET_KEY}&response=${token}`,
+                    });
 
-                const verifyData = await verifyRes.json();
+                    const verifyData = await verifyRes.json();
 
-                if (!verifyData.success) {
-                    throw new Error('Turnstile verification failed');
+                    if (!verifyData.success) {
+                        throw new Error('Turnstile verification failed');
+                    }
                 }
 
                 const user = await User.findOne({ email: credentials.email });

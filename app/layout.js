@@ -30,19 +30,20 @@ export default async function RootLayout({ children }) {
   return (
     <html className={theme} lang="en" style={theme !== "system" ? { colorScheme: theme } : {}}>
       <body className={popins.className}>
-        <AppThemeProvider
-          attribute="class"
-          defaultTheme={theme}
-          enableSystem
-        />
-          <SessionProvider session={session}>
-            <Navbar />
-            <div className="container mx-auto min-h-screen">
-              {children}
+          <AppThemeProvider
+            attribute="class"
+            defaultTheme={theme}
+            enableSystem
+          >
+            <SessionProvider session={session}>
+              <Navbar />
+              <div className="container mx-auto min-h-screen">
+                {children}
 
-            </div>
-            <Footer />
-          </SessionProvider>
+              </div>
+              <Footer />
+            </SessionProvider>
+          </AppThemeProvider>
       </body>
     </html>
   );

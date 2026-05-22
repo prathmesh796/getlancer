@@ -8,12 +8,14 @@ import { IoSunny } from "react-icons/io5";
 function Tab() {
   const { setTheme, theme } = useTheme();
   return (
-    <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-        {theme === 'light' ? (
-          <BsFillMoonStarsFill />
-        ) : (
-          <IoSunny />
-        )}
+    <button onClick={() => {
+      setTheme(theme === 'light' ? 'dark' : 'light');
+    }}>
+      {theme === 'light' ? (
+        <BsFillMoonStarsFill /> 
+      ) : (
+        <IoSunny />
+      )}
     </button>
   );
 }
