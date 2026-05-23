@@ -14,12 +14,8 @@ function AppThemeProvider({ children, ...props }) {
 
   return (
     <ThemeProvider {...props}>
-      {mounted ? (
-        <>
-          <AppThemeProviderHelper />
-          {children}
-        </>
-      ) : null}
+      {children}
+      {mounted ? <AppThemeProviderHelper /> : null}
     </ThemeProvider>
   );
 }
