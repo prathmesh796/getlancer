@@ -16,7 +16,7 @@ test.describe('Login page', () => {
       email,
       password: 'wrong-password-for-e2e',
     });
-    await submitLogin(page);
+    await submitLogin(page, { waitForSession: false });
 
     await expect(page).toHaveURL(/\/login$/);
     await expect(page.getByText('Invalid email or password')).toBeVisible();

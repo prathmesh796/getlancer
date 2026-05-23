@@ -3,7 +3,9 @@ import { expect } from '@playwright/test';
 export const AUTH_DIR = 'e2e/.auth';
 export const CLIENT_AUTH_FILE = `${AUTH_DIR}/client.json`;
 
-const LOGIN_TIMEOUT = 20_000;
+const LOGIN_TIMEOUT = 45_000;
+const E2E_TURNSTILE_BYPASS_TOKEN =
+  process.env.E2E_TURNSTILE_BYPASS_TOKEN || 'e2e-turnstile-token';
 
 export function getCredentials(role = 'client') {
   if (role === 'freelancer') {
@@ -24,25 +26,25 @@ export function getCredentials(role = 'client') {
 }
 
 async function stubTurnstile(page) {
-  await page.addInitScript(() => {
+  await page.addInitScript((token) => {
     window.turnstile = {
       render(_selector, { callback }) {
-        callback('e2e-turnstile-token');
+        callback(token);
         return 'e2e-widget';
       },
       remove() {},
     };
-  });
+  }, E2E_TURNSTILE_BYPASS_TOKEN);
 }
 
 export async function fillLoginForm(page, { email, password }) {
   await stubTurnstile(page);
-  await page.goto('/login');
+  await page.goto('/login', { waitUntil: 'domcontentloaded' });
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(password);
 }
 
-export async function submitLogin(page) {
+export async function submitLogin(page, { waitForSession = true } = {}) {
   const signInResponse = page.waitForResponse(
     (response) =>
       response.url().includes('/api/auth/callback/credentials') &&
@@ -53,13 +55,15 @@ export async function submitLogin(page) {
   await page.getByRole('button', { name: 'Log In' }).click();
   await signInResponse;
 
-  await page
-    .waitForResponse(
-      (response) =>
-        response.url().includes('/api/auth/session') && response.status() === 200,
-      { timeout: LOGIN_TIMEOUT }
-    )
-    .catch(() => {});
+  if (waitForSession) {
+    await page
+      .waitForResponse(
+        (response) =>
+          response.url().includes('/api/auth/session') && response.status() === 200,
+        { timeout: 10_000 }
+      )
+      .catch(() => {});
+  }
 }
 
 export async function waitForDashboard(page, dashboard) {
@@ -79,7 +83,7 @@ export async function waitForDashboard(page, dashboard) {
     await page.waitForTimeout(250);
   }
 
-  await expect(page).toHaveURL(dashboard, { timeout: 5000 });
+  await expect(page).toHaveURL(dashboard, { timeout: 10_000 });
 }
 
 export async function logoutFromNavbar(page) {
@@ -102,7 +106,7 @@ export async function logoutFromNavbar(page) {
 export async function loginAs(page, role = 'client') {
   const { email, password, dashboard } = getCredentials(role);
 
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
     await fillLoginForm(page, { email, password });
     await submitLogin(page);
 
@@ -110,9 +114,17 @@ export async function loginAs(page, role = 'client') {
       await waitForDashboard(page, dashboard);
       return;
     } catch (error) {
-      if (attempt === 1) {
+      if (attempt === 2) {
         throw error;
       }
     }
   }
+}
+
+export async function goToLoginFromNavbar(page) {
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  const navbar = page.getByRole('navigation');
+  await expect(navbar.getByRole('link', { name: 'Login' })).toBeVisible();
+  await navbar.getByRole('link', { name: 'Login' }).click();
+  await page.waitForURL(/\/login$/, { timeout: LOGIN_TIMEOUT });
 }

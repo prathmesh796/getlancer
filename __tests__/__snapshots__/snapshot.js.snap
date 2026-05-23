@@ -41,7 +41,9 @@ exports[`renders homepage unchanged 1`] = `
       >
         <img
           alt="freelancer-img"
+          class="w-full h-auto"
           height="310"
+          loading="eager"
           src="/home-img1.png"
           width="400"
         />
@@ -58,6 +60,7 @@ exports[`renders homepage unchanged 1`] = `
       >
         <img
           alt="freelancer-img"
+          class="w-full h-auto"
           height="310"
           src="/home-img2.jpg"
           width="400"

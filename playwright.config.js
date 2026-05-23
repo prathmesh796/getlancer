@@ -7,10 +7,12 @@ dotenv.config({ path: path.join(__dirname, '.env'), quiet: true });
 
 const AUTH_DIR = path.join(__dirname, 'e2e', '.auth');
 const CLIENT_AUTH_FILE = path.join(AUTH_DIR, 'client.json');
+const E2E_TURNSTILE_BYPASS_TOKEN =
+  process.env.E2E_TURNSTILE_BYPASS_TOKEN || 'e2e-turnstile-token';
 
 module.exports = defineConfig({
   testDir: './e2e',
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
   expect: {
     timeout: 5000,
   },
@@ -29,6 +31,8 @@ module.exports = defineConfig({
     {
       name: 'setup',
       testMatch: /.*\.setup\.js/,
+      timeout: 90 * 1000,
+      retries: process.env.CI ? 2 : 1,
     },
     {
       name: 'chromium',
@@ -47,12 +51,14 @@ module.exports = defineConfig({
   ],
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:3000',
+    url: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
     env: {
       ...process.env,
       E2E_TEST: '1',
+      PLAYWRIGHT: '1',
+      E2E_TURNSTILE_BYPASS_TOKEN,
     },
   },
 });

@@ -40,4 +40,8 @@ jobs:
 
       # 6. Run e2e tests
       - name: Run e2e tests
+        env:
+          E2E_TEST: "1"
+          PLAYWRIGHT: "1"
+          E2E_TURNSTILE_BYPASS_TOKEN: e2e-turnstile-token
         run: npm run test:e2e

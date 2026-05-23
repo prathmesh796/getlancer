@@ -6,6 +6,22 @@ import { connect } from "@/utils/db";
 import User from "@/models/User";
 import bcryptjs from "bcryptjs";
 
+/** Skip Turnstile only for Playwright/e2e: non-production, runner flag, matching secret token. */
+export function shouldBypassTurnstileForE2E(turnstileToken) {
+    const expectedToken = process.env.E2E_TURNSTILE_BYPASS_TOKEN;
+    if (!expectedToken || process.env.NODE_ENV === "production") {
+        return false;
+    }
+
+    const e2eRunnerActive =
+        process.env.PLAYWRIGHT === "1" || process.env.E2E_TEST === "1";
+    if (!e2eRunnerActive) {
+        return false;
+    }
+
+    return turnstileToken === expectedToken;
+}
+
 export const authOptions = {
     // Configure authentication providers
     providers: [
@@ -20,17 +36,13 @@ export const authOptions = {
             async authorize(credentials) {
                 await connect();
 
-                const isE2EBypass =
-                    process.env.E2E_TEST === '1' &&
-                    (process.env.NODE_ENV === 'test' || process.env.CI);
+                const turnstileToken = credentials?.['cf-turnstile-response'];
 
-                if (!isE2EBypass) {
-                    const token = credentials?.['cf-turnstile-response'];
-
+                if (!shouldBypassTurnstileForE2E(turnstileToken)) {
                     const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: `secret=${process.env.TURNSTILE_SECRET_KEY}&response=${token}`,
+                        body: `secret=${process.env.TURNSTILE_SECRET_KEY}&response=${turnstileToken}`,
                     });
 
                     const verifyData = await verifyRes.json();
