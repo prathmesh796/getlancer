@@ -20,7 +20,11 @@ export const authOptions = {
             async authorize(credentials) {
                 await connect();
 
-                if (process.env.E2E_TEST !== '1') {
+                const isE2EBypass =
+                    process.env.E2E_TEST === '1' &&
+                    (process.env.NODE_ENV === 'test' || process.env.CI);
+
+                if (!isE2EBypass) {
                     const token = credentials?.['cf-turnstile-response'];
 
                     const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
