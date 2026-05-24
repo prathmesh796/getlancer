@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, useSession, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaGithub } from "react-icons/fa";
@@ -77,14 +77,20 @@ const Login = () => {
     if (res?.ok) {
       setError("");
 
-      const userRole = session?.data?.user?.role;
+      let userRole;
+      for (let attempt = 0; attempt < 20; attempt += 1) {
+        const freshSession = await getSession();
+        userRole = freshSession?.user?.role;
+        if (userRole) break;
+        await new Promise((resolve) => setTimeout(resolve, 250));
+      }
 
       if (userRole === "Client") {
         router.replace("/Cdash");
       } else if (userRole === "Freelancer") {
         router.replace("/Fdash");
       } else {
-        router.replace("/"); // fallback
+        router.replace("/");
       }
     }
   };
@@ -141,6 +147,7 @@ const Login = () => {
             <input
               type="email"
               id="email"
+              name="email"
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -154,6 +161,7 @@ const Login = () => {
             <input
               type="password"
               id="password"
+              name="password"
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

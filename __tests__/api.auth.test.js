@@ -3,7 +3,10 @@ jest.mock("next-auth/providers/github", () => jest.fn(() => ({ id: "github" })))
 jest.mock("next-auth/providers/google", () => jest.fn(() => ({ id: "google" })));
 jest.mock("next-auth/providers/credentials", () => jest.fn((options) => ({ id: "credentials", ...options })));
 
-import { authOptions } from "../app/api/auth/[...nextauth]/route";
+import {
+  authOptions,
+  shouldBypassTurnstileForE2E,
+} from "../app/api/auth/[...nextauth]/route";
 import { connect } from "@/utils/db";
 import User from "@/models/User";
 import bcryptjs from "bcryptjs";
@@ -25,6 +28,44 @@ describe("api/auth/[...nextauth] callbacks", () => {
     credentialsProvider = authOptions.providers.find(
       (p) => p.id === "credentials"
     );
+  });
+
+  describe("shouldBypassTurnstileForE2E", () => {
+    const originalEnv = process.env;
+
+    beforeEach(() => {
+      process.env = { ...originalEnv };
+    });
+
+    afterEach(() => {
+      process.env = originalEnv;
+    });
+
+    it("allows bypass only with matching token, runner flag, and non-production", () => {
+      process.env.NODE_ENV = "development";
+      process.env.PLAYWRIGHT = "1";
+      process.env.E2E_TURNSTILE_BYPASS_TOKEN = "e2e-turnstile-token";
+
+      expect(shouldBypassTurnstileForE2E("e2e-turnstile-token")).toBe(true);
+      expect(shouldBypassTurnstileForE2E("wrong-token")).toBe(false);
+    });
+
+    it("never bypasses in production", () => {
+      process.env.NODE_ENV = "production";
+      process.env.PLAYWRIGHT = "1";
+      process.env.E2E_TURNSTILE_BYPASS_TOKEN = "e2e-turnstile-token";
+
+      expect(shouldBypassTurnstileForE2E("e2e-turnstile-token")).toBe(false);
+    });
+
+    it("never bypasses without a runner flag", () => {
+      process.env.NODE_ENV = "development";
+      process.env.PLAYWRIGHT = "";
+      process.env.E2E_TEST = "";
+      process.env.E2E_TURNSTILE_BYPASS_TOKEN = "e2e-turnstile-token";
+
+      expect(shouldBypassTurnstileForE2E("e2e-turnstile-token")).toBe(false);
+    });
   });
 
   describe("Credentials Provider Authorize logic", () => {

@@ -35,3 +35,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# testing artifacts
+/test-results/*
+/playwright-report/*
+/playwright-video/*
+/e2e/.auth/
+e2e/storageState.json
