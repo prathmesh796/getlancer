@@ -47,4 +47,8 @@ jobs:
           MONGO_URL: ${{ secrets.MONGO_URL }}
           NEXTAUTH_URL: http://localhost:3000
           NEXTAUTH_SECRET: test-secret
+          E2E_CLIENT_EMAIL: ${{ secrets.E2E_CLIENT_EMAIL }}
+          E2E_CLIENT_PASSWORD: ${{ secrets.E2E_CLIENT_PASSWORD }}
+          E2E_FREELANCER_EMAIL: ${{ secrets.E2E_FREELANCER_EMAIL }}
+          E2E_FREELANCER_PASSWORD: ${{ secrets.E2E_FREELANCER_PASSWORD }}
         run: npm run test:e2e
