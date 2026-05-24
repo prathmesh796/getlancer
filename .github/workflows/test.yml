@@ -1,0 +1,54 @@
+name: Testing CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      # 3. Install dependencies (including dev dependencies for testing)
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Install Playwright browsers and OS dependencies
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # 5. Run unit & integration tests
+      - name: Run unit & integration tests
+        run: npm run test
+
+      # 6. Run e2e tests
+      - name: Run e2e tests
+        env:
+          E2E_TEST: "1"
+          PLAYWRIGHT: "1"
+          E2E_TURNSTILE_BYPASS_TOKEN: e2e-turnstile-token
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: test-secret
+          E2E_CLIENT_EMAIL: ${{ secrets.E2E_CLIENT_EMAIL }}
+          E2E_CLIENT_PASSWORD: ${{ secrets.E2E_CLIENT_PASSWORD }}
+          E2E_FREELANCER_EMAIL: ${{ secrets.E2E_FREELANCER_EMAIL }}
+          E2E_FREELANCER_PASSWORD: ${{ secrets.E2E_FREELANCER_PASSWORD }}
+        run: npm run test:e2e

@@ -1,16 +1,13 @@
 import {connect} from '@/utils/db'
 import User from '@/models/User'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import bcryptjs from 'bcryptjs'
-
-
 
 export async function POST(request) {
     try {
         let conn = await connect()
         const req = await request.json()
         const {Name: name, email, password, roleName: role} = req
-        console.log(req)
 
         const user = await User.findOne({email})
         if(user){

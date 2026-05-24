@@ -6,6 +6,10 @@ import SessionProvider from "@/utils/SessionProvider";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { cookies } from "next/headers";
+import Script from "next/script";
+
+import AppThemeProvider from "@/components/theme";
 
 const popins = Poppins({
   weight: '500',
@@ -20,18 +24,34 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const session = await getServerSession()
+  const cookieStore = await cookies();
 
+  const theme = cookieStore.get("__theme__")?.value || "system";
 
   return (
-    <html lang="en">
+    <html className={theme} lang="en" style={theme !== "system" ? { colorScheme: theme } : {}} suppressHydrationWarning>
       <body className={popins.className}>
-        <SessionProvider session={session}>
-        <Navbar/>
-        <div className="container mx-auto min-h-[87.8vh]">
-            {children}
-          </div>
-        <Footer/>
-        </SessionProvider>
+          <AppThemeProvider
+            attribute="class"
+            defaultTheme={theme}
+            enableSystem
+          >
+            <SessionProvider session={session}>
+              <Navbar />
+              <div className="container mx-auto min-h-screen">
+                {children}
+
+              </div>
+              <Footer />
+            </SessionProvider>
+          </AppThemeProvider>
+
+          {process.env.E2E_TEST !== "1" && (
+            <Script
+              src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+              strategy="afterInteractive"
+            />
+          )}
       </body>
     </html>
   );

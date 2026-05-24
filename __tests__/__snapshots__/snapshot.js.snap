@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`renders homepage unchanged 1`] = `
+<div>
+  <main
+    class="text-black mx-24 p-5"
+  >
+    <div
+      class="flex justify-between px-10"
+    >
+      <div
+        class="pt-24"
+      >
+        <h1
+          class="text-5xl font-semibold p-2"
+        >
+          Have 
+          <span
+            class="text-yellow"
+          >
+            Skills...
+          </span>
+        </h1>
+        <h2
+          class="text-4xl font-normal p-2"
+        >
+          Lets get you paid...
+        </h2>
+        <button
+          class="rounded-full bg-yellow text-black font-semibold p-3 my-5 mx-2"
+        >
+          <a
+            href="/signin"
+          >
+            Signin as Freelancer
+          </a>
+        </button>
+      </div>
+      <div
+        class="img"
+      >
+        <img
+          alt="freelancer-img"
+          class="w-full h-auto"
+          height="310"
+          loading="eager"
+          src="/home-img1.png"
+          width="400"
+        />
+      </div>
+    </div>
+    <div
+      class="mb-10 h-1 rounded-full opacity-15 bg-gray-400"
+    />
+    <div
+      class="flex justify-between px-10"
+    >
+      <div
+        class="img"
+      >
+        <img
+          alt="freelancer-img"
+          class="w-full h-auto"
+          height="310"
+          src="/home-img2.jpg"
+          width="400"
+        />
+      </div>
+      <div
+        class="pt-20"
+      >
+        <h1
+          class="text-5xl font-semibold p-2"
+        >
+          Have 
+          <span
+            class="text-yellow"
+          >
+            Company...
+          </span>
+        </h1>
+        <h2
+          class="text-4xl font-normal p-2"
+        >
+          Lets get you right talent...
+        </h2>
+        <button
+          class="rounded-full bg-yellow text-black font-semibold p-3 my-5 mx-2 hover:bg-light_yellow transition-all duration-200"
+        >
+          <a
+            href="/signin"
+          >
+            Signin as Client
+          </a>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+`;
