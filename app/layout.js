@@ -7,6 +7,7 @@ import SessionProvider from "@/utils/SessionProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { cookies } from "next/headers";
+import Script from "next/script";
 
 import AppThemeProvider from "@/components/theme";
 
@@ -28,7 +29,7 @@ export default async function RootLayout({ children }) {
   const theme = cookieStore.get("__theme__")?.value || "system";
 
   return (
-    <html className={theme} lang="en" style={theme !== "system" ? { colorScheme: theme } : {}}>
+    <html className={theme} lang="en" style={theme !== "system" ? { colorScheme: theme } : {}} suppressHydrationWarning>
       <body className={popins.className}>
           <AppThemeProvider
             attribute="class"
@@ -44,6 +45,13 @@ export default async function RootLayout({ children }) {
               <Footer />
             </SessionProvider>
           </AppThemeProvider>
+
+          {process.env.E2E_TEST !== "1" && (
+            <Script
+              src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+              strategy="afterInteractive"
+            />
+          )}
       </body>
     </html>
   );

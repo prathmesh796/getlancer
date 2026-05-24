@@ -57,6 +57,7 @@ module.exports = defineConfig({
     env: {
       ...process.env,
       E2E_TEST: '1',
+      NEXT_PUBLIC_E2E_TEST: '1',
       PLAYWRIGHT: '1',
       E2E_TURNSTILE_BYPASS_TOKEN,
     },

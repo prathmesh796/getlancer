@@ -23,6 +23,7 @@ test.describe('Login page', () => {
   });
 
   test('client can log in and reach the client dashboard', async ({ page }) => {
+    page.on('console', msg => console.log(`Browser: ${msg.text()}`));
     const { heading } = getCredentials('client');
     await loginAs(page, 'client');
     await expect(page.getByRole('heading', { name: heading })).toBeVisible();

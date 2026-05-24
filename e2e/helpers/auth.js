@@ -40,6 +40,8 @@ async function stubTurnstile(page) {
 export async function fillLoginForm(page, { email, password }) {
   await stubTurnstile(page);
   await page.goto('/login', { waitUntil: 'domcontentloaded' });
+  // Wait for the 300ms setTimeout in login/page.js to execute turnstile render
+  await page.waitForTimeout(500);
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(password);
 }

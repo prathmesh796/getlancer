@@ -44,4 +44,7 @@ jobs:
           E2E_TEST: "1"
           PLAYWRIGHT: "1"
           E2E_TURNSTILE_BYPASS_TOKEN: e2e-turnstile-token
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: test-secret
         run: npm run test:e2e
