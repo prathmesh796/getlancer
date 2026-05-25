@@ -11,7 +11,7 @@ export type User = {
     resetPasswordExpiry?: string
 }
 
-export type Role = "client" | "freelancer" | "admin"
+export type Role = "Client" | "Freelancer" | "Admin"
 
 export type UserSession = {
     user: User,
