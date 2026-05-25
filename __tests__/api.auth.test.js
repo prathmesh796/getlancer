@@ -6,7 +6,7 @@ jest.mock("next-auth/providers/credentials", () => jest.fn((options) => ({ id: "
 import {
   authOptions,
   shouldBypassTurnstileForE2E,
-} from "../app/api/auth/[...nextauth]/route";
+} from "../app/api/auth/[...nextauth]/options";
 import { connect } from "@/utils/db";
 import User from "@/models/User";
 import bcryptjs from "bcryptjs";

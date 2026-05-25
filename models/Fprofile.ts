@@ -1,0 +1,61 @@
+import mongoose from "mongoose";
+import type { FprofileType } from "@/types/User";
+
+const FprofileSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    unique: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  bio: {
+    type: String,
+    default: ""
+  },
+  skills: {
+    type: [String],
+    default: []
+  },
+  hourlyRate: {
+    type: Number,
+    default: 0
+  },
+  experience: {
+    type: [Object],
+    default: []
+  },
+  location: {
+    type: String,
+    default: ""
+  },
+  profilePic: {
+    type: Object,
+  },
+  socialLinks: {
+    type: Object,
+    default: {
+      facebook: "",
+      twitter: "",
+      linkedin: "",
+      instagram: "",
+      github: ""
+    }
+  },
+  projects: {
+    type: [Object],
+    default: []
+  },
+  Jobs: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Jobs",
+    default: []
+  },
+});
+
+const Fprofile = mongoose.models.Fprofile || mongoose.model("Fprofile", FprofileSchema);
+
+export default Fprofile as mongoose.Model<FprofileType>
