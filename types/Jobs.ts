@@ -1,0 +1,28 @@
+import type { User } from "./User"
+
+export type Job = {
+    _id: string,
+    title: string,
+    description: string,
+    company: string,
+    bounty: string,
+    location: string,
+    datePosted: Date,
+    skills: string[],
+    status: jobStatus,
+    applications: Array<application>,
+}
+
+export type application = {
+    _id: string,
+    jobId: string,
+    freelancerId: string,
+    proposal: string,
+    appliedAt: Date,
+}
+
+enum jobStatus {
+    open = "open",
+    assigned = "assigned",
+    completed = "completed"
+}

@@ -1,0 +1,128 @@
+import { connect } from "@/utils/db";
+import Cprofile from "@/models/Cprofile";
+import { NextRequest, NextResponse } from "next/server";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand  } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import type { CprofileType } from "@/types/User";
+
+const r2 = new S3Client({
+  region: "auto",
+  endpoint: process.env.R2_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+  },
+});
+
+export async function GET(req: NextRequest) {
+  await connect();
+
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
+    }
+
+    const clientProfile = await Cprofile.findOne({ user: userId });
+
+    if (!clientProfile) {
+      return NextResponse.json({ success: false, error: "Client profile not found" }, { status: 404 });
+    }
+
+    if (clientProfile.logo?.key) {
+      const command = new GetObjectCommand({
+        Bucket: "getlancer",
+        Key: clientProfile.logo.key,
+      });
+
+      const signedUrl = await getSignedUrl(r2, command, { expiresIn: 3600 });
+      clientProfile.logo.url = signedUrl;
+    }
+
+    return NextResponse.json({ success: true, clientProfile }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  await connect();
+
+  try {
+    const formData = await req.formData();
+
+    const userId = formData.get("userId");
+    const companyName = formData.get("companyName");
+    const website = formData.get("website");
+    const bio = formData.get("bio");
+    const description = formData.get("description");
+    const location = formData.get("location");
+    const socialLinksJSON = formData.get("socialLinks");
+    const logo = formData.get("logo"); 
+
+    if (!userId) {
+      return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
+    }
+
+    const updateFields: Partial<CprofileType> = {
+      companyName: companyName?.toString(),
+      website: website?.toString(),
+      bio: bio?.toString(),
+      description: description?.toString(),
+      location: location?.toString(),
+      socialLinks: JSON.parse(socialLinksJSON as string),
+      logo: JSON.parse(logo as string)
+    };
+
+    const existingProfile = await Cprofile.findOne({ user: userId });
+
+    if (logo && typeof logo === "object") {
+      if (existingProfile?.logo?.key) {
+        try {
+          await r2.send(
+            new DeleteObjectCommand({
+              Bucket: "getlancer",
+              Key: existingProfile.logo.key,
+            })
+          );
+        } catch (err) {
+          console.warn("Failed to delete old logo:", err.message);
+        }
+      }
+
+      const bytes = await logo.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const fileName = `${userId}-${Date.now()}-${logo.name}`;
+      const bucketName = "getlancer";
+
+      await r2.send(
+        new PutObjectCommand({
+          Bucket: bucketName,
+          Key: fileName,
+          Body: buffer,
+          ContentType: logo.type,
+        })
+      );
+
+      // Store the R2 URL or key in your DB
+      updateFields.logo = {
+        url: `${process.env.R2_ENDPOINT}/${fileName}`,
+        key: fileName,
+        type: logo.type,
+        name: logo.name
+      };
+    }
+
+    const updatedProfile = await Cprofile.findOneAndUpdate(
+      { user: userId },
+      { $set: updateFields },
+      { new: true, upsert: true }
+    );
+
+    return NextResponse.json({ success: true, profile: updatedProfile });
+  } catch (err) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
