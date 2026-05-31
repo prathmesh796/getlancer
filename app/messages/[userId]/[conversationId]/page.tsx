@@ -5,6 +5,9 @@ import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import { useMessages } from "@/hooks/useMessages";
 import { sendMessage } from "@/services/chat";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export default function Page({ params }: { params: Promise<{ userId: string; conversationId: string }> }) {
   const { userId, conversationId } = use(params);
@@ -37,7 +40,7 @@ export default function Page({ params }: { params: Promise<{ userId: string; con
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="flex h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       <Sidebar userId={userId} />
 
       <main className="flex-1 flex flex-col">
@@ -61,14 +64,16 @@ export default function Page({ params }: { params: Promise<{ userId: string; con
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             {messages.length === 0 ? (
               <div className="text-gray-600 dark:text-slate-300 text-center py-14">
-                <div className="mx-auto max-w-md rounded-3xl border border-gray-100 dark:border-slate-700 bg-white/80 dark:bg-slate-800/70 backdrop-blur p-8 shadow-sm">
-                  <div className="text-lg font-semibold text-deep_blue dark:text-slate-50 mb-2">
+                <Card className="mx-auto max-w-md border-gray-100 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/70">
+                  <CardContent className="p-8 text-center">
+                  <div className="mb-2 text-lg font-semibold text-deep_blue dark:text-slate-50">
                     No messages yet
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-slate-300">
+                  <div className="text-sm text-muted-foreground">
                     Send a message below to start the conversation.
                   </div>
-                </div>
+                  </CardContent>
+                </Card>
               </div>
             ) : (
               <div className="space-y-3">
@@ -83,11 +88,11 @@ export default function Page({ params }: { params: Promise<{ userId: string; con
                         className={[
                           "max-w-[85%] sm:max-w-[75%] rounded-3xl px-4 py-3 shadow-sm border",
                           mine
-                            ? "bg-gradient-to-r from-yellow to-light_yellow text-deep_blue border-yellow/30"
+                            ? "bg-linear-to-r from-yellow to-light_yellow text-deep_blue border-yellow/30"
                             : "bg-white/90 dark:bg-slate-800/80 text-gray-900 dark:text-slate-50 border-gray-100 dark:border-slate-700",
                         ].join(" ")}
                       >
-                        <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
+                        <div className="whitespace-pre-wrap wrap-break-words text-sm leading-relaxed">
                           {m.text}
                         </div>
                         <div
@@ -122,20 +127,17 @@ export default function Page({ params }: { params: Promise<{ userId: string; con
               }}
               placeholder="Type a message… (Enter to send, Shift+Enter for new line)"
               rows={1}
-              className="flex-1 resize-none rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow/40 text-gray-900 dark:text-slate-50"
+              className={cn(
+                "flex-1 resize-none rounded-2xl border border-input bg-background px-4 py-3 text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              )}
             />
-              <button
+              <Button
                 onClick={onSend}
                 disabled={sending || !text.trim()}
-                className={[
-                  "rounded-2xl px-5 py-3 font-semibold transition",
-                  sending || !text.trim()
-                    ? "bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-slate-400 cursor-not-allowed"
-                    : "bg-yellow hover:bg-light_yellow text-deep_blue shadow-sm",
-                ].join(" ")}
+                className="rounded-2xl px-5 py-3 font-semibold bg-yellow text-deep_blue hover:bg-light_yellow disabled:bg-muted disabled:text-muted-foreground"
               >
                 {sending ? "Sending…" : "Send"}
-              </button>
+              </Button>
             </div>
           </div>
         </footer>

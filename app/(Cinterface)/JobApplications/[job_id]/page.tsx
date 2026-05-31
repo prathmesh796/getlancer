@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faUser, faEnvelope, faFileAlt, faCalendar, faBriefcase } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faEnvelope, faFileAlt, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { ensureConversation } from "@/services/chat";
+import { Button } from "@/components/ui/button";
 
 export default function JobApplicationsPage({ params }: { params: Promise<{ job_id: string }> }) {
     const { job_id } = use(params);
@@ -62,7 +63,7 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ job_
             <div className="flex min-h-screen">
                 <Sidebar userId={session?.user?.id} />
 
-                <main className="flex-1 overflow-y-auto min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+                <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
                     <header className="border-b bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
                         <div className="max-w-7xl mx-auto px-4 py-4">
                             <button
@@ -73,7 +74,7 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ job_
                                 <span>Back to Jobs</span>
                             </button>
 
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">
+                            <h1 className="text-3xl font-bold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">
                                 Applications for: {jobTitle}
                             </h1>
                         </div>
@@ -81,7 +82,7 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ job_
 
                     <div className="max-w-7xl mx-auto px-4 py-8">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-1 h-8 bg-gradient-to-b from-yellow to-light_yellow rounded-full"></div>
+                            <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                             <h2 className="text-2xl font-bold text-deep_blue dark:text-slate-50">
                                 Received Applications
                                 <span className="text-lg font-normal text-gray-600 dark:text-slate-400 ml-3">
@@ -103,7 +104,7 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ job_
                                     >
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-yellow to-light_yellow rounded-full flex items-center justify-center text-deep_blue font-bold text-xl">
+                                                <div className="w-12 h-12 bg-linear-to-br from-yellow to-light_yellow rounded-full flex items-center justify-center text-deep_blue font-bold text-xl">
                                                     {app.userName.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div>
@@ -161,10 +162,8 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ job_
                                         </div>
 
                                         <div className="mt-4 flex gap-3">
-                                            <button
+                                            <Button
                                                 onClick={() => {
-                                                    // Start (or open) a realtime chat with this applicant.
-                                                    // ConversationId is derived deterministically from both participant ids.
                                                     const currentUserId = session?.user?.id;
                                                     if (!currentUserId || !app?.userId) return;
 
@@ -178,18 +177,19 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ job_
                                                             console.error("Error starting conversation:", err);
                                                         });
                                                 }}
-                                                className="px-4 py-2 bg-gradient-to-r from-yellow to-light_yellow text-deep_blue rounded-full font-semibold hover:shadow-lg transition-all duration-300"
+                                                className="rounded-full bg-linear-to-r from-yellow to-light_yellow font-semibold text-deep_blue hover:shadow-lg"
                                             >
                                                 Contact Applicant
-                                            </button>
-                                            <button
+                                            </Button>
+                                            <Button
+                                                variant="secondary"
                                                 onClick={() => {
                                                     router.push(`/profile/view/${app.userId}`);
                                                 }}
-                                                className="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-300"
+                                                className="rounded-full font-semibold"
                                             >
                                                 View Profile
-                                            </button>
+                                            </Button>
                                         </div>
                                     </div>
                                 ))}

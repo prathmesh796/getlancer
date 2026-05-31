@@ -1,5 +1,13 @@
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 const Jobs = ({ job }) => {
     const router = useRouter()
@@ -9,26 +17,29 @@ const Jobs = ({ job }) => {
     }
 
     return (
-        <div className='flex justify-between items-center border border-gray-300 rounded-md shadow-md p-4 m-4'>
-            <div className='flex items-center gap-4'>
+        <Card className="m-4 flex-row items-center justify-between gap-4 p-4 md:flex">
+            <div className="flex items-center gap-4">
                 <Image src="/office-building.jpg" alt="Company Logo" width={100} height={100} />
-                <div className='flex flex-col'>
-                    <h2 className='text-xl font-semibold'>{job.company}</h2>
-                    <p className='text-gray-600'>{job.location}</p>
+                <div className="flex flex-col">
+                    <CardTitle className="text-xl">{job.company}</CardTitle>
+                    <p className="text-muted-foreground">{job.location}</p>
                 </div>
             </div>
 
-            <div className='w-2/3 p-4'>
-                <h2 className='text-2xl font-semibold mb-4'>{job.title}</h2>
-                <p className='text-gray-600'>{job.description}</p>
-            </div>
+            <CardContent className="w-2/3 p-4">
+                <h2 className="mb-4 text-2xl font-semibold">{job.title}</h2>
+                <p className="text-muted-foreground">{job.description}</p>
+            </CardContent>
 
-            <div>
-                <button onClick={handleClick} className='bg-yellow text-black px-4 py-2 rounded-full hover:bg-light_yellow transition-all duration-200'>
+            <CardFooter className="border-0 bg-transparent p-0">
+                <Button
+                    onClick={handleClick}
+                    className="rounded-full bg-yellow text-black hover:bg-light_yellow"
+                >
                     Apply Now
-                </button>
-            </div>
-        </div>
+                </Button>
+            </CardFooter>
+        </Card>
     )
 }
 

@@ -2,66 +2,78 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 const AccountTypeSelection = () => {
-  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleSelection = (accountType) => {
+  const handleSelection = (accountType: string) => {
     setSelectedAccount(accountType);
   };
 
   const handleCreateAccount = () => {
     if (selectedAccount) {
-      // Navigate to the signin page with the selected role as a query parameter
       router.push(`/signin?role=${selectedAccount}`);
-      
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center m-10 bg-white">
-      <h1 className="text-3xl font-bold mb-8 m-10">Join our website</h1>
-      
-        <div className="flex space-x-10 mb-8 m-10 gap-24">
-          <div
-            className={`p-8 w-64 h-48 flex flex-col items-center justify-center border-2 rounded-lg cursor-pointer ${selectedAccount === 'client' ? 'border-black' : 'border-gray-300'
-              }`}
-            onClick={() => handleSelection('client')}
-          >
+    <div className="m-10 flex flex-col items-center justify-center bg-background">
+      <h1 className="m-10 mb-8 text-3xl font-bold">Join our website</h1>
+
+      <div className="m-10 mb-8 flex gap-24 space-x-10">
+        <Card
+          className={cn(
+            "flex h-48 w-64 cursor-pointer flex-col items-center justify-center border-2 p-8",
+            selectedAccount === 'client' ? 'border-foreground' : 'border-muted'
+          )}
+          onClick={() => handleSelection('client')}
+        >
+          <CardContent className="flex flex-col items-center justify-center p-0">
             <input
               type="radio"
               name="accountType"
-              className="mb-4 w-6 h-6 cursor-pointer"
+              className="mb-4 h-6 w-6 cursor-pointer"
               checked={selectedAccount === 'client'}
               onChange={() => handleSelection('client')}
             />
-            <span className="text-xl text-center">Sign in as a Client</span>
-          </div>
+            <span className="text-center text-xl">Sign in as a Client</span>
+          </CardContent>
+        </Card>
 
-          <div
-            className={`p-8 w-64 h-48 flex flex-col items-center justify-center border-2 rounded-lg cursor-pointer ${selectedAccount === 'freelancer' ? 'border-black' : 'border-gray-300'
-              }`}
-            onClick={() => handleSelection('freelancer')}>
+        <Card
+          className={cn(
+            "flex h-48 w-64 cursor-pointer flex-col items-center justify-center border-2 p-8",
+            selectedAccount === 'freelancer' ? 'border-foreground' : 'border-muted'
+          )}
+          onClick={() => handleSelection('freelancer')}
+        >
+          <CardContent className="flex flex-col items-center justify-center p-0">
             <input
               type="radio"
               name="accountType"
-              className="mb-4 w-6 h-6 cursor-pointer"
+              className="mb-4 h-6 w-6 cursor-pointer"
               checked={selectedAccount === 'freelancer'}
               onChange={() => handleSelection('freelancer')}
             />
-            <span className="text-xl text-center">Sign in as a Freelancer</span>
-          </div>
-        </div>
+            <span className="text-center text-xl">Sign in as a Freelancer</span>
+          </CardContent>
+        </Card>
+      </div>
 
-        <button onClick={handleCreateAccount} className="bg-yellow m-10 text-black px-6 py-2 rounded-full hover:bg-light_yellow transition-all duration-200">
-          <Link href='/signin'>Create Account</Link>
-        </button>
-      
+      <Button
+        onClick={handleCreateAccount}
+        className="m-10 rounded-full bg-yellow text-black hover:bg-light_yellow"
+      >
+        Create Account
+      </Button>
 
-      <p className="mt-6 text-sm ">
+      <p className="mt-6 text-sm">
         Already have an account?{' '}
-        <Link href="/login" className="text-yellow text-sm hover:underline">
+        <Link href="/login" className="text-sm text-yellow hover:underline">
           Login
         </Link>
       </p>
@@ -70,4 +82,3 @@ const AccountTypeSelection = () => {
 };
 
 export default AccountTypeSelection;
-

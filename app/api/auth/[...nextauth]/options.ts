@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { connect } from "@/utils/db";
 import User from "@/models/User";
 import bcryptjs from "bcryptjs";
+import { getAuthSecret } from "@/lib/auth";
 
 /** Skip Turnstile only for Playwright/e2e: non-production, runner flag, matching secret token. */
 export function shouldBypassTurnstileForE2E(turnstileToken: string | undefined) {
@@ -22,6 +23,7 @@ export function shouldBypassTurnstileForE2E(turnstileToken: string | undefined) 
 }
 
 export const authOptions = {
+    secret: getAuthSecret(),
     // Configure authentication providers
     providers: [
         CredentialsProvider({

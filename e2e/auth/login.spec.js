@@ -4,7 +4,7 @@ import { fillLoginForm, getCredentials, loginAs, submitLogin } from '../helpers/
 test.describe('Login page', () => {
   test('renders the login form', async ({ page }) => {
     await page.goto('/login');
-    await expect(page.getByRole('heading', { name: 'Log In' })).toBeVisible();
+    await expect(page.locator('[data-slot="card-title"]')).toHaveText('Log In');
     await expect(page.locator('input[name="email"]')).toBeVisible();
     await expect(page.locator('input[name="password"]')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Log In' })).toBeVisible();

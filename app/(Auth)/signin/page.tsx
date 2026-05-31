@@ -1,28 +1,30 @@
 "use client"
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
 import { NextResponse } from 'next/server';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 const SignIn = () => {
   const router = useRouter();
   const searchParams = useSearchParams()
-  const [roleName, setRoleName] = useState("");
   const [Name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, seterror] = useState("")
 
   const role = searchParams.get('role')
-
-  useEffect(() => {
-    if (role === 'client') {
-      setRoleName('Client');
-    } else if (role === 'freelancer') {
-      setRoleName('Freelancer');
-    }
-  }, []);
+  const roleName =
+    role === 'client' ? 'Client' : role === 'freelancer' ? 'Freelancer' : '';
 
   const isValidEmail = (email) => {
     const emailRegex = /[a-z0-9\._%+!$&*=^|~#%'`?{}/\-]+@([a-z0-9\-]+\.){1,}([a-z]{2,16})/
@@ -81,9 +83,8 @@ const SignIn = () => {
             router.replace("/Cdash");
           } else {
             router.replace("/Fdash");
-          } // or redirect to dashboard
+          }
         } else {
-          // Fallback if login fails for some reason
           router.push("/login");
         }
       }
@@ -98,64 +99,70 @@ const SignIn = () => {
   };
 
   return (
-    <div className='flex justify-center items-center h-screen bg-gray-100'>
-      <div className='bg-white p-8 rounded-lg shadow-lg max-w-md w-full'>
-        <h2 className='text-3xl font-bold mb-8 text-center'>Sign in as a {roleName || '...'}</h2>
-        <form onSubmit={handleSubmit}>
-          <div className='mb-6'>
-            <label htmlFor='name' className='block text-sm font-semibold mb-2'>
-              Name
-            </label>
-            <input
-              type='name'
-              id='name'
-              className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow'
-              value={Name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div className='mb-6'>
-            <label htmlFor='email' className='block text-sm font-semibold mb-2'>
-              Email Address
-            </label>
-            <input
-              type='email'
-              id='email'
-              className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className='mb-6'>
-            <label htmlFor='password' className='block text-sm font-semibold mb-2'>
-              Password
-            </label>
-            <input
-              type='password'
-              id='password'
-              className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button
-            type='submit'
-            className='w-full bg-yellow text-black p-3 rounded-lg font-semibold'
-          >
-            Sign In
-          </button>
-          <p className='text-red-500'>{error && error}</p>
-        </form>
-        <p className='text-center mt-6'>
-          Already have an account?{' '}
-          <Link href='/login' className='text-yellow font-thin hover:underline'>
-            Log In
-          </Link>
-        </p>
-      </div>
+    <div className='flex h-screen items-center justify-center bg-muted'>
+      <Card className='w-full max-w-md'>
+        <CardHeader>
+          <CardTitle className='text-center text-3xl'>Sign in as a {roleName || '...'}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            <div>
+              <label htmlFor='name' className='mb-2 block text-sm font-semibold'>
+                Name
+              </label>
+              <Input
+                type='text'
+                id='name'
+                className='h-11'
+                value={Name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor='email' className='mb-2 block text-sm font-semibold'>
+                Email Address
+              </label>
+              <Input
+                type='email'
+                id='email'
+                className='h-11'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor='password' className='mb-2 block text-sm font-semibold'>
+                Password
+              </label>
+              <Input
+                type='password'
+                id='password'
+                className='h-11'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            {error && <p className='text-destructive'>{error}</p>}
+            <Button
+              type='submit'
+              className='h-11 w-full bg-yellow font-semibold text-black hover:bg-light_yellow'
+            >
+              Sign In
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className='justify-center'>
+          <p>
+            Already have an account?{' '}
+            <Link href='/login' className='font-thin text-yellow hover:underline'>
+              Log In
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

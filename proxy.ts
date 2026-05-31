@@ -1,21 +1,71 @@
 import { getToken } from "next-auth/jwt";
+
 import { NextRequest, NextResponse } from "next/server";
 
+import {
+
+  clearSessionCookies,
+
+  getAuthSecret,
+
+  hasSessionCookie,
+
+} from "@/lib/auth";
+
+
+
 const freelancerRoutes = ["/Fdash", "/Fprofile", "/MyApplications", "/ApplyJob"];
+
 const clientRoutes = ["/Cdash", "/Cprofile", "/NewJob", "/JobApplications"];
 
+
+
 function matchesRoute(pathname: string, routes: string[]) {
+
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
+
 }
 
+
+
+async function getValidToken(req: NextRequest) {
+
+  try {
+
+    return await getToken({ req, secret: getAuthSecret() });
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+
+
 export async function proxy(req: NextRequest) {
+
   const { pathname } = req.nextUrl;
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+
+
+  let token = null;
+
+  if (hasSessionCookie(req)) {
+    token = await getValidToken(req);
+
+    if (!token) {
+      const response = NextResponse.next();
+      clearSessionCookies(response);
+
+      return response;
+    }
+  }
 
   const isFreelancerRoute = matchesRoute(pathname, freelancerRoutes);
   const isClientRoute = matchesRoute(pathname, clientRoutes);
 
-  // If route is protected and user is not authenticated, send to login.
   if ((isFreelancerRoute || isClientRoute) && !token) {
     const loginUrl = new URL("/login", req.url);
     return NextResponse.redirect(loginUrl);
@@ -25,7 +75,6 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Enforce role-based route access.
   if (isFreelancerRoute && token.role !== "Freelancer") {
     return NextResponse.redirect(new URL("/Cdash", req.url));
   }
@@ -33,7 +82,7 @@ export async function proxy(req: NextRequest) {
   if (isClientRoute && token.role !== "Client") {
     return NextResponse.redirect(new URL("/Fdash", req.url));
   }
-
+  
   return NextResponse.next();
 }
 
@@ -47,5 +96,6 @@ export const config = {
     "/Cprofile/:path*",
     "/NewJob/:path*",
     "/JobApplications/:path*",
+    "/api/auth/:path*",
   ],
 };

@@ -6,6 +6,14 @@ import { useRouter } from "next/navigation";
 import { MdDeleteForever } from "react-icons/md";
 import Image from "next/image";
 import type { CprofileType } from "@/types/User";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+const textareaClassName = cn(
+  "mb-4 flex min-h-[80px] w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
+);
 
 const socialPlatforms = ["Facebook", "Twitter", "LinkedIn", "Instagram", "Github"];
 
@@ -98,42 +106,46 @@ const UpdateCProfile = () => {
   if (!clientProfile) return <p className="text-center mt-10">Profile not found.</p>;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Update Client Profile</h1>
+    <div className="mx-auto max-w-2xl p-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Update Client Profile</CardTitle>
+        </CardHeader>
+        <CardContent>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <input
+        <Input
           type="text"
           placeholder="Company Name"
           value={clientProfile.companyName}
           onChange={(e) => setClientProfile({ ...clientProfile, companyName: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
+          className="mb-4"
         />
-        <input
+        <Input
           type="text"
           placeholder="Website"
           value={clientProfile.website}
           onChange={(e) => setClientProfile({ ...clientProfile, website: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
+          className="mb-4"
         />
-        <input
+        <Input
           type="text"
           placeholder="Location"
           value={clientProfile.location}
           onChange={(e) => setClientProfile({ ...clientProfile, location: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
+          className="mb-4"
         />
         <textarea
           placeholder="Bio"
           value={clientProfile.bio}
           onChange={(e) => setClientProfile({ ...clientProfile, bio: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
+          className={textareaClassName}
         />
 
         <textarea
           placeholder="Description"
           value={clientProfile.description}
           onChange={(e) => setClientProfile({ ...clientProfile, description: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
+          className={textareaClassName}
         />
         
 
@@ -150,20 +162,20 @@ const UpdateCProfile = () => {
                 <option key={idx} value={plat}>{plat}</option>
               ))}
             </select>
-            <input
+            <Input
               type="url"
               placeholder="Enter URL"
               value={linkInput}
               onChange={(e) => setLinkInput(e.target.value)}
-              className="border p-2 rounded w-full"
+              className="w-full"
             />
-            <button
+            <Button
               type="button"
               onClick={handleSocialAdd}
-              className="bg-yellow px-3 rounded"
+              className="bg-yellow text-black hover:bg-light_yellow"
             >
               Add
-            </button>
+            </Button>
           </div>
           {/* Show added links */}
           {clientProfile.socialLinks && clientProfile.socialLinks.length > 0 && (
@@ -202,13 +214,15 @@ const UpdateCProfile = () => {
           </div>
         )}
 
-        <button
-          className="bg-yellow text-black font-semibold p-2 rounded w-full"
+        <Button
+          className="mt-4 w-full bg-yellow font-semibold text-black hover:bg-light_yellow"
           type="submit"
         >
           Save
-        </button>
+        </Button>
       </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

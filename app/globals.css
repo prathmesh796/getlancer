@@ -1,42 +1,114 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@config "../tailwind.config.js";
 
 @layer base {
   :root {
-    --background: 255 255 255;
-    --foreground: 0 0 0;
-    --text-primary: #000000; /* black */
-    --text-secondary: #1f2937; /* gray-900 */
-    --text-tertiary: #374151; /* gray-800 */
-    --text-quaternary: #4b5563; /* gray-700 */
-    --text-quinary: #6b7280; /* gray-600 */
-    --text-senary: #9ca3af; /* gray-500 */
-    --text-septenary: #d1d5db; /* gray-400 */
-    --text-octonary: #e5e7eb; /* gray-300 */
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --text-primary: #000000;
+    --text-secondary: #1f2937;
+    --text-tertiary: #374151;
+    --text-quaternary: #4b5563;
+    --text-quinary: #6b7280;
+    --text-senary: #9ca3af;
+    --text-septenary: #d1d5db;
+    --text-octonary: #e5e7eb;
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
   }
 
   .dark {
-    --background: 10 10 10; /* gray-900 */
-    --foreground: 255 255 255; /* gray-50 */
-    --text-primary: #ffffff; /* white */
-    --text-secondary: #e5e7eb; /* gray-300 */
-    --text-tertiary: #d1d5db; /* gray-400 */
-    --text-quaternary: #9ca3af; /* gray-500 */
-    --text-quinary: #6b7280; /* gray-600 */
-    --text-senary: #4b5563; /* gray-700 */
-    --text-septenary: #374151; /* gray-800 */
-    --text-octonary: #1f2937; /* gray-900 */
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --text-primary: #ffffff;
+    --text-secondary: #e5e7eb;
+    --text-tertiary: #d1d5db;
+    --text-quaternary: #9ca3af;
+    --text-quinary: #6b7280;
+    --text-senary: #4b5563;
+    --text-septenary: #374151;
+    --text-octonary: #1f2937;
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
   }
 
   body {
-    @apply bg-white dark:bg-gray-900 transition-colors duration-200;
+    @apply bg-background text-foreground transition-colors duration-200;
     color: var(--text-primary);
-    background-color: rgb(var(--background)); /* fallback for custom backgrounds if wanted */
+  }
+
+  .theme {
+    --font-heading: var(--font-sans);
+    --font-sans: var(--font-sans);
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
   }
 }
 
-/* Custom text color utilities mapped to CSS vars */
 @layer utilities {
   .text-primary {
     color: var(--text-primary);
@@ -63,11 +135,10 @@
     color: var(--text-octonary);
   }
 
-  /* Custom dark mode utilities */
   .dark-card {
     @apply bg-white dark:bg-gray-800 dark:border-gray-700;
   }
-  
+
   .dark-input {
     @apply dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-500;
   }
