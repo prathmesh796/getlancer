@@ -1,4 +1,4 @@
-import { Poppins } from "next/font/google";
+import { Poppins, Geist } from "next/font/google";
 import "./globals.css";
 
 import { getServerSession } from "next-auth";
@@ -9,7 +9,10 @@ import Footer from "@/components/Footer";
 import { cookies } from "next/headers";
 import Script from "next/script";
 import AppThemeProvider from "@/components/theme";
-import type { UserSession } from '@/types/User';
+import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const popins = Poppins({
   weight: '500',
@@ -29,7 +32,7 @@ export default async function RootLayout({ children }) {
   const theme = cookieStore.get("__theme__")?.value || "system";
 
   return (
-    <html className={theme} lang="en" style={theme !== "system" ? { colorScheme: theme } : {}} suppressHydrationWarning>
+    <html className={cn(theme, "font-sans", geist.variable)} lang="en" style={theme !== "system" ? { colorScheme: theme } : {}} suppressHydrationWarning>
       <body className={popins.className}>
           <AppThemeProvider
             attribute="class"
@@ -43,6 +46,7 @@ export default async function RootLayout({ children }) {
 
               </div>
               <Footer />
+              <Toaster />
             </SessionProvider>
           </AppThemeProvider>
 

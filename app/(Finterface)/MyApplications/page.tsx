@@ -1,11 +1,13 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faFileAlt, faBriefcase, faMapMarkerAlt, faCalendar, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function MyApplicationsPage() {
     const { data: session, status } = useSession();
@@ -73,20 +75,20 @@ export default function MyApplicationsPage() {
             <div className="flex min-h-screen">
                 <Sidebar userId={session?.user?.id} />
 
-                <main className="flex-1 overflow-y-auto min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+                <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
                     <header className="border-b bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
                         <div className="max-w-7xl mx-auto px-4 py-4">
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent mb-4">
+                            <h1 className="text-3xl font-bold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent mb-4">
                                 My Applications
                             </h1>
 
                             <div className='p-2 rounded-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 flex justify-center gap-2 items-center shadow-md'>
                                 <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '30px', height: '30px' }} className='mr-6 text-gray-400 dark:text-slate-400' />
-                                <input
+                                <Input
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full border-gray-50 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-50 z-10 focus:outline-none"
+                                    className="z-10 h-9 border-0 bg-transparent shadow-none focus-visible:ring-0"
                                     placeholder="Search applications by title, company, or location..."
                                 />
 
@@ -107,7 +109,7 @@ export default function MyApplicationsPage() {
 
                     <div className="max-w-7xl mx-auto px-4 py-8">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-1 h-8 bg-gradient-to-b from-yellow to-light_yellow rounded-full"></div>
+                            <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                             <h2 className="text-2xl font-bold text-deep_blue dark:text-slate-50">
                                 Applications Submitted
                                 <span className="text-lg font-normal text-gray-600 dark:text-slate-400 ml-3">
@@ -203,27 +205,28 @@ export default function MyApplicationsPage() {
                                             <p className="text-gray-500 dark:text-slate-400 text-lg mb-4">
                                                 No applications found matching your filters
                                             </p>
-                                            <button
+                                            <Button
+                                                variant="link"
                                                 onClick={() => {
                                                     setSearchQuery("");
                                                     setStatusFilter("all");
                                                 }}
-                                                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold"
+                                                className="font-semibold text-blue-600 dark:text-blue-400"
                                             >
                                                 Clear filters
-                                            </button>
+                                            </Button>
                                         </>
                                     ) : (
                                         <>
                                             <p className="text-gray-500 dark:text-slate-400 text-lg mb-6">
                                                 You haven't applied to any jobs yet
                                             </p>
-                                            <button
+                                            <Button
                                                 onClick={() => router.push('/Fdash')}
-                                                className="bg-gradient-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                                                className="rounded-full bg-linear-to-r from-yellow to-light_yellow px-8 py-3 font-semibold text-deep_blue hover:scale-105 hover:shadow-2xl"
                                             >
                                                 Browse Jobs
-                                            </button>
+                                            </Button>
                                         </>
                                     )}
                                 </div>

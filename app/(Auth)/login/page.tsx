@@ -5,6 +5,16 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 declare global {
   interface Window {
@@ -22,7 +32,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [turnstileLoaded, setTurnstileLoaded] = useState(false);
   const tokenRef = useRef('');
 
   useEffect(() => {
@@ -32,10 +41,7 @@ const Login = () => {
       const script = document.createElement("script");
       script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
       script.async = true;
-      script.onload = () => setTurnstileLoaded(true);
       document.body.appendChild(script);
-    } else {
-      setTurnstileLoaded(true); // Already loaded
     }
 
     window.onTurnstileSuccess = (token: string) => {
@@ -59,7 +65,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Reset error state
+    setError("");
 
     if (!email || !password) {
       setError("Please fill in all fields");
@@ -105,9 +111,7 @@ const Login = () => {
     }
   };
 
-  // Turnstile rendering
   useEffect(() => {
-    // Prevent double initialization
     if (window.__turnstileRendered) return;
     window.__turnstileRendered = true;
 
@@ -145,87 +149,95 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-white">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-3xl font-bold mb-8 text-center">Log In</h2>
+    <div className="flex h-screen items-center justify-center bg-background">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-center text-3xl">Log In</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="mb-2 block text-sm font-semibold">
+                Email Address
+              </label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                className="h-11"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="mb-2 block text-sm font-semibold">
+                Password
+              </label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                className="h-11"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <label htmlFor="email" className="block text-sm font-semibold mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-semibold mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+            <div id="turnstile-container" className="my-4"></div>
 
-          <div id="turnstile-container" className="my-4"></div>
+            {error && <p className="text-center text-destructive">{error}</p>}
 
+            <Button
+              type="submit"
+              className="h-11 w-full bg-yellow text-black hover:bg-light_yellow"
+            >
+              Log In
+            </Button>
+          </form>
 
-          {/* Error Message Display */}
-          {error && <p className="text-red-500 text-center mt-2">{error}</p>}
-
-          <button
-            type="submit"
-            className="w-full bg-yellow text-black p-3 rounded-lg mt-4"
+          <Button
+            type="button"
+            variant="link"
+            onClick={handleForgotPassword}
+            className="mt-2 h-auto p-0 text-yellow"
           >
-            Log In
-          </button>
-        </form>
-
-        <div>
-          <button onClick={handleForgotPassword} className="text-yellow font-thin hover:underline">
             Forgot Password?
-          </button>
-        </div>
+          </Button>
 
-        <div className="text-center mt-4">
-          <p>Or continue with:</p>
-          <button
-            onClick={() => signIn("google")}
-            className="flex items-center justify-center gap-2 w-full border border-yellow p-3 rounded-lg mt-2"
-          >
-            <FcGoogle className="w-6 h-6" />
-            <span>Login with Google</span>
-          </button>
+          <CardDescription className="mt-4 text-center">Or continue with:</CardDescription>
+          <div className="mt-2 space-y-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11 w-full border-yellow"
+              onClick={() => signIn("google")}
+            >
+              <FcGoogle className="size-6" />
+              Login with Google
+            </Button>
 
-          <button
-            onClick={() => signIn("github")}
-            className="flex items-center justify-center gap-2 w-full border border-yellow p-3 rounded-lg mt-2"
-          >
-            <FaGithub className="w-6 h-6" />
-            <span>Login with GitHub</span>
-          </button>
-
-        </div>
-
-        <p className="text-center mt-6">
-          Don&apos;t have an account?{" "}
-          <Link href="/signin" className="text-yellow font-thin hover:underline">
-            Sign In
-          </Link>
-        </p>
-      </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11 w-full border-yellow"
+              onClick={() => signIn("github")}
+            >
+              <FaGithub className="size-6" />
+              Login with GitHub
+            </Button>
+          </div>
+        </CardContent>
+        <CardFooter className="justify-center">
+          <p className="text-center">
+            Don&apos;t have an account?{" "}
+            <Link href="/signin" className="font-thin text-yellow hover:underline">
+              Sign In
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

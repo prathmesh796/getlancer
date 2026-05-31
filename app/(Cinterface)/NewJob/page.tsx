@@ -3,15 +3,26 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
-import type { Job } from "@/types/Jobs";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+
+const textareaClassName = cn(
+  "flex min-h-[100px] w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
+);
 
 const Page = () => {
     const { data: session } = useSession();
-
     const router = useRouter();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault(); // Prevent page reload
+        event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
@@ -25,7 +36,7 @@ const Page = () => {
             userId: session?.user?.id,
         };
 
-        const res = await fetch("/api/jobs", {
+        await fetch("/api/jobs", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -33,74 +44,73 @@ const Page = () => {
             body: JSON.stringify(jobData),
         });
 
-        const responseData = await res.json();
-
         router.push("/Cdash");
     };
 
-
     return (
-        <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        <div className="flex min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
             <Sidebar userId={session?.user?.id} />
-            <main className="flex flex-1 justify-center items-center">
-                <div className="w-full max-w-xl bg-white/90 dark:bg-slate-800/90 shadow-2xl rounded-2xl p-10 border border-gray-200 dark:border-slate-700">
-                    <h1 className="text-3xl font-extrabold text-center mb-8 bg-gradient-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">
-                        Post a New Job
-                    </h1>
-
-                    <form action="" onSubmit={handleSubmit} className="space-y-6">
+            <main className="flex flex-1 items-center justify-center">
+                <Card className="w-full max-w-xl border-gray-200 p-10 shadow-2xl dark:border-slate-700">
+                    <CardHeader className="p-0 pb-8">
+                        <CardTitle className="bg-linear-to-r from-deep_blue to-marine_blue bg-clip-text text-center text-3xl font-extrabold text-transparent dark:from-yellow dark:to-light_yellow">
+                            Post a New Job
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="jobTitle" className="block text-gray-700 dark:text-slate-200 text-base font-semibold mb-1">
+                            <label htmlFor="jobTitle" className="mb-1 block text-base font-semibold">
                                 Job Title
                             </label>
-                            <input
+                            <Input
                                 type="text"
                                 id="jobTitle"
                                 name="jobTitle"
-                                className="border border-gray-300 dark:border-slate-600 rounded-lg w-full py-2 px-4 bg-slate-50 dark:bg-slate-700 text-gray-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-400 transition focus:outline-none focus:ring-2 focus:ring-yellow focus:border-yellow"
+                                className="h-10"
                                 required
                                 placeholder="e.g. Senior React Developer"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="jobDescription" className="block text-gray-700 dark:text-slate-200 text-base font-semibold mb-1">
+                            <label htmlFor="jobDescription" className="mb-1 block text-base font-semibold">
                                 Job Description
                             </label>
                             <textarea
                                 id="jobDescription"
                                 name="jobDescription"
                                 rows={4}
-                                className="border border-gray-300 dark:border-slate-600 rounded-lg w-full py-2 px-4 bg-slate-50 dark:bg-slate-700 text-gray-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-400 transition focus:outline-none focus:ring-2 focus:ring-yellow focus:border-yellow resize-y"
+                                className={textareaClassName}
                                 required
                                 placeholder="Describe the role, responsibilities, and expectations..."
-                            ></textarea>
+                            />
                         </div>
 
                         <div className="flex gap-4">
                             <div className="flex-1">
-                                <label htmlFor="bounty" className="block text-gray-700 dark:text-slate-200 text-base font-semibold mb-1">
+                                <label htmlFor="bounty" className="mb-1 block text-base font-semibold">
                                     Bounty
                                 </label>
-                                <input
+                                <Input
                                     type="number"
                                     id="bounty"
                                     name="bounty"
                                     min="0"
-                                    className="border border-gray-300 dark:border-slate-600 rounded-lg w-full py-2 px-4 bg-slate-50 dark:bg-slate-700 text-gray-800 dark:text-slate-100 transition focus:outline-none focus:ring-2 focus:ring-yellow focus:border-yellow"
+                                    className="h-10"
                                     required
                                     placeholder="e.g. 2000"
                                 />
                             </div>
                             <div className="flex-1">
-                                <label htmlFor="Location" className="block text-gray-700 dark:text-slate-200 text-base font-semibold mb-1">
+                                <label htmlFor="Location" className="mb-1 block text-base font-semibold">
                                     Location
                                 </label>
-                                <input
+                                <Input
                                     type="text"
                                     id="Location"
                                     name="location"
-                                    className="border border-gray-300 dark:border-slate-600 rounded-lg w-full py-2 px-4 bg-slate-50 dark:bg-slate-700 text-gray-800 dark:text-slate-100 transition focus:outline-none focus:ring-2 focus:ring-yellow focus:border-yellow"
+                                    className="h-10"
                                     required
                                     placeholder="e.g. Remote / Berlin"
                                 />
@@ -108,29 +118,30 @@ const Page = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="Skills" className="block text-gray-700 dark:text-slate-200 text-base font-semibold mb-1">
-                                Skills <span className="text-xs text-gray-400 font-normal">(comma separated)</span>
+                            <label htmlFor="Skills" className="mb-1 block text-base font-semibold">
+                                Skills <span className="text-xs font-normal text-muted-foreground">(comma separated)</span>
                             </label>
-                            <input
+                            <Input
                                 type="text"
                                 id="Skills"
                                 name="skills"
-                                className="border border-gray-300 dark:border-slate-600 rounded-lg w-full py-2 px-4 bg-slate-50 dark:bg-slate-700 text-gray-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-400 transition focus:outline-none focus:ring-2 focus:ring-yellow focus:border-yellow"
+                                className="h-10"
                                 required
                                 placeholder="e.g. React, Node.js, TypeScript"
                             />
                         </div>
 
                         <div className="flex justify-center">
-                            <button
+                            <Button
                                 type="submit"
-                                className="bg-gradient-to-r from-yellow to-light_yellow text-deep_blue font-bold px-10 py-3 rounded-full shadow-md hover:shadow-xl hover:scale-105 hover:from-light_yellow hover:to-yellow transition-all duration-200"
+                                className="rounded-full bg-linear-to-r from-yellow to-light_yellow px-10 py-3 font-bold text-deep_blue shadow-md hover:scale-105 hover:from-light_yellow hover:to-yellow hover:shadow-xl"
                             >
                                 Post Job
-                            </button>
+                            </Button>
                         </div>
                     </form>
-                </div>
+                    </CardContent>
+                </Card>
             </main>
         </div>
     )

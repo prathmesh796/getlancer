@@ -4,6 +4,7 @@ import React, { use } from "react";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import { useConversations } from "@/hooks/useConversations";
+import { Button } from "@/components/ui/button";
 
 export default function Page({ params }) {
   const userId: string = use(params);
@@ -19,12 +20,11 @@ export default function Page({ params }) {
           <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <h1 className="text-4xl font-semibold">Messages</h1>
             <div className="flex items-center space-x-4">
-              <Link
-                href="/NewMessage"
-                className="rounded-full bg-yellow px-6 py-2 hover:bg-light_yellow transition-all duration-200"
-              >
-                New Message
-              </Link>
+              <Button asChild className="rounded-full bg-yellow text-black hover:bg-light_yellow">
+                <Link href="/NewMessage">
+                  New Message
+                </Link>
+              </Button>
             </div>
           </div>
         </header>

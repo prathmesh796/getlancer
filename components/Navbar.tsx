@@ -1,63 +1,66 @@
-"use client"; // Ensure this is at the very top
+"use client";
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
-import Tab from "@/components/theme-switch"; // Import the theme switch component
+import Tab from "@/components/theme-switch";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
-  const { data: session } = useSession(); // Get session data
+  const { data: session } = useSession();
 
   return (
-    <nav className="bg-black text-white flex h-24 py-4 px-10 justify-between">
+    <nav className="flex h-24 justify-between bg-black px-10 py-4 text-white">
       <Link href="/" className="flex outline-none">
         <h1 className="text-5xl font-bold">getLancer</h1>
-        <h4 className="text-light_yellow pt-6 font-semibold">.com</h4>
+        <h4 className="pt-6 font-semibold text-light_yellow">.com</h4>
       </Link>
 
-      <ul className="flex gap-8 items-center text-md">
+      <ul className="flex items-center gap-8 text-md">
         <li>
-          <Link href="/" className="hover:text-light_yellow transition-all duration-200">
+          <Link href="/" className="transition-all duration-200 hover:text-light_yellow">
             Home
           </Link>
         </li>
         <li>
-          <Link href="/about" className="hover:text-light_yellow transition-all duration-200">
+          <Link href="/about" className="transition-all duration-200 hover:text-light_yellow">
             About
           </Link>
         </li>
         <li>
-          <Link href="/contact" className="hover:text-light_yellow transition-all duration-200">
+          <Link href="/contact" className="transition-all duration-200 hover:text-light_yellow">
             Contact
           </Link>
         </li>
       </ul>
 
-      {/* Authentication Section */}
-      <div className="flex gap-3 md:gap-5 justify-center items-center mt-4 md:mt-0 flex-shrink-0">
-        <Tab /> {/* Theme switch component */}
+      <div className="mt-4 flex shrink-0 items-center justify-center gap-3 md:mt-0 md:gap-5">
+        <Tab />
         {session ? (
-          // If user is logged in, show Logout button
           <>
             <p className="text-light_yellow">Hello, {session.user.name}</p>
-            <Link href={(session.user.role == "Client") ? "/Cprofile" : "Fprofile"} ><CgProfile className="w-8 h-8" /></Link>
-            
-            <button
+            <Link href={session.user.role === "Client" ? "/Cprofile" : "/Fprofile"}>
+              <CgProfile className="h-8 w-8" />
+            </Link>
+            <Button
+              variant="destructive"
+              className="rounded-full bg-red-500 px-5 py-2 text-white hover:bg-red-600 md:p-3"
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="rounded-full bg-red-500 text-white px-5 py-2 md:p-3 hover:bg-red-600 transition-all duration-200"
             >
               Logout
-            </button>
+            </Button>
           </>
         ) : (
-          // If user is NOT logged in, show Login and Signin buttons
           <>
-            <Link className="hover:text-light_yellow transition-all duration-200" href="/login">
+            <Link className="transition-all duration-200 hover:text-light_yellow" href="/login">
               Login
             </Link>
-            <button className="rounded-full bg-yellow text-black px-5 py-2 md:p-3 hover:bg-light_yellow transition-all duration-200">
+            <Button
+              asChild
+              className="rounded-full bg-yellow px-5 py-2 text-black hover:bg-light_yellow md:p-3"
+            >
               <Link href="/join">Signin</Link>
-            </button>
+            </Button>
           </>
         )}
       </div>

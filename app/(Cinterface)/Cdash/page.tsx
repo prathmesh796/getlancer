@@ -11,7 +11,7 @@ import Sidebar from '@/components/Sidebar';
 import { Job } from '@/types/Jobs';
 
 export default function Page() {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
 
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
@@ -19,29 +19,35 @@ export default function Page() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (session?.user?.id) {
-            const fetchCprofile = async () => {
-                setLoading(true);
-                try {
-                    const response = await fetch(`/api/jobs/ClientJobs?userId=${encodeURIComponent(session?.user?.id)}`, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    });
-                    const data = await response.json();
-                    setJobs(data.ClientJobs || []);
-                } catch (err) {
-                    console.error("Failed to fetch client jobs:", err);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            fetchCprofile();
+        if (status === "loading") {
+            return;
         }
 
-    }, [session]);
+        if (!session?.user?.id) {
+            setLoading(false);
+            return;
+        }
+
+        const fetchClientJobs = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`/api/jobs/ClientJobs?userId=${encodeURIComponent(session.user.id)}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                const data = await response.json();
+                setJobs(data.ClientJobs || []);
+            } catch (err) {
+                console.error("Failed to fetch client jobs:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchClientJobs();
+    }, [session, status]);
 
     // Filter jobs based on search query and status
     const filteredJobs = jobs.filter(job => {
@@ -61,14 +67,14 @@ export default function Page() {
             <Sidebar userId={session?.user?.id} />
 
             {/* Main Content */}
-            <main className="flex-1 overflow-y-auto bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+            <main className="min-w-0 flex-1 overflow-y-auto bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
                 {/* Header */}
                 <header className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
                     <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                        <h1 className="text-4xl font-semibold bg-gradient-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">Let&apos;s get some work done...</h1>
+                        <h1 className="text-4xl font-semibold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">Let&apos;s get some work done...</h1>
                         <div className="flex items-center space-x-4">
                             <Link href="/NewJob" className="flex justify-center items-center">
-                                <button className="flex items-center gap-2 bg-gradient-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform">
+                                <button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform">
                                     <IoMdAddCircleOutline className='w-6 h-6' />
                                     Post New Job
                                 </button>
@@ -107,7 +113,7 @@ export default function Page() {
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-1 h-8 bg-gradient-to-b from-yellow to-light_yellow rounded-full"></div>
+                                <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                                 <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">
                                     Your Posted Jobs
                                     <span className="text-lg font-normal text-gray-600 ml-3">
@@ -151,7 +157,7 @@ export default function Page() {
                                                 You haven't posted any jobs yet
                                             </p>
                                             <Link href="/NewJob">
-                                                <button className="flex items-center gap-2 bg-gradient-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform mx-auto">
+                                                <button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform mx-auto">
                                                     <IoMdAddCircleOutline className='w-6 h-6' />
                                                     Post Your First Job
                                                 </button>

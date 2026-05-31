@@ -1,12 +1,15 @@
 "use client";
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Jobs from '@/components/Jobs';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
+import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function Page() {
   const { data: session, status } = useSession();
@@ -84,10 +87,6 @@ export default function Page() {
     fetchAllJobs();
   }, [statusFilter]);
 
-  const handleClick = () => {
-    setShowDiv(!showDiv);
-  };
-
   // Filter jobs based on search query
   const filteredJobs = allJobs.filter(job => {
     if (!searchQuery) return true;
@@ -106,17 +105,17 @@ export default function Page() {
         {/* Sidebar */}
         <Sidebar userId={session?.user?.id} />
 
-        <main className="flex-1 overflow-y-auto min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
           <header className="border-b bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">Let&apos;s find some work...</h1>
+              <h1 className="text-2xl font-bold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">Let&apos;s find some work...</h1>
               <div className='m-4 p-2 rounded-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 flex justify-center gap-2 items-center shadow-md w-2/3 '>
                 <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '30px', height: '30px' }} className='mr-6 text-gray-400 dark:text-slate-400' />
-                <input
+                <Input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full border-gray-50 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-50 z-10 focus:outline-none"
+                  className="z-10 h-9 border-0 bg-transparent shadow-none focus-visible:ring-0"
                   placeholder="Search jobs by title, location, or skills..."
                 />
 
@@ -139,7 +138,7 @@ export default function Page() {
             {/* Recommended Jobs Section */}
             <section className="mb-12">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-1 h-8 bg-gradient-to-b from-yellow to-light_yellow rounded-full"></div>
+                <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                 <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">Recommended for You</h2>
               </div>
               <div className="space-y-4">
@@ -156,7 +155,7 @@ export default function Page() {
             {/* All Jobs Section */}
             <section>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-full"></div>
+                <div className="w-1 h-8 bg-linear-to-b from-blue-500 to-indigo-500 rounded-full"></div>
                 <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">
                   All Available Jobs
                   <span className="text-lg font-normal text-gray-600 ml-3">
@@ -165,8 +164,10 @@ export default function Page() {
                 </h2>
               </div>
               {loading ? (
-                <div className="text-center py-12">
-                  <div className="animate-pulse text-gray-600 text-lg">Loading jobs...</div>
+                <div className="space-y-4 py-4">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <Skeleton key={i} className="h-32 w-full rounded-md" />
+                  ))}
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -175,14 +176,16 @@ export default function Page() {
                       <Jobs key={job._id} job={job} />
                     ))
                   ) : (
-                    <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-2xl shadow-sm">
-                      <p className="text-gray-500 dark:text-slate-400 text-lg">
+                    <Card>
+                      <CardContent className="py-12 text-center">
+                      <p className="text-lg text-muted-foreground">
                         {searchQuery
                           ? `No jobs found matching "${searchQuery}"`
                           : "No jobs available at the moment"
                         }
                       </p>
-                    </div>
+                      </CardContent>
+                    </Card>
                   )}
                 </div>
               )}

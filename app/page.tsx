@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -34,7 +35,9 @@ export default function Home() {
         <div className='pt-24'>
           <h1 className='text-5xl font-semibold p-2'>Have <span className='text-yellow'>Skills...</span></h1>
           <h2 className='text-4xl font-normal p-2'>Lets get you paid...</h2>
-          <button className='rounded-full bg-yellow text-black font-semibold p-3 my-5 mx-2'><Link href='/signin'>Signin as Freelancer</Link></button>
+          <Button asChild className='my-5 mx-2 rounded-full bg-yellow font-semibold text-black hover:bg-light_yellow'>
+            <Link href='/signin'>Signin as Freelancer</Link>
+          </Button>
         </div>
         <div className="img">
           <Image src={currentTheme === `light` ? `/home-img1.png` : `/home-img1-dark.png`} width={400} height={310} alt='freelancer-img' loading="eager" className="w-full h-auto" />
@@ -50,7 +53,9 @@ export default function Home() {
         <div className='pt-20'>
           <h1 className='text-5xl font-semibold p-2'>Have <span className='text-yellow'>Company...</span></h1>
           <h2 className='text-4xl font-normal p-2'>Lets get you right talent...</h2>
-          <button className='rounded-full bg-yellow text-black font-semibold p-3 my-5 mx-2 hover:bg-light_yellow transition-all duration-200'><Link href='/signin'>Signin as Client</Link></button>
+          <Button asChild className='my-5 mx-2 rounded-full bg-yellow font-semibold text-black hover:bg-light_yellow'>
+            <Link href='/signin'>Signin as Client</Link>
+          </Button>
         </div>
 
       </div>
