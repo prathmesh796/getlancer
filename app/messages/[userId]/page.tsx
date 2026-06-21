@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use } from "react";
+import { use } from "react";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import { useConversations } from "@/hooks/useConversations";

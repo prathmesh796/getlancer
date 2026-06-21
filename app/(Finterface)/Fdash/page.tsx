@@ -1,25 +1,26 @@
 "use client";
-import React from 'react'
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Jobs from '@/components/Jobs';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
+import { Job } from '@/types/Jobs';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function Page() {
   const { data: session, status } = useSession();
 
-  const [showDiv, setShowDiv] = React.useState(false);
-  const [jobRecommendations, setJobRecommendations] = React.useState([]);
-  const [allJobs, setAllJobs] = React.useState([]);
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [statusFilter, setStatusFilter] = React.useState("all");
-  const [loading, setLoading] = React.useState(false);
+  const [showDiv, setShowDiv] = useState(false);
+  const [jobRecommendations, setJobRecommendations] = useState<Job[]>([]);
+  const [allJobs, setAllJobs] = useState<Job[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -31,6 +32,7 @@ export default function Page() {
 
   useEffect(() => {
     const fetchJobRecommendations = async () => {
+      setLoading(true);
       try {
         const response = await fetch('/api/jobs/recommendations', {
           method: 'GET',
@@ -47,6 +49,8 @@ export default function Page() {
         setJobRecommendations(data);
       } catch (error) {
         console.error("Error fetching job recommendations:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -99,17 +103,25 @@ export default function Page() {
     );
   });
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-white dark:bg-slate-900">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
+
   if (status === "authenticated") {
     return (
       <div className="flex min-h-screen">
         {/* Sidebar */}
         <Sidebar userId={session?.user?.id} />
 
-        <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-          <header className="border-b bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
+        <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-gray-800 dark:to-gray-900">
+          <header className="border-b bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
               <h1 className="text-2xl font-bold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">Let&apos;s find some work...</h1>
-              <div className='m-4 p-2 rounded-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 flex justify-center gap-2 items-center shadow-md w-2/3 '>
+              <div className='m-4 p-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 flex justify-center gap-2 items-center shadow-md w-2/3 '>
                 <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '30px', height: '30px' }} className='mr-6 text-gray-400 dark:text-slate-400' />
                 <Input
                   type="text"
@@ -123,7 +135,7 @@ export default function Page() {
                   name="JobStatus"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className='px-4 py-2 rounded-full border border-gray-300 dark:border-slate-600 focus:outline-none bg-white dark:bg-slate-700 dark:text-slate-50 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors'
+                  className='px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors'
                 >
                   <option value="all">All Jobs</option>
                   <option value="open">Open</option>
@@ -156,7 +168,7 @@ export default function Page() {
             <section>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1 h-8 bg-linear-to-b from-blue-500 to-indigo-500 rounded-full"></div>
-                <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">
+                <h2 className="text-3xl font-bold text-deep_blue dark:text-gray-50">
                   All Available Jobs
                   <span className="text-lg font-normal text-gray-600 ml-3">
                     ({filteredJobs.length} {filteredJobs.length === 1 ? 'job' : 'jobs'})

@@ -8,13 +8,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faFileAlt, faBriefcase, faMapMarkerAlt, faCalendar, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Spinner } from "@/components/ui/spinner";
 
 export default function MyApplicationsPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
 
     const [applications, setApplications] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
 
@@ -26,6 +27,7 @@ export default function MyApplicationsPage() {
 
     useEffect(() => {
         if (session?.user?.id) {
+            setLoading(true);
             fetchApplications();
         }
     }, [session]);
@@ -67,7 +69,11 @@ export default function MyApplicationsPage() {
     });
 
     if (status === "loading") {
-        return null;
+        return (
+            <div className="flex justify-center items-center h-screen bg-white dark:bg-slate-900">
+                <Spinner className="size-10" />
+            </div>
+        )
     }
 
     if (status === "authenticated") {

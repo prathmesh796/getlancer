@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Spinner } from "@/components/ui/spinner";
 
 const textareaClassName = cn(
   "mb-4 flex min-h-[80px] w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
@@ -22,10 +23,9 @@ const UpdateCProfile = () => {
   const router = useRouter();
 
   const [clientProfile, setClientProfile] = useState<CprofileType | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [platform, setPlatform] = useState(socialPlatforms[0]);
   const [linkInput, setLinkInput] = useState("");
-  //66f642599ae31b037ff0765d
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -41,34 +41,13 @@ const UpdateCProfile = () => {
             setClientProfile(data.clientProfile);
           }
           setLoading(false);
+        })
+        .catch(error => {
+          console.error("Error fetching profile:", error);
+          setLoading(false);
         });
     }
   }, [session]);
-
-  const handleSocialAdd = () => {
-    if (linkInput.trim() !== "" && clientProfile) {
-      setClientProfile({
-        ...clientProfile,
-        socialLinks: [
-          ...(clientProfile.socialLinks || []),
-          { platform, link: linkInput.trim() }
-        ]
-      });
-      setLinkInput("");
-      setPlatform(socialPlatforms[0]);
-    }
-  };
-
-  const handleSocialDelete = (index: number) => {
-    if (clientProfile) {
-      const updatedLinks = [...(clientProfile.socialLinks || [])];
-      updatedLinks.splice(index, 1);
-      setClientProfile({
-        ...clientProfile,
-        socialLinks: updatedLinks
-      });
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,8 +81,20 @@ const UpdateCProfile = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading profile...</p>;
-  if (!clientProfile) return <p className="text-center mt-10">Profile not found.</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-white dark:bg-slate-900">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
+  if (!clientProfile) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-linear-to-br from-deep_blue via-marine_blue to-blue dark:from-slate-900 dark:via-slate-800 dark:to-gray-900">
+        <p className="text-center mt-10">Profile not found.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-2xl p-6">
@@ -149,50 +140,6 @@ const UpdateCProfile = () => {
         />
         
 
-        {/* Social links */}
-        <div className="mb-4">
-          <label className="block mb-2">Social Links</label>
-          <div className="flex gap-2 mb-2">
-            <select
-              value={platform}
-              onChange={(e) => setPlatform(e.target.value)}
-              className="border p-2 rounded"
-            >
-              {socialPlatforms.map((plat, idx) => (
-                <option key={idx} value={plat}>{plat}</option>
-              ))}
-            </select>
-            <Input
-              type="url"
-              placeholder="Enter URL"
-              value={linkInput}
-              onChange={(e) => setLinkInput(e.target.value)}
-              className="w-full"
-            />
-            <Button
-              type="button"
-              onClick={handleSocialAdd}
-              className="bg-yellow text-black hover:bg-light_yellow"
-            >
-              Add
-            </Button>
-          </div>
-          {/* Show added links */}
-          {clientProfile.socialLinks && clientProfile.socialLinks.length > 0 && (
-            <ul className="list-disc list-inside text-sm text-gray-600">
-              {clientProfile.socialLinks.map((link, idx) => (
-                <li key={idx} className="flex justify-between" >
-                  <div>
-                    <strong>{link.platform.charAt(0).toUpperCase() + link.platform.slice(1)}:</strong> {link.link}
-                  </div>
-                  <button type="button" onClick={() => handleSocialDelete(idx)} aria-label={`Delete ${link.platform} link`}>
-                    <MdDeleteForever className="w-6 h-6" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
 
         {/* Logo Upload */}
         <input

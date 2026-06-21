@@ -1,28 +1,42 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react";
 import Image from 'next/image';
 import Link from 'next/link';
-import { MdEdit, MdLocationOn, MdAttachMoney, MdWork, MdSchool } from "react-icons/md";
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaGithub, FaGlobe, FaStar } from "react-icons/fa";
+import { MdWork, MdEdit, MdLocationOn, MdAttachMoney } from "react-icons/md";
+import { FaTwitter, FaLinkedin, FaGithub, FaGlobe, FaStar } from "react-icons/fa";
+import { Spinner } from "@/components/ui/spinner"
+import { FprofileType } from '@/types/User';
+import { Button } from '@/components/ui/button';
+import { SkillsDialog } from '@/components/profile/skills';
+import { ProjectsDialog } from '@/components/profile/projects';
+import { ExperienceDialog } from '@/components/profile/experience';
+import { SocialDialog } from '@/components/profile/social';
 
 export default function Page() {
   const { data: session } = useSession();
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const userId = session?.user?.id;
+  const [profile, setProfile] = useState<FprofileType | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (session?.user?.id) {
-      fetch(`/api/profile/FreelancerProfile/?userId=${encodeURIComponent(session.user.id)}`, {
+      setLoading(true);
+      const res = fetch(`/api/profile/FreelancerProfile/?userId=${encodeURIComponent(session.user.id)}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
         }
       })
-        .then(res => res.json())
+
+      res.then(response => response.json())
         .then(data => {
-          setProfile(data.freelancerProfile || {});
+          if (data.success) {
+            setProfile(data.freelancerProfile);
+          } else {
+            console.error("Error fetching profile:", data.error);
+          }
           setLoading(false);
         })
         .catch(error => {
@@ -32,37 +46,52 @@ export default function Page() {
     }
   }, [session]);
 
-  const getSocialIcon = (platform) => {
-    const iconProps = { size: 20, className: "text-white" };
-    switch (platform.toLowerCase()) {
-      case 'facebook': return <FaFacebook {...iconProps} />;
-      case 'twitter': return <FaTwitter {...iconProps} />;
-      case 'linkedin': return <FaLinkedin {...iconProps} />;
-      case 'instagram': return <FaInstagram {...iconProps} />;
-      case 'github': return <FaGithub {...iconProps} />;
-      default: return <FaGlobe {...iconProps} />;
+  const getSocialIcon = (link: string) => {
+    const iconProps = { size: 20, className: "" };
+    if (link.toLowerCase().includes("twitter") || link.toLowerCase().includes("x.com")) {
+      return <FaTwitter {...iconProps} />;
     }
+    if (link.toLowerCase().includes("linkedin")) {
+      return <FaLinkedin {...iconProps} />;
+    }
+    if (link.toLowerCase().includes("github")) {
+      return <FaGithub {...iconProps} />;
+    }
+    return <FaGlobe {...iconProps} />;
+  };
+
+  const getSocialName = (link: string) => {
+    if (link.toLowerCase().includes("twitter") || link.toLowerCase().includes("x.com")) {
+      return "Twitter";
+    }
+    if (link.toLowerCase().includes("linkedin")) {
+      return "LinkedIn";
+    }
+    if (link.toLowerCase().includes("github")) {
+      return "GitHub";
+    }
+    return link;
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-deep_blue via-marine_blue to-blue dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-        <div className="animate-pulse text-white text-2xl font-semibold">Loading...</div>
+      <div className="flex justify-center items-center h-screen bg-white dark:bg-slate-900">
+        <Spinner className="size-10" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Profile Header */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-deep_blue via-marine_blue to-blue p-1 shadow-2xl mb-8">
+        <div className="relative overflow-hidden rounded-3xl bg-white p-1 shadow-2xl mb-8">
           <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-12">
             <div className="flex flex-col md:flex-row justify-between items-center gap-8">
               <div className="flex flex-col md:flex-row items-center gap-8">
                 {/* Profile Picture */}
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-yellow via-light_yellow to-yellow rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                  <div className="absolute -inset-1 bg-linear-to-r from-yellow via-light_yellow to-yellow rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
                   <Image
                     src={profile?.profilePic?.url || "/profilepic.jpeg"}
                     alt="Profile"
@@ -103,13 +132,13 @@ export default function Page() {
                       {profile.skills.slice(0, 4).map((skill, index) => (
                         <span
                           key={index}
-                          className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/30 rounded-full text-sm font-semibold"
+                          className="px-4 py-2 bg-gray-200 backdrop-blur-sm border border-white/30 rounded-full text-sm font-semibold"
                         >
                           {skill}
                         </span>
                       ))}
                       {profile.skills.length > 4 && (
-                        <span className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/30 rounded-full text-sm font-semibold">
+                        <span className="px-4 py-2 bg-gray-200 backdrop-blur-sm border border-white/30 rounded-full text-sm font-semibold">
                           +{profile.skills.length - 4} more
                         </span>
                       )}
@@ -120,7 +149,7 @@ export default function Page() {
 
               {/* Update Button */}
               <Link href="/Fprofile/updateFprofile">
-                <button className="flex items-center gap-2 bg-gradient-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform">
+                <button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform">
                   <MdEdit size={20} />
                   Update Profile
                 </button>
@@ -134,69 +163,67 @@ export default function Page() {
           <div className="lg:col-span-2 space-y-8">
             {/* About Section */}
             <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-800 shadow-xl p-1">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-yellow via-light_yellow to-yellow"></div>
+              <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-yellow via-light_yellow to-yellow"></div>
               <div className="p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-1 h-8 bg-gradient-to-b from-yellow to-light_yellow rounded-full"></div>
+                  <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                   <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">About Me</h2>
                 </div>
                 <p className="text-gray-700 dark:text-slate-300 text-lg leading-relaxed">
                   {profile?.bio || "I'm a passionate freelancer dedicated to delivering high-quality work. Let's collaborate on your next project!"}
                 </p>
               </div>
+
+
             </div>
 
             {/* Experience Section */}
-            {profile?.experience && profile.experience.length > 0 && (
-              <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl p-1">
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
-                <div className="p-8">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-full"></div>
+            <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl p-1">
+              <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+              <div className="p-8">
+                <div className="flex items-center justify-between gap-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-1 h-8 bg-linear-to-b from-blue-500 to-indigo-500 rounded-full"></div>
                     <h2 className="text-3xl font-bold text-deep_blue">Experience</h2>
                   </div>
-                  <div className="space-y-6">
-                    {profile.experience.map((exp, index) => (
-                      <div key={index} className="relative pl-8 pb-6 border-l-2 border-gray-200 last:border-l-0 last:pb-0">
-                        <div className="absolute left-0 top-0 w-4 h-4 bg-gradient-to-br from-yellow to-light_yellow rounded-full -translate-x-[9px] shadow-lg"></div>
+                  <ExperienceDialog userId={userId} experienceData={profile?.experience || []} />
+                </div>
+                <div className="space-y-6">
+                  {profile?.experience && profile.experience.length > 0 ? (
+                    profile.experience.map((exp, index) => (
+                      <div key={index} className="relative pl-8 pb-6 rounded-xl shadow shadow-gray-400 ">
                         <h3 className="text-xl font-bold text-deep_blue mb-1">{exp.title || "Position"}</h3>
                         <p className="text-gray-600 font-semibold mb-2">{exp.company || "Company"}</p>
-                        <p className="text-sm text-gray-500 mb-3">{exp.duration || "Duration"}</p>
+                        <p className="text-sm text-gray-500 mb-3">{exp.startDate ? new Date(exp.startDate).toLocaleDateString() : ""} - {exp.endDate ? new Date(exp.endDate).toLocaleDateString() : "Present"}</p>
                         {exp.description && (
                           <p className="text-gray-700 leading-relaxed">{exp.description}</p>
                         )}
                       </div>
-                    ))}
-                  </div>
+                    ))) : (
+                    <p className="text-gray-500 text-sm">No experience added yet</p>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
 
-            {/* Portfolio Section */}
-            {profile?.projects && profile.projects.length > 0 && (
-              <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl p-1">
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500"></div>
-                <div className="p-8">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-1 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></div>
-                    <h2 className="text-3xl font-bold text-deep_blue">Portfolio</h2>
+            {/* Projects Section */}
+            <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl p-1">
+              <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-purple-500 via-pink-500 to-red-500"></div>
+              <div className="p-8">
+                <div className="flex items-center justify-between gap-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-1 h-8 bg-linear-to-b from-purple-500 to-pink-500 rounded-full"></div>
+                    <h2 className="text-3xl font-bold text-deep_blue">Projects</h2>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {profile.projects.map((project, index) => (
+                  <ProjectsDialog userId={userId} projectsData={profile?.projects || []} />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {profile?.projects && profile.projects.length > 0 ? (
+                    profile.projects.map((project, index) => (
                       <div
                         key={index}
-                        className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                        className="group relative overflow-hidden rounded-2xl"
                       >
-                        {project.image && (
-                          <div className="aspect-video relative overflow-hidden">
-                            <Image
-                              src={project.image}
-                              alt={project.title || "Project"}
-                              fill
-                              className="object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                          </div>
-                        )}
                         <div className="p-6">
                           <h3 className="text-xl font-bold text-deep_blue mb-2">{project.title || "Project"}</h3>
                           {project.description && (
@@ -204,29 +231,32 @@ export default function Page() {
                           )}
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-sm">No projects added yet</p>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-8">
             {/* Skills Section */}
             <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl p-1">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500"></div>
+              <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-green-500 via-emerald-500 to-teal-500"></div>
               <div className="p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full"></div>
+                  <div className="w-1 h-8 bg-linear-to-b from-green-500 to-emerald-500 rounded-full"></div>
                   <h2 className="text-2xl font-bold text-deep_blue">Skills</h2>
+                  <SkillsDialog userId={userId} skillsData={profile?.skills || []} />
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {profile?.skills && profile.skills.length > 0 ? (
                     profile.skills.map((skill, index) => (
                       <span
                         key={index}
-                        className="px-4 py-2 bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-gray-300 rounded-full text-deep_blue font-semibold text-sm hover:from-yellow hover:to-light_yellow hover:border-yellow hover:scale-110 transition-all duration-300 transform cursor-default"
+                        className="px-4 py-2 bg-linear-to-br from-gray-100 to-gray-200 border-2 border-gray-300 rounded-full text-deep_blue font-semibold text-sm hover:from-yellow hover:to-light_yellow hover:border-yellow hover:scale-110 transition-all duration-300 transform cursor-default"
                       >
                         {skill}
                       </span>
@@ -239,42 +269,46 @@ export default function Page() {
             </div>
 
             {/* Social Links */}
-            {profile?.socialLinks && Object.keys(profile.socialLinks).some(key => profile.socialLinks[key]) && (
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white to-gray-50 shadow-xl p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-1 h-8 bg-gradient-to-b from-yellow to-light_yellow rounded-full"></div>
+            <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white to-gray-50 shadow-xl p-8">
+              <div className="flex items-center justify-between gap-3 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                   <h2 className="text-2xl font-bold text-deep_blue">Connect</h2>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {Object.entries(profile.socialLinks).map(([platform, link]: [string, string | undefined]) => {
+                <SocialDialog userId={userId} socialData={profile?.socialLinks || []} />
+              </div>
+              <div className="grid grid-cols-2 gap-3 m-2">
+                {profile?.socialLinks && profile.socialLinks.length > 0 ? (
+                  profile.socialLinks.map((link) => {
                     if (!link) return null;
                     return (
-                      <a
-                        key={platform}
+                      <Link
+                        key={link}
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-deep_blue to-marine_blue p-4 shadow-lg hover:shadow-2xl transform hover:scale-110 transition-all duration-300"
+                        className="group relative overflow-hidden rounded-xl transform hover:scale-110 transition-all duration-300"
                       >
-                        <div className="absolute inset-0 bg-gradient-to-br from-yellow/20 to-light_yellow/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="relative flex flex-col items-center gap-2">
+                        <div className="absolute inset-0"></div>
+                        <div className="relative flex items-center gap-2">
                           <div className="transform group-hover:rotate-12 transition-transform duration-300">
-                            {getSocialIcon(platform)}
+                            {getSocialIcon(link)}
                           </div>
-                          <span className="text-white font-semibold text-xs capitalize">
-                            {platform}
+                          <span className="font-semibold text-xs capitalize">
+                            {getSocialName(link)}
                           </span>
                         </div>
-                      </a>
+                      </Link>
                     );
-                  })}
-                </div>
+                  })) : (
+                  <p className="text-gray-500 text-sm">No social links added yet</p>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Stats Card */}
             <div className="grid grid-cols-1 gap-4">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 shadow-xl">
+              <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 p-6 shadow-xl">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12"></div>
                 <div className="relative">
                   <MdWork className="mb-2" size={32} />
@@ -283,7 +317,7 @@ export default function Page() {
                 </div>
               </div>
 
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-yellow to-light_yellow p-6 shadow-xl">
+              <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-yellow to-light_yellow p-6 shadow-xl">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12"></div>
                 <div className="relative">
                   <FaStar className="text-deep_blue/80 mb-2" size={32} />
@@ -293,8 +327,8 @@ export default function Page() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </div >
+      </div >
+    </div >
   )
 }

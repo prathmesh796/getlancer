@@ -60,7 +60,7 @@ export default function Sidebar({ userId }: { userId?: string }) {
     <SidebarProvider defaultOpen className="w-auto shrink-0 min-h-0">
       <ShadcnSidebar
         collapsible="none"
-        className="hidden h-auto w-64 shrink-0 border-r border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-800 md:flex"
+        className="hidden h-auto w-64 shrink-0 border-r border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 md:flex"
       >
         <SidebarHeader className="p-6 pb-2">
           <h2 className="bg-linear-to-r from-deep_blue to-marine_blue bg-clip-text text-2xl font-bold text-transparent dark:from-yellow dark:to-light_yellow">
@@ -83,7 +83,7 @@ export default function Sidebar({ userId }: { userId?: string }) {
                           "h-auto px-4 py-3",
                           isActive
                             ? "border-l-4 border-yellow bg-linear-to-r from-yellow/20 to-light_yellow/20 font-semibold text-deep_blue dark:from-yellow/10 dark:to-light_yellow/10 dark:text-yellow"
-                            : "text-gray-600 dark:text-slate-400"
+                            : "text-gray-600 dark:text-gray-400"
                         )}
                       >
                         <Link href={href}>
