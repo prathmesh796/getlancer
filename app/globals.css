@@ -136,10 +136,10 @@
   }
 
   .dark-card {
-    @apply bg-white dark:bg-gray-800 dark:border-gray-700;
+    @apply bg-white dark:bg-gray-900 dark:border-gray-700;
   }
 
   .dark-input {
-    @apply dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-500;
+    @apply dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-500;
   }
 }

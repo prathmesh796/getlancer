@@ -4,14 +4,16 @@ import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import type { Job } from "@/types/Jobs";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Page({ params }) {
   const job_id: string = use(params);
 
   const [proposal, setProposal] = useState("");
   const [jobDetails, setJobDetails] = useState<Job | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const user = session?.user;
   const router = useRouter();
 
@@ -19,7 +21,8 @@ export default function Page({ params }) {
     router.push("/Fdash");
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     try {
       const response = await fetch(`/api/jobs/${job_id}`, {
@@ -38,6 +41,8 @@ export default function Page({ params }) {
       router.push("/Fdash");
     } catch (error) {
       console.error("Error submitting job application:", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -62,6 +67,14 @@ export default function Page({ params }) {
     };
     fetchJobDetails();
   }, [job_id]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-white dark:bg-slate-900">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

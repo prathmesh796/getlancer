@@ -27,18 +27,9 @@ export type CprofileType = {
     description: string,
     createdAt: string,
     updatedAt: string,
-    logo: {
-        name: string,
-        url: string,
-        type: string,
-        key: string
-    },
-    socialLinks: {
-        platform: string,
-        link: string
-    }[],
-    postedJobs: User[
-    ]
+    logo: profilePic,
+    socialLinks: string[],
+    postedJobs: User[]
 }
 
 export type FprofileType = {
@@ -47,20 +38,35 @@ export type FprofileType = {
     bio: string,
     skills: string[],
     hourlyRate: number,
-    experience: object[],
+    experience: experience[],
     location: string,
-    profilePic: {
-        name: string,
-        url: string,
-        type: string,
-        key: string
-    },
-    socialLinks: {
-        platform: string,
-        link: string
-    }[]
-    projects: object[],
+    profilePic: profilePic,
+    socialLinks: string[]
+    projects: projects[],
     Jobs: User[],
     createdAt: string,
     updatedAt: string
+}
+
+
+export type projects = {
+    title: string,
+    description: string,
+    link: string,
+    tags: string[]
+}
+
+export type profilePic = {
+    name: string,
+    url: string,
+    type: string,
+    key: string
+}
+
+export type experience = {
+    title: string,
+    company: string,
+    startDate: Date,
+    endDate: Date,
+    description: string
 }

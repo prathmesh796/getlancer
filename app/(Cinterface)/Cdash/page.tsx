@@ -9,6 +9,7 @@ import Link from "next/link"
 import CJobs from '@/components/CJobs';
 import Sidebar from '@/components/Sidebar';
 import { Job } from '@/types/Jobs';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function Page() {
     const { data: session, status } = useSession();
@@ -16,7 +17,7 @@ export default function Page() {
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [jobs, setJobs] = useState<Job[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (status === "loading") {
@@ -60,6 +61,14 @@ export default function Page() {
 
         return matchesSearch && matchesStatus;
     });
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-white dark:bg-slate-900">
+                <Spinner className="size-10" />
+            </div>
+        );
+    }
 
     return (
         <div className="flex min-h-screen">

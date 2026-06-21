@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faEnvelope, faFileAlt, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { ensureConversation } from "@/services/chat";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function JobApplicationsPage({ params }: { params: Promise<{ job_id: string }> }) {
     const { job_id } = use(params);
@@ -16,7 +17,7 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ job_
 
     const [applications, setApplications] = useState([]);
     const [jobTitle, setJobTitle] = useState("");
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -54,8 +55,12 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ job_
         }
     };
 
-    if (status === "loading") {
-        return null;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-white dark:bg-slate-900">
+                <Spinner className="size-10" />
+            </div>
+        );
     }
 
     if (status === "authenticated") {
