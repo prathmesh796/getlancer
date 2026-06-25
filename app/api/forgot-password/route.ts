@@ -1,40 +1,44 @@
 import { connect } from "@/utils/db";
+import nodemailer from "nodemailer";
 import User from "@/models/User";
 
-export async function POST(req) {
-    // const { email } = await req.json();
+export async function POST(req: Request) {
+    const { email } = await req.json();
+    console.log("Received email:", email); // Log the received email for debugging
 
-    // await connect();
+    await connect();
 
-    // const user = await User.findOne({ email });
-    // if (!user) {
-    //     return Response.json({ message: "User not found" }, { status: 404 });
-    // }
+    const user = await User.findOne({ email });
+    if (!user) {
+        return Response.json({ message: "User not found" }, { status: 404 });
+    }
 
-    // // Generate token
-    // const token = crypto.randomBytes(32).toString("hex");
+    const bytes = crypto.getRandomValues(new Uint8Array(32));
+    const token = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 
-    // user.resetToken = token;
-    // user.resetTokenExpiry = Date.now() + 1000 * 60 * 15; // 15 min
-    // await user.save();
+    user.resetPasswordToken = token;
+    user.resetPasswordTokenExpiry = new Date(Date.now() + 1000 * 60 * 15); 
+    await user.save();
 
-    // const resetLink = `${process.env.NEXTAUTH_URL}/reset-password/${token}`;
+    const resetLink = `${process.env.NEXTAUTH_URL}/reset-password/${token}`;
 
-    // // Send email
-    // const transporter = nodemailer.createTransport({
-    //     service: "gmail",
-    //     auth: {
-    //         user: process.env.EMAIL_USER,
-    //         pass: process.env.EMAIL_PASS,
-    //     },
-    // });
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.WEBSITE_EMAIL,
+            pass: process.env.WEBSITE_EMAIL_PASSWORD,
+        }
+    });
 
-    // await transporter.sendMail({
-    //     to: email,
-    //     subject: "Reset Password",
-    //     html: `<p>Click below to reset password:</p>
-    //        <a href="${resetLink}">${resetLink}</a>`,
-    // });
+    const mailOptions = {
+        from: process.env.WEBSITE_EMAIL,
+        to: email,
+        subject: "Getlancer - Reset Password",
+        html: `<p>Click below to reset password:</p>
+           <a href="${resetLink}">${resetLink}</a>`,
+    };
 
-    return Response.json({ message: "Email sent" });
+    const result = await transporter.sendMail(mailOptions);
+
+    return Response.json({ message: "Email sent", result });
 }

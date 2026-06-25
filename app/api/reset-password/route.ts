@@ -1,27 +1,34 @@
 import { connect } from "@/utils/db";
 import User from "@/models/User";
+import bcryptjs from "bcryptjs";
 
-export async function POST(req) {
-  // const { token, password } = await req.json();
+export async function POST(req: Request) {
+  const { token, password } = await req.json();
+  console.log("Received token:", token); // Log the received token for debugging
+  console.log("Received password:", password); // Log the received password for debugging
 
-  // await connect();
+  await connect();
 
-  // const user = await User.findOne({
-  //   resetToken: token,
-  //   resetTokenExpiry: { $gt: Date.now() },
-  // });
+  const user = await User.findOne({
+    resetPasswordToken: token,
+  });
 
-  // if (!user) {
-  //   return Response.json({ message: "Invalid or expired token" }, { status: 400 });
-  // }
+  if (
+    !user ||
+    !user.resetPasswordTokenExpiry ||
+    user.resetPasswordTokenExpiry.getTime() < Date.now()
+  ) {
+    return Response.json({ message: "Invalid or expired token" }, { status: 400 });
+  }
 
-  // const hashedPassword = await bcrypt.hash(password, 10);
+  const salt = await bcryptjs.genSalt(10)
+  const hashedPassword = await bcryptjs.hash(password, salt)
 
-  // user.password = hashedPassword;
-  // user.resetToken = undefined;
-  // user.resetTokenExpiry = undefined;
+  user.password = hashedPassword;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordTokenExpiry = undefined;
 
-  // await user.save();
+  await user.save();
 
   return Response.json({ message: "Password updated successfully" });
 }

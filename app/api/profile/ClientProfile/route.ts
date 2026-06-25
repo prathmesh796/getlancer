@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand  } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { CprofileType } from "@/types/User";
+import User from "@/models/User";
 
 const r2 = new S3Client({
   region: "auto",
@@ -25,6 +26,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
     }
 
+    const user = await User.findOne({ _id: userId })
     const clientProfile = await Cprofile.findOne({ user: userId });
 
     if (!clientProfile) {
@@ -41,7 +43,7 @@ export async function GET(req: NextRequest) {
       clientProfile.logo.url = signedUrl;
     }
 
-    return NextResponse.json({ success: true, clientProfile }, { status: 200 });
+    return NextResponse.json({ success: true, user, clientProfile }, { status: 200 });
   } catch (err) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

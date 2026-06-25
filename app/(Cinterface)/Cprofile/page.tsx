@@ -6,12 +6,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MdOpenInNew, MdLocationOn, MdEdit } from "react-icons/md";
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaGithub, FaGlobe } from "react-icons/fa";
-import type { CprofileType } from "@/types/User";
+import type { User, CprofileType } from "@/types/User";
 import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 const Cprofile = () => {
   const { data: session } = useSession();
 
+  const [user, setUser] = useState<User | null>(null)
   const [clientProfile, setClientProfile] = useState<CprofileType | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,8 +28,13 @@ const Cprofile = () => {
       })
         .then(res => res.json())
         .then(data => {
+          console.log(data)
+          const user: User = data.user
           const clientProfile: CprofileType = data.clientProfile;
+
+          setUser(user)
           setClientProfile(clientProfile);
+
           setLoading(false);
         })
         .catch(error => {
@@ -48,6 +56,25 @@ const Cprofile = () => {
     }
   };
 
+  const handleVerification = async () => {
+    const response = await fetch("/api/verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: session?.user?.id ?? user._id }),
+    });
+
+    if (response.ok) {
+      toast("Verification link has been sent to your email.")
+      setLoading(false)
+    } else {
+      const data = await response.json();
+      toast(data.message || "Something went wrong.");
+      setLoading(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-white dark:bg-slate-900">
@@ -60,7 +87,7 @@ const Cprofile = () => {
     <main className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Hero Section with Company Header */}
-        <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-deep_blue via-marine_blue to-blue p-1 shadow-2xl transform hover:scale-[1.01] transition-all duration-300">
+        <section className="relative overflow-hidden rounded-3xl p-1 shadow-2xl transform hover:scale-[1.01] transition-all duration-300">
           <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-12">
             <div className="flex flex-col md:flex-row justify-between items-center gap-8">
               {/* Company Info */}
@@ -108,11 +135,17 @@ const Cprofile = () => {
                     )}
                     <Link
                       href="/Cprofile/updateCprofile"
-                      className="flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-3 rounded-full font-semibold hover:bg-white/20 hover:scale-105 transition-all duration-300 transform"
+                      className="flex items-center gap-2 bg-gray-600 backdrop-blur-sm px-8 py-3 rounded-full font-semibold hover:scale-105 transition-all duration-300 transform"
                     >
                       <MdEdit size={20} />
                       Update Profile
                     </Link>
+
+                    {user && user.isVerified == false && (
+                      <Button className="items-center bg-gray-600 backdrop-blur-sm px-8 py-6 rounded-full font-semibold hover:scale-105 transition-all duration-300 transform" onClick={handleVerification}>
+                        Verify Email
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>

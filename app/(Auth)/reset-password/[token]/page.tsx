@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { use, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,14 +9,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function ResetPassword({ params }) {
+export default function ResetPassword({
+  params,
+}: {
+  params: Promise<{ token: string }>;
+}) {
+  const { token: rawToken } = use(params);
+  const token = decodeURIComponent(rawToken);
   const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
-    const res = await fetch("/api/auth/reset-password", {
+    const res = await fetch("/api/reset-password", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        token: params.token,
+        token,
         password,
       }),
     });

@@ -7,6 +7,7 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ForgotPasswordDialog } from "@/components/auth/forgotPassword";
 import {
   Card,
   CardContent,
@@ -197,14 +198,7 @@ const Login = () => {
             </Button>
           </form>
 
-          <Button
-            type="button"
-            variant="link"
-            onClick={handleForgotPassword}
-            className="mt-2 h-auto p-0 text-yellow"
-          >
-            Forgot Password?
-          </Button>
+          <ForgotPasswordDialog />
 
           <CardDescription className="mt-4 text-center">Or continue with:</CardDescription>
           <div className="mt-2 space-y-2">
