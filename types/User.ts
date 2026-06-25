@@ -4,11 +4,12 @@ export type User = {
     email: string,
     password: string,
     isVerified: boolean,
+    verificationToken: string,
     role: Role,
     createdAt: string,
     updatedAt: string,
     resetPasswordToken?: string,
-    resetPasswordExpiry?: string
+    resetPasswordTokenExpiry?: Date
 }
 
 export type Role = "Client" | "Freelancer" | "Admin"

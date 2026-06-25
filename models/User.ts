@@ -17,9 +17,12 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        isVerfied: {
+        isVerified: {
             type: Boolean,
             default: false,
+        },
+        verificationToken: {
+            type: String,
         },
         role: {
             type: String,
@@ -28,13 +31,18 @@ const userSchema = new mongoose.Schema(
         resetPasswordToken: {
             type: String,
         },
-        resetPasswordExpiry: {
+        resetPasswordTokenExpiry: {
             type: Date,
         },
     },
     { timestamps: true },
 )
 
-const User = mongoose.models.User || mongoose.model("User", userSchema)
+// Re-register in dev so schema changes (e.g. new fields) are picked up after hot reload
+if (mongoose.models.User) {
+    mongoose.deleteModel("User");
+}
 
-export default User as mongoose.Model<User>
+const User = mongoose.model<User>("User", userSchema);
+
+export default User;
