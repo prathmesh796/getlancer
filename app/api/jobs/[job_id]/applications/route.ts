@@ -47,6 +47,8 @@ export async function GET(request: NextRequest, { params }){
             })
         );
 
+        console.log("applicationsWithDetails", applicationsWithDetails)
+
         return NextResponse.json({
             applications: applicationsWithDetails,
             jobTitle: job.title,

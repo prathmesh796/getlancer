@@ -21,6 +21,7 @@ import { useState } from "react"
 import { projects } from "@/types/User";
 import Link from "next/link";
 import { FiEdit3 } from "react-icons/fi";
+import { toast } from "sonner"
 
 export function ProjectsDialog({ userId, projectsData }: { userId: string, projectsData: projects[] }) {
     const [projects, setProjects] = useState<projects[]>(projectsData );
@@ -40,11 +41,12 @@ export function ProjectsDialog({ userId, projectsData }: { userId: string, proje
             .then((res) => res.json())
             .then((data) => {
                 console.log("Profile updated:", data);
-                // Optionally, you can add a success message or close the dialog here
+                toast("Projects updated successfully!");
+                DialogClose
             })
             .catch((error) => {
                 console.error("Error updating profile:", error);
-                // Optionally, you can add an error message here
+                toast("Failed to update projects");
             });
     };
 

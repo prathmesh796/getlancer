@@ -13,6 +13,7 @@ import { SkillsDialog } from '@/components/profile/skills';
 import { ProjectsDialog } from '@/components/profile/projects';
 import { ExperienceDialog } from '@/components/profile/experience';
 import { SocialDialog } from '@/components/profile/social';
+import { AboutDialog } from '@/components/profile/about';
 
 export default function Page() {
   const { data: session } = useSession();
@@ -168,6 +169,7 @@ export default function Page() {
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                   <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">About Me</h2>
+                  <AboutDialog userId={userId} userRole='Freelancer' about={profile?.bio} />
                 </div>
                 <p className="text-gray-700 dark:text-slate-300 text-lg leading-relaxed">
                   {profile?.bio || "I'm a passionate freelancer dedicated to delivering high-quality work. Let's collaborate on your next project!"}
@@ -275,7 +277,7 @@ export default function Page() {
                   <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                   <h2 className="text-2xl font-bold text-deep_blue">Connect</h2>
                 </div>
-                <SocialDialog userId={userId} socialData={profile?.socialLinks || []} />
+                <SocialDialog userId={userId} userRole='Freelancer' socialData={profile?.socialLinks || []} />
               </div>
               <div className="grid grid-cols-2 gap-3 m-2">
                 {profile?.socialLinks && profile.socialLinks.length > 0 ? (

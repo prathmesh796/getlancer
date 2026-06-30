@@ -10,6 +10,7 @@ import CJobs from '@/components/CJobs';
 import Sidebar from '@/components/Sidebar';
 import { Job } from '@/types/Jobs';
 import { Spinner } from '@/components/ui/spinner';
+import Navbar from '@/components/Navbar';
 
 export default function Page() {
     const { data: session, status } = useSession();
@@ -76,7 +77,8 @@ export default function Page() {
             <Sidebar userId={session?.user?.id} />
 
             {/* Main Content */}
-            <main className="min-w-0 flex-1 overflow-y-auto bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+            <main className="flex-1 ">
+                <Navbar activeTab={"dashboard"} />
                 {/* Header */}
                 <header className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
                     <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -93,7 +95,7 @@ export default function Page() {
                 </header>
 
                 {/* Dashboard Content */}
-                <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <div className="mx-full py-6 sm:px-6 lg:px-8">
                     {/* Search and Filter Bar */}
                     <div className='mb-8 p-3 rounded-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 flex justify-center gap-2 items-center shadow-lg'>
                         <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '30px', height: '30px' }} className='mr-4 text-gray-400 dark:text-slate-400' />

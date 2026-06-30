@@ -6,15 +6,33 @@ import { CgProfile } from "react-icons/cg";
 import Tab from "@/components/theme-switch";
 import { Button } from "@/components/ui/button";
 
-const Navbar = (params: {activeTab: string}) => {
-  const { activeTab } = params;
+const Banner = () => {
   const { data: session } = useSession();
 
   return (
     <nav className="flex h-24 justify-between bg-black px-10 py-4 text-white">
-      <div className="flex outline-none">
-        <h1 className="text-4xl font-bold">getLancer</h1>
-      </div>
+      <Link href="/" className="flex outline-none">
+        <h1 className="text-5xl font-bold">getLancer</h1>
+        <h4 className="pt-6 font-semibold text-light_yellow">.com</h4>
+      </Link>
+
+      <ul className="flex items-center gap-8 text-md">
+        <li>
+          <Link href="/" className="transition-all duration-200 hover:text-light_yellow">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link href="/about" className="transition-all duration-200 hover:text-light_yellow">
+            About
+          </Link>
+        </li>
+        <li>
+          <Link href="/contact" className="transition-all duration-200 hover:text-light_yellow">
+            Contact
+          </Link>
+        </li>
+      </ul>
 
       <div className="mt-4 flex shrink-0 items-center justify-center gap-3 md:mt-0 md:gap-5">
         <Tab />
@@ -50,4 +68,4 @@ const Navbar = (params: {activeTab: string}) => {
   );
 };
 
-export default Navbar;
+export default Banner;

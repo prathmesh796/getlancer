@@ -41,6 +41,8 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ job_
                 },
             });
 
+            console.log(response)
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

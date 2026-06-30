@@ -1,54 +1,28 @@
-import { getToken } from "next-auth/jwt";
-
 import { NextRequest, NextResponse } from "next/server";
-
+import { getToken } from "next-auth/jwt";
 import {
-
   clearSessionCookies,
-
   getAuthSecret,
-
   hasSessionCookie,
-
 } from "@/lib/auth";
 
-
-
 const freelancerRoutes = ["/Fdash", "/Fprofile", "/MyApplications", "/ApplyJob"];
-
 const clientRoutes = ["/Cdash", "/Cprofile", "/NewJob", "/JobApplications"];
 
-
-
 function matchesRoute(pathname: string, routes: string[]) {
-
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
-
 }
-
-
 
 async function getValidToken(req: NextRequest) {
-
   try {
-
     return await getToken({ req, secret: getAuthSecret() });
-
   } catch {
-
     return null;
-
   }
-
 }
 
-
-
 export async function proxy(req: NextRequest) {
-
   const { pathname } = req.nextUrl;
-
-
 
   let token = null;
 
