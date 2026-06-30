@@ -9,6 +9,7 @@ import { faSearch, faFileAlt, faBriefcase, faMapMarkerAlt, faCalendar, faDollarS
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Spinner } from "@/components/ui/spinner";
+import Navbar from "@/components/Navbar";
 
 export default function MyApplicationsPage() {
     const { data: session, status } = useSession();
@@ -82,6 +83,7 @@ export default function MyApplicationsPage() {
                 <Sidebar userId={session?.user?.id} />
 
                 <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+                    <Navbar activeTab="My Applications" />
                     <header className="border-b bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
                         <div className="max-w-7xl mx-auto px-4 py-4">
                             <h1 className="text-3xl font-bold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent mb-4">

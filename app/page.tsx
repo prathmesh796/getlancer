@@ -34,13 +34,13 @@ export default function Home() {
     <div>
       <Banner />
 
-      <main className='text-black mx-24 p-5'>
+      <main className=' mx-24 p-5 '>
         <div className='flex justify-between px-10'>
           <div className='pt-24'>
             <h1 className='text-5xl font-semibold p-2'>Have <span className='text-yellow'>Skills...</span></h1>
-            <h2 className='text-4xl font-normal p-2'>Lets get you paid...</h2>
+            <h2 className='text-4xl font-normal p-2 '>Lets get you paid...</h2>
             <Button asChild className='my-5 mx-2 rounded-full bg-yellow font-semibold text-black hover:bg-light_yellow'>
-              <Link href='/signin'>Signin as Freelancer</Link>
+              <Link href='/signin?role=Freelancer'>Signin as Freelancer</Link>
             </Button>
           </div>
           <div className="img">
@@ -58,7 +58,7 @@ export default function Home() {
             <h1 className='text-5xl font-semibold p-2'>Have <span className='text-yellow'>Company...</span></h1>
             <h2 className='text-4xl font-normal p-2'>Lets get you right talent...</h2>
             <Button asChild className='my-5 mx-2 rounded-full bg-yellow font-semibold text-black hover:bg-light_yellow'>
-              <Link href='/signin'>Signin as Client</Link>
+              <Link href='/signin?role=Client'>Signin as Client</Link>
             </Button>
           </div>
 

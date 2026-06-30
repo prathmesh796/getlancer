@@ -3,7 +3,7 @@ import Jobs from "@/models/Jobs";
 import Cprofile from "@/models/Cprofile";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET({ params }) {
+export async function GET(request: NextRequest, { params }) {
     try {
         await connect();
         const { job_id } = await params;

@@ -28,17 +28,17 @@ const AccountTypeSelection = () => {
         <Card
           className={cn(
             "flex h-48 w-64 cursor-pointer flex-col items-center justify-center border-2 p-8",
-            selectedAccount === 'client' ? 'border-foreground' : 'border-muted'
+            selectedAccount === 'Client' ? 'border-foreground' : 'border-muted'
           )}
-          onClick={() => handleSelection('client')}
+          onClick={() => handleSelection('Client')}
         >
           <CardContent className="flex flex-col items-center justify-center p-0">
             <input
               type="radio"
               name="accountType"
               className="mb-4 h-6 w-6 cursor-pointer"
-              checked={selectedAccount === 'client'}
-              onChange={() => handleSelection('client')}
+              checked={selectedAccount === 'Client'}
+              onChange={() => handleSelection('Client')}
             />
             <span className="text-center text-xl">Sign in as a Client</span>
           </CardContent>
@@ -47,17 +47,17 @@ const AccountTypeSelection = () => {
         <Card
           className={cn(
             "flex h-48 w-64 cursor-pointer flex-col items-center justify-center border-2 p-8",
-            selectedAccount === 'freelancer' ? 'border-foreground' : 'border-muted'
+            selectedAccount === 'Freelancer' ? 'border-foreground' : 'border-muted'
           )}
-          onClick={() => handleSelection('freelancer')}
+          onClick={() => handleSelection('Freelancer')}
         >
           <CardContent className="flex flex-col items-center justify-center p-0">
             <input
               type="radio"
               name="accountType"
               className="mb-4 h-6 w-6 cursor-pointer"
-              checked={selectedAccount === 'freelancer'}
-              onChange={() => handleSelection('freelancer')}
+              checked={selectedAccount === 'Freelancer'}
+              onChange={() => handleSelection('Freelancer')}
             />
             <span className="text-center text-xl">Sign in as a Freelancer</span>
           </CardContent>

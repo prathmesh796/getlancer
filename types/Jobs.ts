@@ -1,5 +1,3 @@
-import type { User } from "./User"
-
 export type Job = {
     _id: string,
     title: string,
@@ -10,10 +8,10 @@ export type Job = {
     datePosted: Date,
     skills: string[],
     status: jobStatus,
-    applications: Array<application>,
+    applications: Array<Application>,
 }
 
-export type application = {
+export type Application = {
     _id: string,
     jobId: string,
     freelancerId: string,

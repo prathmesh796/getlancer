@@ -7,6 +7,7 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ForgotPasswordDialog } from "@/components/auth/forgotPassword";
 import {
   Card,
@@ -16,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Banner from "@/components/Banner";
 
 declare global {
   interface Window {
@@ -64,7 +66,7 @@ const Login = () => {
     }
   }, [session, router]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
@@ -136,102 +138,93 @@ const Login = () => {
     }
   }, []);
 
-  const handleForgotPassword = async () => {
-    const res = await fetch("/api/forgot-password", {
-      method: "POST",
-      body: JSON.stringify({ email }),
-    });
-    const data = await res.json();
-    if (res.status === 200) {
-      alert(data.message);
-    } else {
-      setError(data.error);
-    }
-  };
-
   return (
-    <div className="flex h-screen items-center justify-center bg-background">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-center text-3xl">Log In</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-semibold">
-                Email Address
-              </label>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                className="h-11"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+    <div className="flex-1 h-screen items-center justify-center bg-background">
+      <Banner />
+
+      <div className="flex flex-col items-center justify-center">
+        <Card className="w-full max-w-md m-5 shadow-lg">
+          <CardHeader>
+            <CardTitle className="text-center text-3xl">Log In</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <Label htmlFor="email" className="mb-2 block text-sm font-semibold">
+                  Email Address
+                </Label>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="h-11"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="password" className="mb-2 block text-sm font-semibold">
+                  Password
+                </Label>
+                <Input
+                  type="password"
+                  id="password"
+                  name="password"
+                  className="h-11"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div id="turnstile-container" className="my-4"></div>
+
+              {error && <p className="text-center text-destructive">{error}</p>}
+
+              <Button
+                type="submit"
+                className="h-11 w-full bg-yellow text-black hover:bg-light_yellow"
+              >
+                Log In
+              </Button>
+            </form>
+
+            <ForgotPasswordDialog />
+
+            <CardDescription className="mt-4 text-center">Or continue with:</CardDescription>
+            <div className="mt-2 space-y-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11 w-full border-yellow"
+                onClick={() => signIn("google")}
+              >
+                <FcGoogle className="size-6" />
+                Login with Google
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11 w-full border-yellow"
+                onClick={() => signIn("github")}
+              >
+                <FaGithub className="size-6" />
+                Login with GitHub
+              </Button>
             </div>
-            <div>
-              <label htmlFor="password" className="mb-2 block text-sm font-semibold">
-                Password
-              </label>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                className="h-11"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            <div id="turnstile-container" className="my-4"></div>
-
-            {error && <p className="text-center text-destructive">{error}</p>}
-
-            <Button
-              type="submit"
-              className="h-11 w-full bg-yellow text-black hover:bg-light_yellow"
-            >
-              Log In
-            </Button>
-          </form>
-
-          <ForgotPasswordDialog />
-
-          <CardDescription className="mt-4 text-center">Or continue with:</CardDescription>
-          <div className="mt-2 space-y-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="h-11 w-full border-yellow"
-              onClick={() => signIn("google")}
-            >
-              <FcGoogle className="size-6" />
-              Login with Google
-            </Button>
-
-            <Button
-              type="button"
-              variant="outline"
-              className="h-11 w-full border-yellow"
-              onClick={() => signIn("github")}
-            >
-              <FaGithub className="size-6" />
-              Login with GitHub
-            </Button>
-          </div>
-        </CardContent>
-        <CardFooter className="justify-center">
-          <p className="text-center">
-            Don&apos;t have an account?{" "}
-            <Link href="/signin" className="font-thin text-yellow hover:underline">
-              Sign In
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
+          </CardContent>
+          <CardFooter className="justify-center">
+            <p className="text-center">
+              Don&apos;t have an account?{" "}
+              <Link href="/signin" className="font-thin text-yellow hover:underline">
+                Sign In
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
 
-export function useConversations(userId) {
+export function useConversations(userId: string) {
   const [conversations, setConversations] = useState([]);
 
   useEffect(() => {

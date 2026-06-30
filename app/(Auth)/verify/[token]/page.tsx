@@ -1,11 +1,9 @@
 "use client";
 import { use, useState, useEffect, useRef } from "react";
+import Banner from "@/components/Banner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function VerifyEmail({
-    params,
-}: {
-    params: Promise<{ token: string }>;
-}) {
+export default function VerifyEmail({ params }: { params: Promise<{ token: string }> }) {
     const { token: rawToken } = use(params);
     const token = decodeURIComponent(rawToken);
     const [message, setMessage] = useState("verifying...");
@@ -32,7 +30,18 @@ export default function VerifyEmail({
     }, [token]);
     return (
         <div className="flex min-h-[50vh] items-center justify-center p-6">
-            {message}
+            <Banner />
+
+            <div className="flex flex-col items-center justify-center">
+                <Card className="w-full max-w-md m-5 shadow-lg">
+                    <CardHeader>
+                        <CardTitle>Verify Email</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {message}
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }

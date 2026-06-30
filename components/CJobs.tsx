@@ -77,7 +77,7 @@ const CJobs = ({ jobid, job }: { jobid: string, job: Job }) => {
                     asChild
                     className="rounded-full bg-linear-to-r from-yellow to-light_yellow font-semibold text-deep_blue hover:scale-105 hover:shadow-lg"
                 >
-                    <Link href={`/JobApplications/${job._id}`}>
+                    <Link href={`/JobApplications/${jobid}/`}>
                         View Applications
                     </Link>
                 </Button>

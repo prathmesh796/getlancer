@@ -46,14 +46,14 @@ export default function Sidebar({ userId }: { userId?: string }) {
   const freelancerLinks: NavLink[] = [
     { href: "/Fdash", label: "Dashboard", icon: faHome },
     { href: "/MyApplications", label: "My Applications", icon: faFileAlt },
-    { href: `/messages/${userId}`, label: "Messages", icon: faEnvelope },
+    { href: `/messages`, label: "Messages", icon: faEnvelope },
     { href: "/schedule", label: "Schedule", icon: faCalendar },
   ];
 
   const clientLinks: NavLink[] = [
     { href: "/Cdash", label: "Dashboard", icon: faHome },
     { href: "/NewJob", label: "Post New Job", icon: faBriefcase },
-    { href: `/messages/${userId}`, label: "Messages", icon: faEnvelope },
+    { href: `/messages`, label: "Messages", icon: faEnvelope },
     { href: "/schedule", label: "Schedule", icon: faCalendar },
   ];
 

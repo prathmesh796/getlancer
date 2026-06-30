@@ -20,7 +20,7 @@ export const db = getFirestore(app);
 if (typeof window !== "undefined") {
   try {
     getAnalytics(app);
-  } catch {
-    // Ignore analytics init errors (not critical for chat functionality).
+  } catch(error) {
+    console.error("Analytics init failed", error)
   }
 }

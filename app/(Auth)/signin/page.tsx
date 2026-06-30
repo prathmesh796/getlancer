@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { NextResponse } from 'next/server';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
@@ -13,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import Banner from '@/components/Banner';
 
 const SignIn = () => {
   const router = useRouter();
@@ -23,8 +25,6 @@ const SignIn = () => {
   const [error, seterror] = useState("")
 
   const role = searchParams.get('role')
-  const roleName =
-    role === 'client' ? 'Client' : role === 'freelancer' ? 'Freelancer' : '';
 
   const isValidEmail = (email) => {
     const emailRegex = /[a-z0-9\._%+!$&*=^|~#%'`?{}/\-]+@([a-z0-9\-]+\.){1,}([a-z]{2,16})/
@@ -34,7 +34,7 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password || !Name || !roleName) {
+    if (!email || !password || !Name || !role) {
       seterror('Please fill in all fields');
       return;
     }
@@ -59,7 +59,7 @@ const SignIn = () => {
           Name,
           email,
           password,
-          roleName,
+          role,
         }),
       })
 
@@ -79,7 +79,7 @@ const SignIn = () => {
         });
 
         if (loginResult.ok) {
-          if (roleName === "Client") {
+          if (role === "Client") {
             router.replace("/Cdash");
           } else {
             router.replace("/Fdash");
@@ -99,70 +99,74 @@ const SignIn = () => {
   };
 
   return (
-    <div className='flex h-screen items-center justify-center bg-muted'>
-      <Card className='w-full max-w-md'>
-        <CardHeader>
-          <CardTitle className='text-center text-3xl'>Sign in as a {roleName || '...'}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className='space-y-6'>
-            <div>
-              <label htmlFor='name' className='mb-2 block text-sm font-semibold'>
-                Name
-              </label>
-              <Input
-                type='text'
-                id='name'
-                className='h-11'
-                value={Name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor='email' className='mb-2 block text-sm font-semibold'>
-                Email Address
-              </label>
-              <Input
-                type='email'
-                id='email'
-                className='h-11'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor='password' className='mb-2 block text-sm font-semibold'>
-                Password
-              </label>
-              <Input
-                type='password'
-                id='password'
-                className='h-11'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && <p className='text-destructive'>{error}</p>}
-            <Button
-              type='submit'
-              className='h-11 w-full bg-yellow font-semibold text-black hover:bg-light_yellow'
-            >
-              Sign In
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className='justify-center'>
-          <p>
-            Already have an account?{' '}
-            <Link href='/login' className='font-thin text-yellow hover:underline'>
-              Log In
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
+    <div className='flex-col h-screen items-center justify-center bg-muted'>
+      <Banner />
+
+      <div className='flex justify-center'>
+        <Card className='w-full max-w-md m-5'>
+          <CardHeader>
+            <CardTitle className='text-center text-3xl'>Sign in as a {role || '...'}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className='space-y-6'>
+              <div>
+                <Label htmlFor='name' className='mb-2 block text-sm font-semibold'>
+                  Name
+                </Label>
+                <Input
+                  type='text'
+                  id='name'
+                  className='h-11'
+                  value={Name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor='email' className='mb-2 block text-sm font-semibold'>
+                  Email Address
+                </Label>
+                <Input
+                  type='email'
+                  id='email'
+                  className='h-11'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor='password' className='mb-2 block text-sm font-semibold'>
+                  Password
+                </Label>
+                <Input
+                  type='password'
+                  id='password'
+                  className='h-11'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              {error && <p className='text-destructive'>{error}</p>}
+              <Button
+                type='submit'
+                className='h-11 w-full bg-yellow font-semibold text-black hover:bg-light_yellow'
+              >
+                Sign In
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className='justify-center'>
+            <p>
+              Already have an account?{' '}
+              <Link href='/login' className='font-thin text-yellow hover:underline'>
+                Log In
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 };

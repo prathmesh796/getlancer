@@ -11,11 +11,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Job } from '@/types/Jobs';
 import { Spinner } from '@/components/ui/spinner';
+import Navbar from '@/components/Navbar';
 
 export default function Page() {
   const { data: session, status } = useSession();
 
-  const [showDiv, setShowDiv] = useState(false);
   const [jobRecommendations, setJobRecommendations] = useState<Job[]>([]);
   const [allJobs, setAllJobs] = useState<Job[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -118,6 +118,7 @@ export default function Page() {
         <Sidebar userId={session?.user?.id} />
 
         <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-gray-800 dark:to-gray-900">
+          <Navbar activeTab={"Dashboard"} />
           <header className="border-b bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
               <h1 className="text-2xl font-bold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">Let&apos;s find some work...</h1>
@@ -162,45 +163,6 @@ export default function Page() {
                   <p className="text-gray-500 text-center py-8">No recommendations available</p>
                 )}
               </div>
-            </section>
-
-            {/* All Jobs Section */}
-            <section>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-1 h-8 bg-linear-to-b from-blue-500 to-indigo-500 rounded-full"></div>
-                <h2 className="text-3xl font-bold text-deep_blue dark:text-gray-50">
-                  All Available Jobs
-                  <span className="text-lg font-normal text-gray-600 ml-3">
-                    ({filteredJobs.length} {filteredJobs.length === 1 ? 'job' : 'jobs'})
-                  </span>
-                </h2>
-              </div>
-              {loading ? (
-                <div className="space-y-4 py-4">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <Skeleton key={i} className="h-32 w-full rounded-md" />
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredJobs.length > 0 ? (
-                    filteredJobs.map((job) => (
-                      <Jobs key={job._id} job={job} />
-                    ))
-                  ) : (
-                    <Card>
-                      <CardContent className="py-12 text-center">
-                      <p className="text-lg text-muted-foreground">
-                        {searchQuery
-                          ? `No jobs found matching "${searchQuery}"`
-                          : "No jobs available at the moment"
-                        }
-                      </p>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              )}
             </section>
           </div>
         </main>
