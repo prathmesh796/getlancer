@@ -18,11 +18,11 @@ export default function Page({ params }) {
 
       <main className="flex-1 overflow-y-auto">
         <Navbar activeTab="messages" />
-        <header className="shadow-sm">
-          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <h1 className="text-4xl font-semibold">Messages</h1>
-            <div className="flex items-center space-x-4">
-              <Button asChild className="rounded-full bg-yellow text-black hover:bg-light_yellow">
+        <header className="shadow-sm border-b">
+          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+            <h1 className="text-2xl sm:text-4xl font-semibold text-center sm:text-left">Messages</h1>
+            <div className="flex items-center space-x-4 w-full sm:w-auto justify-center sm:justify-start">
+              <Button asChild className="rounded-full bg-yellow text-black hover:bg-light_yellow w-full sm:w-auto">
                 <Link href="/NewMessage">
                   New Message
                 </Link>

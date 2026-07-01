@@ -90,7 +90,7 @@ const Page = () => {
                                     />
                                 </div>
 
-                                <div className="flex gap-4">
+                                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                                     <div className="flex-1">
                                         <label htmlFor="bounty" className="mb-1 block text-base font-semibold">
                                             Bounty

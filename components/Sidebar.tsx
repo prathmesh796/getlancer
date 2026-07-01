@@ -67,9 +67,12 @@ export default function Sidebar({ userId }: { userId?: string }) {
   return (
     <TooltipProvider>
       <SidebarProvider defaultOpen className="w-auto shrink-0 min-h-0">
+        <div className="md:hidden fixed bottom-6 right-6 z-50">
+          <SidebarTrigger className="bg-white dark:bg-slate-800 shadow-xl rounded-full h-14 w-14 border border-gray-200 dark:border-slate-700" />
+        </div>
         <ShadcnSidebar
           collapsible="icon"
-          className="hidden h-auto shrink-0 md:flex"
+          className="h-auto shrink-0"
         >
         <SidebarHeader className="p-6 pb-2 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:justify-center">
           <div className="flex items-center justify-between">

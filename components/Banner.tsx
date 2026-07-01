@@ -10,13 +10,13 @@ const Banner = () => {
   const { data: session } = useSession();
 
   return (
-    <nav className="flex h-24 justify-between bg-black px-10 py-4 text-white">
-      <Link href="/" className="flex outline-none">
-        <h1 className="text-5xl font-bold">getLancer</h1>
-        <h4 className="pt-6 font-semibold text-light_yellow">.com</h4>
+    <nav className="flex flex-col md:flex-row h-auto md:h-24 justify-between items-center bg-black px-4 md:px-10 py-4 text-white gap-4 md:gap-0">
+      <Link href="/" className="flex outline-none items-end">
+        <h1 className="text-3xl md:text-5xl font-bold">getLancer</h1>
+        <h4 className="pb-0 md:pb-1 font-semibold text-light_yellow text-sm md:text-base">.com</h4>
       </Link>
 
-      <ul className="flex items-center gap-8 text-md">
+      <ul className="flex items-center gap-4 md:gap-8 text-sm md:text-base flex-wrap justify-center">
         <li>
           <Link href="/" className="transition-all duration-200 hover:text-light_yellow">
             Home
@@ -34,34 +34,34 @@ const Banner = () => {
         </li>
       </ul>
 
-      <div className="mt-4 flex shrink-0 items-center justify-center gap-3 md:mt-0 md:gap-5">
+      <div className="flex shrink-0 items-center justify-center gap-3 md:gap-5 w-full md:w-auto">
         <Tab />
         {session ? (
-          <>
-            <p className="text-light_yellow">Hello, {session.user.name}</p>
+          <div className="flex items-center gap-3 md:gap-5">
+            <p className="hidden sm:block text-light_yellow text-sm md:text-base">Hello, {session.user.name}</p>
             <Link href={session.user.role === "Client" ? "/Cprofile" : "/Fprofile"}>
-              <CgProfile className="h-8 w-8" />
+              <CgProfile className="h-6 w-6 md:h-8 md:w-8" />
             </Link>
             <Button
               variant="destructive"
-              className="rounded-full bg-red-500 px-5 py-2 text-white hover:bg-red-600 md:p-3"
+              className="rounded-full bg-red-500 px-4 py-2 text-sm md:text-base md:px-5 md:py-3 text-white hover:bg-red-600"
               onClick={() => signOut({ callbackUrl: "/" })}
             >
               Logout
             </Button>
-          </>
+          </div>
         ) : (
-          <>
-            <Link className="transition-all duration-200 hover:text-light_yellow" href="/login">
+          <div className="flex items-center gap-3 md:gap-5">
+            <Link className="text-sm md:text-base transition-all duration-200 hover:text-light_yellow" href="/login">
               Login
             </Link>
             <Button
               asChild
-              className="rounded-full bg-yellow px-5 py-2 text-black hover:bg-light_yellow md:p-3"
+              className="rounded-full bg-yellow px-4 py-2 text-sm md:text-base md:px-5 md:py-3 text-black hover:bg-light_yellow"
             >
               <Link href="/join">Signin</Link>
             </Button>
-          </>
+          </div>
         )}
       </div>
     </nav>

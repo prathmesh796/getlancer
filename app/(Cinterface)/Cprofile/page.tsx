@@ -229,7 +229,6 @@ const Cprofile = () => {
             </div>
           </div>
 
-
           {/* Stats/Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 p-8 shadow-xl transform hover:scale-105 transition-all duration-300">

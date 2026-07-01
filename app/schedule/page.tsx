@@ -33,8 +33,8 @@ const CalendarEvents = () => {
             {/* Sidebar */}
             <Sidebar userId={session?.user?.id} />
 
-            <main className="flex-1 overflow-y-auto">
-                <h1 className="text-2xl font-bold my-10">Your Google Calendar Events</h1>
+            <main className="flex-1 overflow-y-auto p-4 sm:p-8">
+                <h1 className="text-2xl font-bold mb-10 text-center md:text-left">Your Google Calendar Events</h1>
                 <MyCalendar />
 
                 {events.map((event) => (

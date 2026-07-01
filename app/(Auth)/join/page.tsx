@@ -21,14 +21,14 @@ const AccountTypeSelection = () => {
   };
 
   return (
-    <div className="m-10 flex flex-col items-center justify-center bg-background">
-      <h1 className="m-10 mb-8 text-3xl font-bold">Join our website</h1>
+    <div className="m-4 md:m-10 flex flex-col items-center justify-center bg-background min-h-[70vh]">
+      <h1 className="m-6 md:m-10 mb-8 text-2xl md:text-3xl font-bold text-center">Join our website</h1>
 
-      <div className="m-10 mb-8 flex gap-24 space-x-10">
+      <div className="m-4 md:m-10 mb-8 flex flex-col md:flex-row gap-6 md:gap-16 w-full max-w-2xl justify-center items-center">
         <Card
           className={cn(
-            "flex h-48 w-64 cursor-pointer flex-col items-center justify-center border-2 p-8",
-            selectedAccount === 'Client' ? 'border-foreground' : 'border-muted'
+            "flex h-48 w-full md:w-64 cursor-pointer flex-col items-center justify-center border-2 p-8 transition-all duration-200",
+            selectedAccount === 'Client' ? 'border-foreground shadow-lg scale-105' : 'border-muted hover:border-gray-400'
           )}
           onClick={() => handleSelection('Client')}
         >
@@ -40,14 +40,14 @@ const AccountTypeSelection = () => {
               checked={selectedAccount === 'Client'}
               onChange={() => handleSelection('Client')}
             />
-            <span className="text-center text-xl">Sign in as a Client</span>
+            <span className="text-center text-lg md:text-xl">Sign in as a Client</span>
           </CardContent>
         </Card>
 
         <Card
           className={cn(
-            "flex h-48 w-64 cursor-pointer flex-col items-center justify-center border-2 p-8",
-            selectedAccount === 'Freelancer' ? 'border-foreground' : 'border-muted'
+            "flex h-48 w-full md:w-64 cursor-pointer flex-col items-center justify-center border-2 p-8 transition-all duration-200",
+            selectedAccount === 'Freelancer' ? 'border-foreground shadow-lg scale-105' : 'border-muted hover:border-gray-400'
           )}
           onClick={() => handleSelection('Freelancer')}
         >
@@ -59,19 +59,19 @@ const AccountTypeSelection = () => {
               checked={selectedAccount === 'Freelancer'}
               onChange={() => handleSelection('Freelancer')}
             />
-            <span className="text-center text-xl">Sign in as a Freelancer</span>
+            <span className="text-center text-lg md:text-xl">Sign in as a Freelancer</span>
           </CardContent>
         </Card>
       </div>
 
       <Button
         onClick={handleCreateAccount}
-        className="m-10 rounded-full bg-yellow text-black hover:bg-light_yellow"
+        className="m-6 md:m-10 rounded-full bg-yellow px-8 py-4 text-black hover:bg-light_yellow text-base md:text-lg"
       >
         Create Account
       </Button>
 
-      <p className="mt-6 text-sm">
+      <p className="mt-2 md:mt-6 text-sm">
         Already have an account?{' '}
         <Link href="/login" className="text-sm text-yellow hover:underline">
           Login

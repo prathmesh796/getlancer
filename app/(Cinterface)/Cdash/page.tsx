@@ -77,16 +77,16 @@ export default function Page() {
             <Sidebar userId={session?.user?.id} />
 
             {/* Main Content */}
-            <main className="flex-1 ">
+            <main className="flex-1 min-w-0">
                 <Navbar activeTab={"dashboard"} />
                 {/* Header */}
                 <header className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
-                    <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                        <h1 className="text-4xl font-semibold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">Let&apos;s get some work done...</h1>
+                    <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+                        <h1 className="text-2xl md:text-4xl font-semibold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent text-center md:text-left">Let&apos;s get some work done...</h1>
                         <div className="flex items-center space-x-4">
                             <Link href="/NewJob" className="flex justify-center items-center">
-                                <button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform">
-                                    <IoMdAddCircleOutline className='w-6 h-6' />
+                                <button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-6 py-2 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform text-sm md:text-base">
+                                    <IoMdAddCircleOutline className='w-5 h-5 md:w-6 md:h-6' />
                                     Post New Job
                                 </button>
                             </Link>
@@ -95,23 +95,24 @@ export default function Page() {
                 </header>
 
                 {/* Dashboard Content */}
-                <div className="mx-full py-6 sm:px-6 lg:px-8">
+                <div className="mx-auto py-6 px-4 sm:px-6 lg:px-8 w-full">
                     {/* Search and Filter Bar */}
-                    <div className='mb-8 p-3 rounded-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 flex justify-center gap-2 items-center shadow-lg'>
-                        <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '30px', height: '30px' }} className='mr-4 text-gray-400 dark:text-slate-400' />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full border-gray-50 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-50 z-10 focus:outline-none"
-                            placeholder="Search your jobs by title, location, or description..."
-                        />
-
+                    <div className='mb-8 p-3 rounded-2xl md:rounded-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 flex flex-col md:flex-row justify-center gap-2 md:gap-4 items-center shadow-lg'>
+                        <div className="flex items-center w-full px-2">
+                          <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '20px', height: '20px' }} className='mr-3 text-gray-400 dark:text-slate-400 shrink-0' />
+                          <input
+                              type="text"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              className="w-full bg-transparent border-none text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-0 text-sm md:text-base py-2"
+                              placeholder="Search your jobs by title, location, or description..."
+                          />
+                        </div>
                         <select
                             name="JobStatus"
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className='px-4 py-2 rounded-full border border-gray-300 dark:border-slate-600 focus:outline-none bg-white dark:bg-slate-700 dark:text-slate-50 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors'
+                            className='px-4 py-2 w-full md:w-auto rounded-xl md:rounded-full border border-gray-300 dark:border-slate-600 focus:outline-none bg-white dark:bg-slate-700 dark:text-slate-50 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors text-sm md:text-base'
                         >
                             <option value="all">All Status</option>
                             <option value="open">Open</option>
@@ -124,10 +125,10 @@ export default function Page() {
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
-                                <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">
+                                <div className="w-1 h-6 md:h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
+                                <h2 className="text-xl md:text-3xl font-bold text-deep_blue dark:text-slate-50">
                                     Your Posted Jobs
-                                    <span className="text-lg font-normal text-gray-600 ml-3">
+                                    <span className="text-sm md:text-lg font-normal text-gray-600 ml-2 md:ml-3">
                                         ({filteredJobs.length} {filteredJobs.length === 1 ? 'job' : 'jobs'})
                                     </span>
                                 </h2>
@@ -146,10 +147,10 @@ export default function Page() {
                             </div>
                         ) : (
                             <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-3xl shadow-sm">
-                                <div className="max-w-md mx-auto">
+                                <div className="max-w-md mx-auto px-4">
                                     {searchQuery || statusFilter !== "all" ? (
                                         <>
-                                            <p className="text-gray-500 text-lg mb-4">
+                                            <p className="text-gray-500 text-base md:text-lg mb-4">
                                                 No jobs found matching your filters
                                             </p>
                                             <button
@@ -164,11 +165,11 @@ export default function Page() {
                                         </>
                                     ) : (
                                         <>
-                                            <p className="text-gray-500 text-lg mb-6">
+                                            <p className="text-gray-500 text-base md:text-lg mb-6">
                                                 You haven't posted any jobs yet
                                             </p>
                                             <Link href="/NewJob">
-                                                <button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform mx-auto">
+                                                <button className="flex items-center justify-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-6 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform mx-auto w-full md:w-auto">
                                                     <IoMdAddCircleOutline className='w-6 h-6' />
                                                     Post Your First Job
                                                 </button>
@@ -181,6 +182,6 @@ export default function Page() {
                     </div>
                 </div>
             </main>
-        </div >
+        </div>
     )
 }

@@ -137,7 +137,7 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ jobI
                                         </div>
                                     </div>
 
-                                    <div className="mt-4 flex gap-3">
+                                    <div className="mt-4 flex flex-col sm:flex-row gap-3">
                                         <Button
                                             onClick={() => {
                                                 const currentUserId = session?.user?.id;
@@ -153,7 +153,7 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ jobI
                                                         console.error("Error starting conversation:", err);
                                                     });
                                             }}
-                                            className="rounded-full bg-linear-to-r from-yellow to-light_yellow font-semibold text-deep_blue hover:shadow-lg"
+                                            className="w-full sm:w-auto rounded-full bg-linear-to-r from-yellow to-light_yellow font-semibold text-deep_blue hover:shadow-lg"
                                         >
                                             Contact Applicant
                                         </Button>
@@ -162,7 +162,7 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ jobI
                                             onClick={() => {
                                                 router.push(`/profile/view/${app.freelancerId}`);
                                             }}
-                                            className="rounded-full font-semibold"
+                                            className="w-full sm:w-auto rounded-full font-semibold"
                                         >
                                             View Profile
                                         </Button>
