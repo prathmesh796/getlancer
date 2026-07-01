@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Navbar from '../components/Navbar';
+import Banner from '../components/Banner'
 import { useSession, signOut } from 'next-auth/react';
 
 // next-auth/react is already mocked in jest.setup.js, we just need to typecast and mockReturnValue/mockReturnValueOnce.
@@ -14,10 +15,10 @@ describe('components/Navbar', () => {
     jest.clearAllMocks();
   });
 
-  it('renders correctly when user is unauthenticated', () => {
+  it('renders Banner correctly when user is unauthenticated', () => {
     useSession.mockReturnValue({ data: null, status: "unauthenticated" });
 
-    render(<Navbar />);
+    render(<Banner />);
 
     expect(screen.getByText('getLancer')).toBeInTheDocument();
     expect(screen.getByText('.com')).toBeInTheDocument();
