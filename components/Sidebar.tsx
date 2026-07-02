@@ -38,8 +38,8 @@ export default function Sidebar({ userId }: { userId?: string }) {
 
   const [activeTab, setActiveTab] = useState("")
 
-  const isFreelancerInterface = pathname.includes('Finterface') || pathname.includes('Fdash') || pathname.includes('Fprofile') || pathname.includes('MyApplications');
-  const isClientInterface = pathname.includes('Cinterface') || pathname.includes('Cdash') || pathname.includes('Cprofile') || pathname.includes('NewJob') || pathname.includes('JobApplications');
+  const isFreelancerInterface = pathname.includes('Finterface') || pathname.includes('Fdash') || pathname.includes('Fprofile') || pathname.includes('MyApplications') || pathname.startsWith('/ApplyJob');
+  const isClientInterface = pathname.includes('Cinterface') || pathname.includes('Cdash') || pathname.includes('Cprofile') || pathname.includes('NewJob') || pathname.includes('JobApplications') || pathname.startsWith('/Job');
 
   const isSharedPage = pathname === '/messages' || pathname === '/schedule' || pathname.startsWith('/messages/') || pathname.startsWith('/schedule/');
 

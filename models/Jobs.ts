@@ -32,12 +32,8 @@ const jobsSchema = new mongoose.Schema(
             required: true,
         },
         applications: {
-            type: [
-                {
-                  userId: mongoose.Schema.Types.ObjectId,
-                  proposal: String,
-                },
-              ],
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: "Applications",
             default: [],
         },
         status: {

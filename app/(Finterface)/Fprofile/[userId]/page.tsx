@@ -8,7 +8,7 @@ import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaGithub, FaGlobe, FaSt
 import { Spinner } from '@/components/ui/spinner';
 
 export default function ViewProfilePage({ params }) {
-    const userId: string | undefined = use(params);
+    const { userId } = use(params) as { userId: string };
     const router = useRouter();
     const [profile, setProfile] = useState(null);
     const [userName, setUserName] = useState("");

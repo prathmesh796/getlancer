@@ -148,10 +148,14 @@ export default function Page() {
             <div className="space-y-4">
               {jobRecommendations.length > 0 ? (
                 jobRecommendations.map((job) => (
-                  <Jobs key={job._id} job={job} />
+                  <div key={job._id}>
+                    <Jobs job={job} />
+                  </div>
                 ))
               ) : (
-                <p className="text-gray-500 text-center py-8">No recommendations available</p>
+                <p className="text-gray-500 text-center py-8">
+                  No recommendations available
+                </p>
               )}
             </div>
           </section>

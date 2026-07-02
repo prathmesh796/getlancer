@@ -16,6 +16,7 @@ export type Application = {
     jobId: string,
     freelancerId: string,
     proposal: string,
+    status: applicationStatus
     appliedAt: Date,
 }
 
@@ -23,4 +24,10 @@ enum jobStatus {
     open = "open",
     assigned = "assigned",
     completed = "completed"
+}
+
+enum applicationStatus {
+    pending = "pending",
+    accepted = "accepted",
+    rejected = "rejected"
 }
