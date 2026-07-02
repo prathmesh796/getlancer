@@ -13,7 +13,6 @@ import { useRouter } from 'next/navigation'
 
 const CJobs = ({ jobid, job }: { jobid: string, job: Job }) => {
     const router = useRouter()
-    const applicationCount = job.applications?.length || 0;
 
     return (
         <Card onClick={() => router.push(`/Job/${jobid}`)} className="w-full rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-xl" key={jobid}>
@@ -66,15 +65,6 @@ const CJobs = ({ jobid, job }: { jobid: string, job: Job }) => {
                     </div>
                 </div>
             </CardHeader>
-
-            <CardFooter className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-t p-0 pt-4 gap-4 sm:gap-0">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                    <FontAwesomeIcon icon={faUsers} className="h-5 w-5" />
-                    <span className="font-semibold text-sm sm:text-base">
-                        {applicationCount} {applicationCount === 1 ? 'Application' : 'Applications'}
-                    </span>
-                </div>
-            </CardFooter>
         </Card>
     )
 }

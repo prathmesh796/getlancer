@@ -1,63 +1,75 @@
 "use client";
 
-import { use } from "react";
+import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
-import { useConversations } from "@/hooks/useConversations";
 import { Button } from "@/components/ui/button";
-import Navbar from "@/components/Navbar";
+import { Card, CardContent } from "@/components/ui/card";
+import { useConversations } from "@/hooks/useConversations";
+import { useSession } from "next-auth/react";
 
-export default function Page({ params }) {
-  const userId: string = use(params);
-  const conversations = useConversations(userId);
+export default function Page() {
+  const { data: session } = useSession();
+  const userId = session?.user.id;
+  const conversations = useConversations(userId!);
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       <Sidebar userId={userId} />
 
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 flex flex-col">
         <Navbar activeTab="messages" />
-        <header className="shadow-sm border-b">
-          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
-            <h1 className="text-2xl sm:text-4xl font-semibold text-center sm:text-left">Messages</h1>
-            <div className="flex items-center space-x-4 w-full sm:w-auto justify-center sm:justify-start">
-              <Button asChild className="rounded-full bg-yellow text-black hover:bg-light_yellow w-full sm:w-auto">
-                <Link href="/NewMessage">
-                  New Message
-                </Link>
-              </Button>
-            </div>
+        
+        <section className="flex-1 overflow-y-auto">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            {conversations.length === 0 ? (
+              <div className="text-gray-600 dark:text-slate-300 text-center py-14">
+                <Card className="mx-auto max-w-md border-gray-100 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/70">
+                  <CardContent className="p-8 text-center">
+                  <div className="mb-2 text-lg font-semibold text-deep_blue dark:text-slate-50">
+                    No conversations yet
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Send a message below to start the conversation.
+                  </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {conversations.map((c) => {
+                  const mine = c.senderId === userId;
+                  const createdAt =
+                    typeof c?.createdAt?.toDate === "function" ? c.createdAt.toDate() : null;
+
+                  return (
+                    <Link href={`/messages/${userId}/${c.id}`} key={c.id} className={`flex-col`}>
+                      <div
+                        className={[
+                          "max-w-[85%] sm:max-w-[75%] rounded-3xl px-4 py-3 shadow-sm border",
+                          mine
+                            ? "bg-linear-to-r from-yellow to-light_yellow text-deep_blue border-yellow/30"
+                            : "bg-white/90 dark:bg-slate-800/80 text-gray-900 dark:text-slate-50 border-gray-100 dark:border-slate-700",
+                        ].join(" ")}
+                      >
+                        <div className="whitespace-pre-wrap wrap-break-words text-sm leading-relaxed">
+                          {c.id}
+                        </div>
+                        <div
+                          className={[
+                            "mt-2 text-[11px]",
+                            mine ? "text-deep_blue/70" : "text-gray-500 dark:text-slate-400",
+                          ].join(" ")}
+                        >
+                          {createdAt ? createdAt.toLocaleString() : ""}
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        </header>
-
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {conversations.length === 0 ? (
-            <div className="text-gray-600">No conversations yet.</div>
-          ) : (
-            <div className="divide-y rounded-xl border bg-white">
-              {conversations.map((c) => {
-                const other =
-                  Array.isArray(c.participants) ? c.participants.find((p) => p !== userId) : null;
-                const title = other || c.id;
-                const preview = c.lastMessage?.text || "No messages yet";
-
-                return (
-                  <Link
-                    key={c.id}
-                    href={`/messages/${userId}/${c.id}`}
-                    className="block p-4 hover:bg-gray-50 transition"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="font-semibold text-gray-900">{title}</div>
-                      <div className="text-xs text-gray-500">Open</div>
-                    </div>
-                    <div className="text-sm text-gray-600 truncate">{preview}</div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
         </section>
       </main>
     </div>
