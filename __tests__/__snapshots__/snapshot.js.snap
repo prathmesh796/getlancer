@@ -2,99 +2,191 @@
 
 exports[`renders homepage unchanged 1`] = `
 <div>
-  <main
-    class="text-black mx-24 p-5"
-  >
-    <div
-      class="flex justify-between px-10"
+  <div>
+    <nav
+      class="flex flex-col md:flex-row h-auto md:h-24 justify-between items-center bg-black px-4 md:px-10 py-4 text-white gap-4 md:gap-0"
     >
-      <div
-        class="pt-24"
+      <a
+        class="flex outline-none items-end"
+        href="/"
       >
         <h1
-          class="text-5xl font-semibold p-2"
+          class="text-3xl md:text-5xl font-bold"
         >
-          Have 
-          <span
-            class="text-yellow"
-          >
-            Skills...
-          </span>
+          getLancer
         </h1>
-        <h2
-          class="text-4xl font-normal p-2"
+        <h4
+          class="pb-0 md:pb-1 font-semibold text-light_yellow text-sm md:text-base"
         >
-          Lets get you paid...
-        </h2>
-        <a
-          class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 my-5 mx-2 rounded-full bg-yellow font-semibold text-black hover:bg-light_yellow"
-          data-size="default"
-          data-slot="button"
-          data-variant="default"
-          href="/signin"
-        >
-          Signin as Freelancer
-        </a>
-      </div>
-      <div
-        class="img"
+          .com
+        </h4>
+      </a>
+      <ul
+        class="flex items-center gap-4 md:gap-8 text-sm md:text-base flex-wrap justify-center"
       >
-        <img
-          alt="freelancer-img"
-          class="w-full h-auto"
-          height="310"
-          loading="eager"
-          src="/home-img1.png"
-          width="400"
-        />
+        <li>
+          <a
+            class="transition-all duration-200 hover:text-light_yellow"
+            href="/"
+          >
+            Home
+          </a>
+        </li>
+        <li>
+          <a
+            class="transition-all duration-200 hover:text-light_yellow"
+            href="/about"
+          >
+            About
+          </a>
+        </li>
+        <li>
+          <a
+            class="transition-all duration-200 hover:text-light_yellow"
+            href="/contact"
+          >
+            Contact
+          </a>
+        </li>
+      </ul>
+      <div
+        class="flex shrink-0 items-center justify-center gap-3 md:gap-5 w-full md:w-auto"
+      >
+        <div>
+          <button>
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 16 16"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"
+              />
+              <path
+                d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          class="flex items-center gap-3 md:gap-5"
+        >
+          <a
+            class="text-sm md:text-base transition-all duration-200 hover:text-light_yellow"
+            href="/login"
+          >
+            Login
+          </a>
+          <a
+            class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 h-8 gap-1.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 rounded-full bg-yellow px-4 py-2 text-sm md:text-base md:px-5 md:py-3 text-black hover:bg-light_yellow"
+            data-size="default"
+            data-slot="button"
+            data-variant="default"
+            href="/join"
+          >
+            Signin
+          </a>
+        </div>
       </div>
-    </div>
-    <div
-      class="mb-10 h-1 rounded-full opacity-15 bg-gray-400"
-    />
-    <div
-      class="flex justify-between px-10"
+    </nav>
+    <main
+      class="mx-4 md:mx-12 lg:mx-24 p-2 md:p-5"
     >
       <div
-        class="img"
+        class="flex flex-col md:flex-row justify-between items-center px-2 md:px-10 gap-8 md:gap-0"
       >
-        <img
-          alt="freelancer-img"
-          class="w-full h-auto"
-          height="310"
-          src="/home-img2.jpg"
-          width="400"
-        />
+        <div
+          class="pt-10 md:pt-24 text-center md:text-left flex-1"
+        >
+          <h1
+            class="text-4xl md:text-5xl font-semibold p-2"
+          >
+            Have 
+            <span
+              class="text-yellow"
+            >
+              Skills...
+            </span>
+          </h1>
+          <h2
+            class="text-3xl md:text-4xl font-normal p-2 "
+          >
+            Lets get you paid...
+          </h2>
+          <a
+            class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 my-5 mx-2 rounded-full bg-yellow font-semibold text-black hover:bg-light_yellow"
+            data-size="default"
+            data-slot="button"
+            data-variant="default"
+            href="/signin?role=Freelancer"
+          >
+            Signin as Freelancer
+          </a>
+        </div>
+        <div
+          class="img flex-1 w-full flex justify-center md:justify-end"
+        >
+          <img
+            alt="freelancer-img"
+            class="w-full max-w-[400px] h-auto"
+            height="310"
+            loading="eager"
+            src="/home-img1.png"
+            width="400"
+          />
+        </div>
       </div>
       <div
-        class="pt-20"
+        class="my-10 md:mb-10 h-1 rounded-full opacity-15 bg-gray-400"
+      />
+      <div
+        class="flex flex-col-reverse md:flex-row justify-between items-center px-2 md:px-10 gap-8 md:gap-0"
       >
-        <h1
-          class="text-5xl font-semibold p-2"
+        <div
+          class="img flex-1 w-full flex justify-center md:justify-start"
         >
-          Have 
-          <span
-            class="text-yellow"
+          <img
+            alt="freelancer-img"
+            class="w-full max-w-[400px] h-auto"
+            height="310"
+            src="/home-img2.jpg"
+            width="400"
+          />
+        </div>
+        <div
+          class="pt-10 md:pt-20 text-center md:text-left flex-1 md:pl-10"
+        >
+          <h1
+            class="text-4xl md:text-5xl font-semibold p-2"
           >
-            Company...
-          </span>
-        </h1>
-        <h2
-          class="text-4xl font-normal p-2"
-        >
-          Lets get you right talent...
-        </h2>
-        <a
-          class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 my-5 mx-2 rounded-full bg-yellow font-semibold text-black hover:bg-light_yellow"
-          data-size="default"
-          data-slot="button"
-          data-variant="default"
-          href="/signin"
-        >
-          Signin as Client
-        </a>
+            Have 
+            <span
+              class="text-yellow"
+            >
+              Company...
+            </span>
+          </h1>
+          <h2
+            class="text-3xl md:text-4xl font-normal p-2"
+          >
+            Lets get you right talent...
+          </h2>
+          <a
+            class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 my-5 mx-2 rounded-full bg-yellow font-semibold text-black hover:bg-light_yellow"
+            data-size="default"
+            data-slot="button"
+            data-variant="default"
+            href="/signin?role=Client"
+          >
+            Signin as Client
+          </a>
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </div>
 </div>
 `;
