@@ -1,34 +1,24 @@
 "use client";
+
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Jobs from '@/components/Jobs';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent } from '@/components/ui/card';
 import { Job } from '@/types/Jobs';
 import { Spinner } from '@/components/ui/spinner';
+import Navbar from '@/components/Navbar';
 
 export default function Page() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
-  const [showDiv, setShowDiv] = useState(false);
   const [jobRecommendations, setJobRecommendations] = useState<Job[]>([]);
   const [allJobs, setAllJobs] = useState<Job[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.replace("/login");
-    }
-  }, [status, router]);
 
   useEffect(() => {
     const fetchJobRecommendations = async () => {
@@ -111,101 +101,62 @@ export default function Page() {
     );
   }
 
-  if (status === "authenticated") {
-    return (
-      <div className="flex min-h-screen">
-        {/* Sidebar */}
-        <Sidebar userId={session?.user?.id} />
+  return (
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <Sidebar userId={session?.user?.id} />
 
-        <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-gray-800 dark:to-gray-900">
-          <header className="border-b bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-              <h1 className="text-2xl font-bold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent">Let&apos;s find some work...</h1>
-              <div className='m-4 p-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 flex justify-center gap-2 items-center shadow-md w-2/3 '>
-                <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '30px', height: '30px' }} className='mr-6 text-gray-400 dark:text-slate-400' />
+      <main className="flex-1 min-w-0 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-gray-800 dark:to-gray-900">
+        <Navbar activeTab={"Dashboard"} />
+        <header className="border-b bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+            <h1 className="text-xl md:text-2xl font-bold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent text-center md:text-left">Let&apos;s find some work...</h1>
+            <div className='m-0 md:m-4 p-2 rounded-2xl md:rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 flex flex-col md:flex-row justify-center gap-2 items-center shadow-md w-full md:w-2/3'>
+              <div className="flex items-center w-full px-2">
+                <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '20px', height: '20px' }} className='mr-4 text-gray-400 dark:text-slate-400 shrink-0' />
                 <Input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="z-10 h-9 border-0 bg-transparent shadow-none focus-visible:ring-0"
+                  className="z-10 h-9 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm md:text-base w-full"
                   placeholder="Search jobs by title, location, or skills..."
                 />
-
-                <select
-                  name="JobStatus"
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className='px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors'
-                >
-                  <option value="all">All Jobs</option>
-                  <option value="open">Open</option>
-                  <option value="assigned">Assigned</option>
-                  <option value="closed">Closed</option>
-                </select>
               </div>
+
+              <select
+                name="JobStatus"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className='px-4 py-2 w-full md:w-auto rounded-xl md:rounded-full border border-gray-300 dark:border-gray-600 focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm md:text-base'
+              >
+                <option value="all">All Jobs</option>
+                <option value="open">Open</option>
+                <option value="assigned">Assigned</option>
+                <option value="closed">Closed</option>
+              </select>
             </div>
-          </header>
-
-          <div className="max-w-7xl mx-auto px-4 py-8">
-            {/* Recommended Jobs Section */}
-            <section className="mb-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
-                <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">Recommended for You</h2>
-              </div>
-              <div className="space-y-4">
-                {jobRecommendations.length > 0 ? (
-                  jobRecommendations.map((job) => (
-                    <Jobs key={job._id} job={job} />
-                  ))
-                ) : (
-                  <p className="text-gray-500 text-center py-8">No recommendations available</p>
-                )}
-              </div>
-            </section>
-
-            {/* All Jobs Section */}
-            <section>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-1 h-8 bg-linear-to-b from-blue-500 to-indigo-500 rounded-full"></div>
-                <h2 className="text-3xl font-bold text-deep_blue dark:text-gray-50">
-                  All Available Jobs
-                  <span className="text-lg font-normal text-gray-600 ml-3">
-                    ({filteredJobs.length} {filteredJobs.length === 1 ? 'job' : 'jobs'})
-                  </span>
-                </h2>
-              </div>
-              {loading ? (
-                <div className="space-y-4 py-4">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <Skeleton key={i} className="h-32 w-full rounded-md" />
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredJobs.length > 0 ? (
-                    filteredJobs.map((job) => (
-                      <Jobs key={job._id} job={job} />
-                    ))
-                  ) : (
-                    <Card>
-                      <CardContent className="py-12 text-center">
-                      <p className="text-lg text-muted-foreground">
-                        {searchQuery
-                          ? `No jobs found matching "${searchQuery}"`
-                          : "No jobs available at the moment"
-                        }
-                      </p>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              )}
-            </section>
           </div>
-        </main>
-      </div>
-    )
-  }
-  else { return null }
+        </header>
+
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Recommended Jobs Section */}
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
+              <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">Recommended for You</h2>
+            </div>
+            <div className="space-y-4">
+              {jobRecommendations.length > 0 ? (
+                jobRecommendations.map((job) => (
+                  <Jobs key={job._id} job={job} />
+                ))
+              ) : (
+                <p className="text-gray-500 text-center py-8">No recommendations available</p>
+              )}
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  )
 }

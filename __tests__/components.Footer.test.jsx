@@ -8,8 +8,8 @@ describe('components/Footer', () => {
 
     expect(screen.getByText('getLancer')).toBeInTheDocument();
     expect(screen.getByText('.com')).toBeInTheDocument();
-    expect(screen.getByText('All rights reserved | 2024')).toBeInTheDocument();
+    expect(screen.getByText('All rights reserved | 2026')).toBeInTheDocument();
     expect(screen.getByText('Connect with us')).toBeInTheDocument();
-    expect(screen.getByText('getlancer@gmail.com')).toBeInTheDocument();
+    expect(screen.getByText('getlancer796@gmail.com')).toBeInTheDocument();
   });
 });

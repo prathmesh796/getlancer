@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Banner from "@/components/Banner";
 
 export default function ResetPassword({
   params,
@@ -36,25 +37,29 @@ export default function ResetPassword({
 
   return (
     <div className="flex min-h-[50vh] items-center justify-center p-6">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Reset Password</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Input
-            type="password"
-            placeholder="New Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button
-            onClick={handleSubmit}
-            className="w-full bg-yellow text-black hover:bg-light_yellow"
-          >
-            Reset Password
-          </Button>
-        </CardContent>
-      </Card>
+      <Banner />
+
+      <div className="flex flex-col items-center justify-center">
+        <Card className="w-full max-w-md m-5 shadow-lg">
+          <CardHeader>
+            <CardTitle>Reset Password</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Input
+              type="password"
+              placeholder="New Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              onClick={handleSubmit}
+              className="w-full bg-yellow text-black hover:bg-light_yellow"
+            >
+              Reset Password
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

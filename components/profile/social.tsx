@@ -15,8 +15,14 @@ import { Label } from "@/components/ui/label"
 import { FaRegEdit } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useState } from "react"
+import { toast } from "sonner"
+import { Role } from "@/types/User"
 
-export function SocialDialog({ userId, socialData }: { userId: string, socialData: string[] }) {
+export function SocialDialog({ userId, userRole, socialData }: { userId: string, userRole: Role, socialData: string[] }) {
+    let apiUrl = ""
+    if(userRole === 'Client') apiUrl = '/api/profile/ClientProfile'
+    else apiUrl = '/api/profile/FreelancerProfile'
+    
     const [socialLinks, setSocialLinks] = useState<string[]>(socialData);
     const [inputValue, setInputValue] = useState("");
 
@@ -32,7 +38,7 @@ export function SocialDialog({ userId, socialData }: { userId: string, socialDat
         e.preventDefault();
         try {
             console.log("Submitting social links:", socialLinks);
-            const response = await fetch("/api/profile/FreelancerProfile", {
+            const response = await fetch(apiUrl, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -46,9 +52,11 @@ export function SocialDialog({ userId, socialData }: { userId: string, socialDat
 
             const data = await response.json();
             console.log("Profile updated:", data);
-            // Optionally, you can add a success message or close the dialog here
+            toast("Social links updated successfully!");
+            DialogClose
         } catch (error) {
             console.error("Error updating profile:", error);
+            toast("Failed to update social links");
         }
     };
 
@@ -78,7 +86,7 @@ export function SocialDialog({ userId, socialData }: { userId: string, socialDat
                             onChange={(e) => setInputValue(e.target.value)}
                             onKeyDown={handleKeyDown} />
                     </Field>
-                    {socialLinks.length > 0 && (
+                    {socialLinks?.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">
                             {socialLinks.map((link, idx) => (
                                 <span

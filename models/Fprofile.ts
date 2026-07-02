@@ -16,6 +16,10 @@ const FprofileSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
+  description: {
+    type: String,
+    default: ""
+  },
   skills: {
     type: [String],
     default: []

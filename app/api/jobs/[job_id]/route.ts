@@ -1,14 +1,15 @@
 import { connect } from "@/utils/db";
 import Jobs from "@/models/Jobs";
 import Cprofile from "@/models/Cprofile";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request, { params }) {
+export async function GET(request: NextRequest, { params }) {
     try {
         await connect();
         const { job_id } = await params;
 
         const job = await Jobs.findById(job_id);
+        console.log(job)
 
         if (!job) {
             return NextResponse.json({ message: "Job not found" }, { status: 404 });
@@ -20,7 +21,7 @@ export async function GET(request, { params }) {
     }
 }
 
-export async function PUT(request, { params }) {
+export async function PUT(request: NextRequest, { params }) {
     try {
         await connect();
         const { job_id } = await params;
@@ -55,7 +56,7 @@ export async function PUT(request, { params }) {
     }
 }
 
-export async function PATCH(request, { params }) {
+export async function PATCH(request: NextRequest, { params }) {
     try {
         await connect();
         const { job_id } = await params;
@@ -90,7 +91,7 @@ export async function PATCH(request, { params }) {
     }
 }
 
-export async function DELETE(request, { params }) {
+export async function DELETE(request: NextRequest, { params }) {
     try {
         await connect();
         const { job_id } = await params;

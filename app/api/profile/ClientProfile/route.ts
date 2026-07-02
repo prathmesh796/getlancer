@@ -128,3 +128,32 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
 }
+
+export async function PATCH(req: NextRequest) {
+    await connect();
+
+    try {
+        const body = await req.json();
+        const { userId, updateFields } = body;
+
+        console.log("Received PATCH request with body:", body);
+
+        if (!userId) {
+            return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
+        }
+
+        const updated = await Cprofile.findOneAndUpdate(
+            { user: userId },
+            { $set: updateFields },
+            { new: true }
+        );
+
+        if (!updated) {
+            return NextResponse.json({ success: false, error: "Client profile not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ success: true, profile: updated }, { status: 200 });
+    } catch (err) {
+        return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    }
+}

@@ -40,8 +40,8 @@ export default async function RootLayout({ children }) {
             enableSystem
           >
             <SessionProvider session={session}>
-              <Navbar />
-              <div className="container mx-auto min-h-screen">
+              {/* <Navbar activeTab={"profile"} /> */}
+              <div className=" mx-auto min-h-screen">
                 {children}
 
               </div>

@@ -9,6 +9,7 @@ import { faSearch, faFileAlt, faBriefcase, faMapMarkerAlt, faCalendar, faDollarS
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Spinner } from "@/components/ui/spinner";
+import Navbar from "@/components/Navbar";
 
 export default function MyApplicationsPage() {
     const { data: session, status } = useSession();
@@ -82,27 +83,29 @@ export default function MyApplicationsPage() {
                 <Sidebar userId={session?.user?.id} />
 
                 <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+                    <Navbar activeTab="My Applications" />
                     <header className="border-b bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
                         <div className="max-w-7xl mx-auto px-4 py-4">
                             <h1 className="text-3xl font-bold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent mb-4">
                                 My Applications
                             </h1>
 
-                            <div className='p-2 rounded-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 flex justify-center gap-2 items-center shadow-md'>
-                                <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '30px', height: '30px' }} className='mr-6 text-gray-400 dark:text-slate-400' />
-                                <Input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="z-10 h-9 border-0 bg-transparent shadow-none focus-visible:ring-0"
-                                    placeholder="Search applications by title, company, or location..."
-                                />
-
+                            <div className='p-2 rounded-2xl md:rounded-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 flex flex-col md:flex-row justify-center gap-2 items-center shadow-md'>
+                                <div className="flex items-center w-full px-2">
+                                    <FontAwesomeIcon icon={faSearch} style={{ fontSize: '1px', width: '20px', height: '20px' }} className='mr-4 text-gray-400 dark:text-slate-400 shrink-0' />
+                                    <Input
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="z-10 h-9 border-0 bg-transparent shadow-none focus-visible:ring-0 w-full text-sm md:text-base"
+                                        placeholder="Search applications by title, company, or location..."
+                                    />
+                                </div>
                                 <select
                                     name="StatusFilter"
                                     value={statusFilter}
                                     onChange={(e) => setStatusFilter(e.target.value)}
-                                    className='px-4 py-2 rounded-full border border-gray-300 dark:border-slate-600 focus:outline-none bg-white dark:bg-slate-700 dark:text-slate-50 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors'
+                                    className='px-4 py-2 w-full md:w-auto rounded-xl md:rounded-full border border-gray-300 dark:border-slate-600 focus:outline-none bg-white dark:bg-slate-700 dark:text-slate-50 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors text-sm md:text-base'
                                 >
                                     <option value="all">All Status</option>
                                     <option value="open">Open</option>
@@ -115,10 +118,10 @@ export default function MyApplicationsPage() {
 
                     <div className="max-w-7xl mx-auto px-4 py-8">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
-                            <h2 className="text-2xl font-bold text-deep_blue dark:text-slate-50">
+                            <div className="w-1 h-6 md:h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
+                            <h2 className="text-xl md:text-2xl font-bold text-deep_blue dark:text-slate-50">
                                 Applications Submitted
-                                <span className="text-lg font-normal text-gray-600 dark:text-slate-400 ml-3">
+                                <span className="text-sm md:text-lg font-normal text-gray-600 dark:text-slate-400 ml-3">
                                     ({filteredApplications.length} {filteredApplications.length === 1 ? 'application' : 'applications'})
                                 </span>
                             </h2>
@@ -135,9 +138,9 @@ export default function MyApplicationsPage() {
                                         key={app._id}
                                         className="bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 border border-gray-100 dark:border-slate-700"
                                     >
-                                        <div className="flex justify-between items-start mb-4">
+                                        <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4 sm:gap-0">
                                             <div className="flex-1">
-                                                <h3 className="text-2xl font-bold text-deep_blue dark:text-slate-50 mb-2">
+                                                <h3 className="text-xl md:text-2xl font-bold text-deep_blue dark:text-slate-50 mb-2">
                                                     {app.title}
                                                 </h3>
                                                 <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-slate-400">
@@ -162,7 +165,7 @@ export default function MyApplicationsPage() {
                                                 </div>
                                             </div>
 
-                                            <div className={`px-4 py-2 rounded-full text-sm font-semibold ${app.status === 'open'
+                                            <div className={`px-4 py-2 rounded-full text-sm font-semibold self-start ${app.status === 'open'
                                                     ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
                                                     : app.status === 'assigned'
                                                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'

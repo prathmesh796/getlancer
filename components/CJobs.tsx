@@ -18,8 +18,8 @@ const CJobs = ({ jobid, job }: { jobid: string, job: Job }) => {
             <CardHeader className="p-0">
                 <div className="mb-4 flex items-start justify-between">
                     <div className="flex-1">
-                        <div className="mb-2 flex items-center gap-3">
-                            <CardTitle className="text-2xl text-deep_blue dark:text-slate-50">{job.title}</CardTitle>
+                        <div className="mb-2 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                            <CardTitle className="text-xl sm:text-2xl text-deep_blue dark:text-slate-50">{job.title}</CardTitle>
                             <span className={`rounded-full px-3 py-1 text-sm font-semibold ${job.status === 'open'
                                     ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
                                     : job.status === 'assigned'
@@ -65,19 +65,19 @@ const CJobs = ({ jobid, job }: { jobid: string, job: Job }) => {
                 </div>
             </CardHeader>
 
-            <CardFooter className="flex items-center justify-between border-t p-0 pt-4">
+            <CardFooter className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-t p-0 pt-4 gap-4 sm:gap-0">
                 <div className="flex items-center gap-2 text-muted-foreground">
                     <FontAwesomeIcon icon={faUsers} className="h-5 w-5" />
-                    <span className="font-semibold">
+                    <span className="font-semibold text-sm sm:text-base">
                         {applicationCount} {applicationCount === 1 ? 'Application' : 'Applications'}
                     </span>
                 </div>
 
                 <Button
                     asChild
-                    className="rounded-full bg-linear-to-r from-yellow to-light_yellow font-semibold text-deep_blue hover:scale-105 hover:shadow-lg"
+                    className="w-full sm:w-auto rounded-full bg-linear-to-r from-yellow to-light_yellow font-semibold text-deep_blue hover:scale-105 hover:shadow-lg"
                 >
-                    <Link href={`/JobApplications/${job._id}`}>
+                    <Link href={`/JobApplications/${jobid}/`}>
                         View Applications
                     </Link>
                 </Button>

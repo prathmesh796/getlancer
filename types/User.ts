@@ -37,6 +37,7 @@ export type FprofileType = {
     user: User,
     title: string,
     bio: string,
+    description: string,
     skills: string[],
     hourlyRate: number,
     experience: experience[],

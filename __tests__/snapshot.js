@@ -6,6 +6,7 @@ jest.mock('next-themes', () => ({
     theme: 'light',
     setTheme: jest.fn(),
   })),
+  ThemeProvider: ({ children }) => <div>{children}</div>,
 }))
 
 it('renders homepage unchanged', () => {

@@ -6,15 +6,33 @@ import { CgProfile } from "react-icons/cg";
 import Tab from "@/components/theme-switch";
 import { Button } from "@/components/ui/button";
 
-const Navbar = (params: {activeTab: string}) => {
-  const { activeTab } = params;
+const Banner = () => {
   const { data: session } = useSession();
 
   return (
     <nav className="flex flex-col md:flex-row h-auto md:h-24 justify-between items-center bg-black px-4 md:px-10 py-4 text-white gap-4 md:gap-0">
-      <div className="flex outline-none">
-        <h1 className="text-2xl md:text-4xl font-bold text-center md:text-left">{activeTab}</h1>
-      </div>
+      <Link href="/" className="flex outline-none items-end">
+        <h1 className="text-3xl md:text-5xl font-bold">getLancer</h1>
+        <h4 className="pb-0 md:pb-1 font-semibold text-light_yellow text-sm md:text-base">.com</h4>
+      </Link>
+
+      <ul className="flex items-center gap-4 md:gap-8 text-sm md:text-base flex-wrap justify-center">
+        <li>
+          <Link href="/" className="transition-all duration-200 hover:text-light_yellow">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link href="/about" className="transition-all duration-200 hover:text-light_yellow">
+            About
+          </Link>
+        </li>
+        <li>
+          <Link href="/contact" className="transition-all duration-200 hover:text-light_yellow">
+            Contact
+          </Link>
+        </li>
+      </ul>
 
       <div className="flex shrink-0 items-center justify-center gap-3 md:gap-5 w-full md:w-auto">
         <Tab />
@@ -50,4 +68,4 @@ const Navbar = (params: {activeTab: string}) => {
   );
 };
 
-export default Navbar;
+export default Banner;

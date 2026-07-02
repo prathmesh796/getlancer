@@ -1,52 +1,40 @@
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   return (
-    <footer className='bg-black text-white flex h-28 py-7 px-10 mt-5 justify-between items-center bottom-0 static w-100vw'>
-      <div className='flex flex-col sm:w-[100vw]'>
-
+    <footer className='bg-black text-white flex flex-col md:flex-row h-auto md:h-28 py-8 px-4 md:px-10 mt-5 justify-between items-center gap-6 md:gap-0 w-full'>
+      <div className='flex flex-col items-center md:items-start text-center md:text-left'>
         <h2 className='text-md font-normal'>Connect with us</h2>
-        <ul className='flex justify-start gap-1 pt-1'>
+        <ul className='flex justify-center md:justify-start gap-1 pt-1'>
           <li>
-            <Link href='#' className='hover:text-yellow transition  flex-shrink-0'>
-              <FontAwesomeIcon icon={faFacebook} style={{ fontSize: '1px', width: '30px', height: '20px' }}  />
-            </Link>
-          </li>
-
-          <li>
-            <Link href='#' className='hover:text-yellow transition  flex-shrink-0'>
+            <Link href='#' className='hover:text-yellow transition shrink-0'>
             <FontAwesomeIcon icon={faXTwitter}  style={{ fontSize: '1px', width: '30px', height: '20px' }}  />
             </Link>
           </li>
-          
-
           <li>
-            <Link href='#' className='hover:text-yellow transition  flex-shrink-0'>
+            <Link href='#' className='hover:text-yellow transition shrink-0'>
               <FontAwesomeIcon icon={faLinkedin} style={{ fontSize: '20px', width: '30px', height: '20px' }} />
             </Link>
           </li>
         </ul>
       </div>
 
-
-      <Link href='/' className='flex flex-col items-center justify-center sm:w-[100vw]'>
-
+      <Link href='/' className='flex flex-col items-center justify-center'>
           <div className='flex items-center'>
-            <h1 className='text-3xl font-bold'>getLancer</h1>
-            <h4 className='text-light_yellow pt-2 font-semibold'>.com</h4>
+            <h1 className='text-2xl md:text-3xl font-bold'>getLancer</h1>
+            <h4 className='text-light_yellow pt-1 md:pt-2 font-semibold text-sm md:text-base'>.com</h4>
           </div>
-          <h1 className='text-gray-500 pt-4 text-sm'>All rights reserved | 2024</h1>
+          <h1 className='text-gray-500 pt-2 text-xs md:text-sm'>All rights reserved | 2026</h1>
       </Link>
 
-      <div className='sm:w-[100vw] flex justify-end'>
+      <div className='flex justify-center md:justify-end text-center md:text-right'>
         <h3 className='font-medium'>
           <span className='text-sm font-normal'>Our mail:</span> <br />
-          <span className='text-yellow text-md font-semibold'>getlancer@gmail.com</span>
+          <span className='text-yellow text-sm md:text-base font-semibold'>getlancer796@gmail.com</span>
         </h3>
       </div> 
-
     </footer>
   );
 };

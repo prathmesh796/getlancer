@@ -15,6 +15,8 @@ import { Label } from "@/components/ui/label"
 import { FaRegEdit } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useState } from "react"
+import { toast } from "sonner"
+import { Role } from "@/types/User"
 
 export function SkillsDialog({ userId, skillsData }: { userId: string, skillsData: string[] }) {
     const [skills, setSkills] = useState<string[]>(skillsData);
@@ -40,11 +42,12 @@ export function SkillsDialog({ userId, skillsData }: { userId: string, skillsDat
             .then((res) => res.json())
             .then((data) => {
                 console.log("Profile updated:", data);
-                // Optionally, you can add a success message or close the dialog here
+                toast("Skills updated successfully!");
+                DialogClose
             })
             .catch((error) => {
                 console.error("Error updating profile:", error);
-                // Optionally, you can add an error message here
+                toast("Failed to update skills");
             });
     };
 

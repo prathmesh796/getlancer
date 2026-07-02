@@ -1,7 +1,7 @@
 import { connect } from "@/utils/db";
 import Jobs from "@/models/Jobs";
 import { NextResponse, NextRequest } from "next/server";
-import type { Job, application } from "@/types/Jobs";
+import type { Job, Application } from "@/types/Jobs";
 
 export async function GET(request: NextRequest) {
     try {
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
         // Map the jobs to include the user's specific application
         const jobsWithApplications = appliedJobs.map((job: Job) => {
             const userApplication = job.applications.find(
-                app => app.freelancerId.toString() === userId
+                (app: Application) => app.freelancerId.toString() === userId
             );
 
             return {

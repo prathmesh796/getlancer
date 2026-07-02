@@ -21,6 +21,7 @@ import { IoAddCircleOutline } from "react-icons/io5";
 import { MdOutlineSaveAs } from "react-icons/md";
 import { FiEdit3 } from "react-icons/fi";
 import MonthYearDatePicker from "../ui/datepicker";
+import { toast } from "sonner"
 
 export function ExperienceDialog({ userId, experienceData }: { userId: string, experienceData: experience[] }) {
     const [experience, setExperience] = useState<experience[]>(experienceData);
@@ -39,11 +40,12 @@ export function ExperienceDialog({ userId, experienceData }: { userId: string, e
             .then((res) => res.json())
             .then((data) => {
                 console.log("Profile updated:", data);
-                // Optionally, you can add a success message or close the dialog here
+                toast("Experience updated successfully!");
+                DialogClose
             })
             .catch((error) => {
                 console.error("Error updating profile:", error);
-                // Optionally, you can add an error message here
+                toast("Failed to update experience");
             });
     };
 
