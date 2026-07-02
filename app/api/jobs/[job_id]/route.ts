@@ -2,55 +2,22 @@ import { connect } from "@/utils/db";
 import Jobs from "@/models/Jobs";
 import Cprofile from "@/models/Cprofile";
 import { NextRequest, NextResponse } from "next/server";
+import Applications from "@/models/Applications";
 
-export async function GET(request: NextRequest, { params }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ job_id: string }> }) {
     try {
         await connect();
         const { job_id } = await params;
 
         const job = await Jobs.findById(job_id);
-        console.log(job)
+        const applications = await Applications.find({ jobId: job_id });
+        //console.log(job)
 
         if (!job) {
             return NextResponse.json({ message: "Job not found" }, { status: 404 });
         }
 
-        return NextResponse.json({ job, success: true }, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-}
-
-export async function PUT(request: NextRequest, { params }) {
-    try {
-        await connect();
-        const { job_id } = await params;
-
-        const body = await request.json();
-        const { user, proposal } = body;
-
-        if (!user?.id || !proposal) {
-            return NextResponse.json({ error: "Missing user or proposal" }, { status: 400 });
-        }
-
-        const updatedJob = await Jobs.findByIdAndUpdate(
-            job_id,
-            {
-                $push: {
-                    applications: {
-                        userId: user.id,
-                        proposal,
-                    },
-                },
-            },
-            { new: true }
-        );
-
-        if (!updatedJob) {
-            return NextResponse.json({ error: "Job not found" }, { status: 404 });
-        }
-
-        return NextResponse.json({ job: updatedJob, success: true }, { status: 200 });
+        return NextResponse.json({ job, applications, success: true }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }

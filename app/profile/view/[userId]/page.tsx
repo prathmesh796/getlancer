@@ -54,16 +54,31 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
         }
     };
 
-    const getSocialIcon = (platform) => {
-        const iconProps = { size: 20, className: "text-white" };
-        switch (platform.toLowerCase()) {
-            case 'facebook': return <FaFacebook {...iconProps} />;
-            case 'twitter': return <FaTwitter {...iconProps} />;
-            case 'linkedin': return <FaLinkedin {...iconProps} />;
-            case 'instagram': return <FaInstagram {...iconProps} />;
-            case 'github': return <FaGithub {...iconProps} />;
-            default: return <FaGlobe {...iconProps} />;
+    const getSocialIcon = (link: string) => {
+        const iconProps = { size: 20, className: "" };
+        if (link.toLowerCase().includes("twitter") || link.toLowerCase().includes("x.com")) {
+            return <FaTwitter {...iconProps} />;
         }
+        if (link.toLowerCase().includes("linkedin")) {
+            return <FaLinkedin {...iconProps} />;
+        }
+        if (link.toLowerCase().includes("github")) {
+            return <FaGithub {...iconProps} />;
+        }
+        return <FaGlobe {...iconProps} />;
+    };
+
+    const getSocialName = (link: string) => {
+        if (link.toLowerCase().includes("twitter") || link.toLowerCase().includes("x.com")) {
+            return "Twitter";
+        }
+        if (link.toLowerCase().includes("linkedin")) {
+            return "LinkedIn";
+        }
+        if (link.toLowerCase().includes("github")) {
+            return "GitHub";
+        }
+        return link;
     };
 
     if (loading) {
@@ -76,7 +91,7 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
 
     if (error) {
         return (
-            <div className="flex flex-col justify-center items-center h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+            <div className="flex flex-col justify-center items-center h-screen">
                 <p className="text-red-600 text-xl mb-4">Error loading profile: {error}</p>
                 <button
                     onClick={() => router.back()}
@@ -89,7 +104,7 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
     }
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 {/* Back Button */}
                 <button
@@ -101,8 +116,8 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
                 </button>
 
                 {/* Profile Header */}
-                <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-deep_blue via-marine_blue to-blue p-1 shadow-2xl mb-8">
-                    <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-12">
+                <div className="relative overflow-hidden rounded-3xl p-1 shadow-2xl mb-8">
+                    <div className="backdrop-blur-xl rounded-3xl p-8 md:p-12">
                         <div className="flex flex-col md:flex-row items-center gap-8">
                             {/* Profile Picture */}
                             <div className="relative group">
@@ -118,15 +133,15 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
 
                             {/* Profile Info */}
                             <div className="text-center md:text-left flex-1">
-                                <h1 className="text-4xl md:text-5xl font-bold mb-2 text-white">
+                                <h1 className="text-4xl md:text-5xl font-bold mb-2">
                                     {userName || "Freelancer"}
                                 </h1>
-                                <p className="text-xl md:text-2xl mb-4 text-white/90">
+                                <p className="text-xl md:text-2xl mb-4">
                                     {profile?.title || "Professional Freelancer"}
                                 </p>
 
                                 {/* Quick Info */}
-                                <div className="flex flex-wrap gap-4 justify-center md:justify-start mb-4 text-white">
+                                <div className="flex flex-wrap gap-4 justify-center md:justify-start mb-4">
                                     {profile?.location && (
                                         <div className="flex items-center gap-2">
                                             <MdLocationOn size={20} className="text-yellow" />
@@ -153,7 +168,7 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
                                             </span>
                                         ))}
                                         {profile.skills.length > 4 && (
-                                            <span className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/30 rounded-full text-sm font-semibold text-white">
+                                            <span className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/30 rounded-full text-sm font-semibold">
                                                 +{profile.skills.length - 4} more
                                             </span>
                                         )}
@@ -168,7 +183,7 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* About Section */}
-                        <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-800 shadow-xl p-1">
+                        <div className="relative overflow-hidden rounded-3xl dark:bg-slate-800 shadow-xl p-1">
                             <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-yellow via-light_yellow to-yellow"></div>
                             <div className="p-8">
                                 <div className="flex items-center gap-3 mb-6">
@@ -183,7 +198,7 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
 
                         {/* Experience Section */}
                         {profile?.experience && profile.experience.length > 0 && (
-                            <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-800 shadow-xl p-1">
+                            <div className="relative overflow-hidden rounded-3xl dark:bg-slate-800 shadow-xl p-1">
                                 <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
                                 <div className="p-8">
                                     <div className="flex items-center gap-3 mb-6">
@@ -193,7 +208,7 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
                                     <div className="space-y-6">
                                         {profile.experience.map((exp, index) => (
                                             <div key={index} className="relative pl-8 pb-6 border-l-2 border-gray-200 dark:border-slate-700 last:border-l-0 last:pb-0">
-                                                <div className="absolute left-0 top-0 w-4 h-4 bg-linear-to-br from-yellow to-light_yellow rounded-full -translate-x-[9px] shadow-lg"></div>
+                                                <div className="absolute left-0 top-0 w-4 h-4 bg-linear-to-br from-yellow to-light_yellow rounded-full translate-x-[-9px] shadow-lg"></div>
                                                 <h3 className="text-xl font-bold text-deep_blue dark:text-slate-50 mb-1">{exp.title || "Position"}</h3>
                                                 <p className="text-gray-600 dark:text-slate-400 font-semibold mb-2">{exp.company || "Company"}</p>
                                                 <p className="text-sm text-gray-500 dark:text-slate-500 mb-3">{exp.duration || "Duration"}</p>
@@ -249,7 +264,7 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
                     {/* Sidebar */}
                     <div className="space-y-8">
                         {/* Skills Section */}
-                        <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-800 shadow-xl p-1">
+                        <div className="relative overflow-hidden rounded-3xl dark:bg-slate-800 shadow-xl p-1">
                             <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-green-500 via-emerald-500 to-teal-500"></div>
                             <div className="p-8">
                                 <div className="flex items-center gap-3 mb-6">
@@ -281,23 +296,23 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
                                     <h2 className="text-2xl font-bold text-deep_blue dark:text-slate-50">Connect</h2>
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
-                                    {Object.entries(profile.socialLinks).map(([platform, link]: [string, string | undefined]) => {
+                                    {profile.socialLinks.map((link: string) => {
                                         if (!link) return null;
                                         return (
                                             <a
-                                                key={platform}
+                                                key={link}
                                                 href={link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="group relative overflow-hidden rounded-xl bg-linear-to-br from-deep_blue to-marine_blue p-4 shadow-lg hover:shadow-2xl transform hover:scale-110 transition-all duration-300"
+                                                className="group relative overflow-hidden rounded-xl p-4 shadow-lg hover:shadow-2xl transform hover:scale-110 transition-all duration-300"
                                             >
-                                                <div className="absolute inset-0 bg-linear-to-br from-yellow/20 to-light_yellow/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                                <div className="relative flex flex-col items-center gap-2">
+                                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <div className="relative flex items-center gap-2">
                                                     <div className="transform group-hover:rotate-12 transition-transform duration-300">
-                                                        {getSocialIcon(platform)}
+                                                        {getSocialIcon(link)}
                                                     </div>
-                                                    <span className="text-white font-semibold text-xs capitalize">
-                                                        {platform}
+                                                    <span className="font-semibold text-xs capitalize">
+                                                        {getSocialName(link)}
                                                     </span>
                                                 </div>
                                             </a>

@@ -9,12 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { useRouter } from 'next/navigation'
 
 const CJobs = ({ jobid, job }: { jobid: string, job: Job }) => {
+    const router = useRouter()
     const applicationCount = job.applications?.length || 0;
 
     return (
-        <Card className="w-full rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-xl" key={jobid}>
+        <Card onClick={() => router.push(`/Job/${jobid}`)} className="w-full rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-xl" key={jobid}>
             <CardHeader className="p-0">
                 <div className="mb-4 flex items-start justify-between">
                     <div className="flex-1">
@@ -34,17 +36,17 @@ const CJobs = ({ jobid, job }: { jobid: string, job: Job }) => {
 
                         <div className="mb-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
                             <div className="flex items-center gap-2">
-                                <FontAwesomeIcon icon={faMapMarkerAlt} className="h-4 w-4" />
+                                <FontAwesomeIcon icon={faMapMarkerAlt} className="h-4" />
                                 <span>{job.location}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <FontAwesomeIcon icon={faDollarSign} className="h-4 w-4" />
-                                <span className="font-semibold text-green-600 dark:text-green-400">
-                                    ${job.bounty?.toLocaleString()}
+                                <FontAwesomeIcon icon={faDollarSign} className="h-4" />
+                                <span className="">
+                                    {job.bounty?.toLocaleString()}
                                 </span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <FontAwesomeIcon icon={faCalendar} className="h-4 w-4" />
+                                <FontAwesomeIcon icon={faCalendar} className="h-4" />
                                 <span>Posted: {new Date(job.datePosted).toLocaleDateString()}</span>
                             </div>
                         </div>
@@ -72,15 +74,6 @@ const CJobs = ({ jobid, job }: { jobid: string, job: Job }) => {
                         {applicationCount} {applicationCount === 1 ? 'Application' : 'Applications'}
                     </span>
                 </div>
-
-                <Button
-                    asChild
-                    className="w-full sm:w-auto rounded-full bg-linear-to-r from-yellow to-light_yellow font-semibold text-deep_blue hover:scale-105 hover:shadow-lg"
-                >
-                    <Link href={`/JobApplications/${jobid}/`}>
-                        View Applications
-                    </Link>
-                </Button>
             </CardFooter>
         </Card>
     )

@@ -135,11 +135,7 @@ export default function Page() {
                             </div>
                         </div>
 
-                        {loading ? (
-                            <div className="text-center py-12">
-                                <div className="animate-pulse text-gray-600 text-lg">Loading your jobs...</div>
-                            </div>
-                        ) : filteredJobs.length > 0 ? (
+                        {filteredJobs.length > 0 ? (
                             <div className="grid grid-cols-1 gap-4">
                                 {filteredJobs.map((job) => (
                                     <CJobs key={job._id} jobid={job._id} job={job} />
