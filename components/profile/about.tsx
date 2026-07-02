@@ -15,12 +15,13 @@ import { FaRegEdit } from "react-icons/fa";
 import { useState } from "react"
 import { Textarea } from "../ui/textarea"
 import { toast } from "sonner";
-import type { Role } from "types/User"
+import type { Role } from "@/types/User"
 
 export function AboutDialog({ userId, userRole, about }: { userId: string, userRole: Role, about: string }) {
     let apiUrl = ""
-    if(userRole === 'Client') apiUrl = '/api/profile/ClientProfile'
+    if (userRole === 'Client') apiUrl = '/api/profile/ClientProfile'
     else apiUrl = '/api/profile/FreelancerProfile'
+
     const [newAbout, setNewAbout] = useState(about);
 
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {

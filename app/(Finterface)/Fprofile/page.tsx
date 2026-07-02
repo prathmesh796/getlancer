@@ -115,6 +115,9 @@ export default function Page() {
                     <p className="text-xl md:text-2xl mb-4">
                       {profile?.title || "Professional Freelancer"}
                     </p>
+                    <p className="text-lg md:text-xl mb-4">
+                      {profile?.bio || "Professional Freelancer bio"}
+                    </p>
 
                     {/* Quick Info */}
                     <div className="flex flex-wrap gap-4 justify-center md:justify-start mb-4">
@@ -155,10 +158,10 @@ export default function Page() {
 
                 {/* Update Button */}
                 <Link href="/Fprofile/updateFprofile">
-                  <button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform">
+                  <Button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform">
                     <MdEdit size={20} />
                     Update Profile
-                  </button>
+                  </Button>
                 </Link>
               </div>
             </div>
@@ -174,10 +177,10 @@ export default function Page() {
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                     <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">About Me</h2>
-                    <AboutDialog userId={userId} userRole='Freelancer' about={profile?.bio} />
+                    <AboutDialog userId={userId} userRole='Freelancer' about={profile?.description} />
                   </div>
                   <p className="text-gray-700 dark:text-slate-300 text-lg leading-relaxed">
-                    {profile?.bio || "I'm a passionate freelancer dedicated to delivering high-quality work. Let's collaborate on your next project!"}
+                    {profile?.description || "I'm a passionate freelancer dedicated to delivering high-quality work. Let's collaborate on your next project!"}
                   </p>
                 </div>
 
