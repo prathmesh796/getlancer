@@ -10,6 +10,13 @@ import CJobs from '@/components/CJobs';
 import Sidebar from '@/components/Sidebar';
 import { Job } from '@/types/Jobs';
 import { Spinner } from '@/components/ui/spinner';
+import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import Navbar from '@/components/Navbar';
 
 export default function Page() {
@@ -108,17 +115,17 @@ export default function Page() {
                               placeholder="Search your jobs by title, location, or description..."
                           />
                         </div>
-                        <select
-                            name="JobStatus"
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className='px-4 py-2 w-full md:w-auto rounded-xl md:rounded-full border border-gray-300 dark:border-slate-600 focus:outline-none bg-white dark:bg-slate-700 dark:text-slate-50 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors text-sm md:text-base'
-                        >
-                            <option value="all">All Status</option>
-                            <option value="open">Open</option>
-                            <option value="assigned">Assigned</option>
-                            <option value="closed">Closed</option>
-                        </select>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">Filter</Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem onClick={() => setStatusFilter("all")}>All</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setStatusFilter("assigned")}>Assigned</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setStatusFilter("open")}>Open</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setStatusFilter("closed")}>Closed</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
 
                     {/* Jobs Section */}

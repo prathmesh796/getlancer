@@ -117,7 +117,7 @@ export const authOptions = {
                     dbUser = await User.create({
                         name: user.name,
                         email: user.email,
-                        role: user.role || "Client",
+                        role: user.role,
                     });
                 }
 

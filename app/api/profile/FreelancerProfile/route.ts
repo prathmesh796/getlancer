@@ -27,26 +27,26 @@ export async function GET(req: NextRequest) {
         }
 
         // Use 'user' field to match the Fprofile model schema
-        const freelancerProfile = await Fprofile.findOne({ user: userId });
+        const profile = await Fprofile.findOne({ user: userId });
 
-        if (!freelancerProfile) {
+        if (!profile) {
             return NextResponse.json({ success: false, error: "Freelancer profile not found" }, { status: 404 });
         }
 
         // Generate signed URL for profile picture if it exists
-        if (freelancerProfile.profilePic?.key) {
+        if (profile.profilePic?.key) {
             const command = new GetObjectCommand({
                 Bucket: "getlancer",
-                Key: freelancerProfile.profilePic.key,
+                Key: profile.profilePic.key,
             });
 
             const signedUrl = await getSignedUrl(r2, command, { expiresIn: 3600 });
-            freelancerProfile.profilePic.url = signedUrl;
+            profile.profilePic.url = signedUrl;
         }
 
-        //console.log("Fetched freelancer profile:", freelancerProfile);
+        //console.log("Fetched freelancer profile:", profile);
 
-        return NextResponse.json({ success: true, freelancerProfile }, { status: 200 });
+        return NextResponse.json({ success: true, profile }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ success: false, error: err.message }, { status: 500 });
     }

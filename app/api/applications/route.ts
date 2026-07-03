@@ -48,6 +48,9 @@ export async function POST(req: NextRequest) {
         const postApplication = {
             jobId: jobId,
             freelancerId: user.id,
+            freelancerName: user.name,
+            freelancerEmail: user.email,
+            freelancerProfileUrl: user.image,
             proposal: proposal,
         }
 

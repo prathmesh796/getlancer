@@ -15,6 +15,9 @@ export type Application = {
     _id: string,
     jobId: string,
     freelancerId: string,
+    freelancerName: string,
+    freelancerEmail: string,
+    freelancerProfileUrl: string,
     proposal: string,
     status: applicationStatus
     appliedAt: Date,

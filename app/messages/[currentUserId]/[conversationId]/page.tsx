@@ -2,29 +2,33 @@
 
 import { useEffect, useMemo, useRef, useState, use } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import { useMessages } from "@/hooks/useMessages";
+import { useConversations } from "@/hooks/useConversations";
 import { sendMessage } from "@/services/chat";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Bubble, BubbleContent } from "@/components/ui/bubble"
+import { Message, MessageAvatar, MessageContent, MessageFooter } from "@/components/ui/message"
 
 export default function Page({ params }: { params: Promise<{ currentUserId: string; conversationId: string }> }) {
     const { currentUserId: userId, conversationId } = use(params);
     const messages = useMessages(conversationId);
+    const conversations = useConversations(userId);
+    const conversation = conversations.find((c: any) => c.id === conversationId);
     const [text, setText] = useState("");
     const [sending, setSending] = useState(false);
     const bottomRef = useRef(null);
 
-    const otherParticipantId = useMemo(() => {
-        if (!conversationId) return null;
-        const parts = conversationId.split("__");
-        return parts.find((p) => p !== userId) || null;
-    }, [conversationId, userId]);
-
+    const otherParticipant = useMemo(() => {
+        if (!conversation) return null;
+        return conversation.participantDetails?.find((p: any) => p.userId !== userId) || null;
+    }, [conversation, userId]);
+ 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     }, [messages.length]);
@@ -55,17 +59,11 @@ export default function Page({ params }: { params: Promise<{ currentUserId: stri
                             <Link href={`/messages`} className="p-4">
                                 <ArrowLeft />
                             </Link>
-                            <div>
-                                <div className="text-sm text-gray-500 dark:text-slate-400">
-                                    <Link href={`/messages/${userId}`} className="hover:underline">
-                                        Messages
-                                    </Link>{" "}
-                                    / {otherParticipantId || conversationId}
-                                </div>
+                            <Link href={`/profile/${otherParticipant?.userId}`}>
                                 <h1 className="text-2xl font-semibold text-deep_blue dark:text-slate-50">
-                                    {otherParticipantId ? `Chat with ${otherParticipantId}` : "Conversation"}
+                                    {otherParticipant?.userName ? `${otherParticipant.userName}` : "Conversation"}
                                 </h1>
-                            </div>
+                            </Link>
                         </div>
                     </div>
                 </header>
@@ -93,31 +91,22 @@ export default function Page({ params }: { params: Promise<{ currentUserId: stri
                                         typeof m?.createdAt?.toDate === "function" ? m.createdAt.toDate() : null;
 
                                     return (
-                                        <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-                                            <div
-                                                className={[
-                                                    "max-w-[85%] sm:max-w-[75%] rounded-3xl px-4 py-3 shadow-sm border",
-                                                    mine
-                                                        ? "bg-linear-to-r from-yellow to-light_yellow text-deep_blue border-yellow/30"
-                                                        : "bg-white/90 dark:bg-slate-800/80 text-gray-900 dark:text-slate-50 border-gray-100 dark:border-slate-700",
-                                                ].join(" ")}
-                                            >
-                                                <div className="whitespace-pre-wrap wrap-break-words text-sm leading-relaxed">
-                                                    {m.text}
-                                                </div>
-                                                <div
-                                                    className={[
-                                                        "mt-2 text-[11px]",
-                                                        mine ? "text-deep_blue/70" : "text-gray-500 dark:text-slate-400",
-                                                    ].join(" ")}
-                                                >
+                                        <Message key={m.id} className={`w-full flex ${mine ? " justify-end" : "justify-start"}`}>
+                                            <MessageAvatar>
+                                                <Avatar>
+                                                    <AvatarImage src={mine ? `/profilepic.jpeg` : `/office-building.jpg`} className="w-full h-full object-cover" />
+                                                    <AvatarFallback>{mine ? "You" : "Other"}</AvatarFallback>
+                                                </Avatar>
+                                            </MessageAvatar>
+                                            <MessageContent>
+                                                <Bubble variant={mine ? "default" : "outline"} className={`whitespace-pre-wrap wrap-break-words text-sm leading-relaxed`}>
+                                                    <BubbleContent>{m.text}</BubbleContent>
+                                                </Bubble>
+                                                <MessageFooter className={`mt-2 text-[11px] ${mine ? "text-deep_blue/70" : "text-gray-500 dark:text-slate-400"}`}>
                                                     {createdAt ? createdAt.toLocaleString() : ""}
-                                                </div>
-                                            </div>
-                                            <div className="w-12 h-12 bg-amber-700 rounded-full overflow-hidden">
-                                                <Image src={mine ? `/profilepic.jpeg` : `/office-building.jpg`} width={50} height={50} alt="profile" className="w-full h-full object-cover" />
-                                            </div>
-                                        </div>
+                                                </MessageFooter>
+                                            </MessageContent>
+                                        </Message>
                                     );
                                 })}
                                 <div ref={bottomRef} />
@@ -138,10 +127,10 @@ export default function Page({ params }: { params: Promise<{ currentUserId: stri
                                         onSend();
                                     }
                                 }}
-                                placeholder="Type a message… (Enter to send, Shift+Enter for new line)"
+                                placeholder="Type a message… "
                                 rows={1}
                                 className={cn(
-                                    "flex-1 resize-none rounded-2xl border border-input bg-background px-4 py-3 text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                                    "flex-1 resize-none rounded-2xl border border-input bg-background px-4 py-2 text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                                 )}
                             />
                             <Button
