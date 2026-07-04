@@ -28,7 +28,7 @@ describe("hooks/useChat", () => {
     mockQuery.mockReturnValue("query-ref");
   });
 
-  it("returns empty array and does not subscribe without projectId", () => {
+  it("returns empty array and does not subscribe without conversationId", () => {
     const { result } = renderHook(() => useChat(undefined));
 
     expect(result.current).toEqual([]);
@@ -43,10 +43,10 @@ describe("hooks/useChat", () => {
       return unsubscribe;
     });
 
-    const { result, unmount } = renderHook(() => useChat("project-1"));
+    const { result, unmount } = renderHook(() => useChat("conv-1"));
 
     expect(mockCollection).toHaveBeenCalledWith({ __name: "mock-db" }, "messages");
-    expect(mockWhere).toHaveBeenCalledWith("projectId", "==", "project-1");
+    expect(mockWhere).toHaveBeenCalledWith("conversationId", "==", "conv-1");
     expect(mockOrderBy).toHaveBeenCalledWith("createdAt", "asc");
     expect(mockQuery).toHaveBeenCalledWith("collection-ref", "where-ref", "order-by-ref");
 

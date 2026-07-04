@@ -3,7 +3,6 @@
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useConversations } from "@/hooks/useConversations";
 import { useSession } from "next-auth/react";
@@ -12,6 +11,8 @@ export default function Page() {
   const { data: session } = useSession();
   const userId = session?.user.id;
   const conversations = useConversations(userId!);
+
+  console.log(conversations)
 
   return (
     <div className="flex h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
@@ -53,7 +54,10 @@ export default function Page() {
                         ].join(" ")}
                       >
                         <div className="whitespace-pre-wrap wrap-break-words text-sm leading-relaxed">
-                          {c.id}
+                          {c.participantDetails.map((p: any) => {
+                            if (p.userId === userId) return null;
+                            return <span key={p.userId}>{p.userName}</span>
+                          })}
                         </div>
                         <div
                           className={[

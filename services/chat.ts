@@ -9,10 +9,18 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-const conversationIdForParticipants = (participants) =>
-  [...participants].sort().join("__");
+interface participants {
+  userId: string;
+  userName: string;
+}
 
-export async function ensureConversation({ participants }) {
+const conversationIdForParticipants = (participants: participants[]) =>
+  [...participants]
+    .map((p) => p.userId)
+    .sort((a, b) => a.localeCompare(b))
+    .join("__");
+
+export async function ensureConversation({ participants }: { participants: participants[] }) {
   if (!Array.isArray(participants) || participants.length < 2) {
     throw new Error("participants must be an array of at least 2 userIds");
   }
@@ -23,7 +31,8 @@ export async function ensureConversation({ participants }) {
 
   if (!existing.exists()) {
     await setDoc(conversationRef, {
-      participants: [...new Set(participants)],
+      participants: [...new Set(participants.map(p => p.userId))],
+      participantDetails: participants,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
       lastMessage: null,

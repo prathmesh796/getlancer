@@ -4,18 +4,18 @@ import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
-export const useChat = (projectId: string) => {
+export const useChat = (conversationId: string) => {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    if (!projectId) {
+    if (!conversationId) {
       setMessages([]);
       return;
     }
 
     const q = query(
       collection(db, "messages"),
-      where("projectId", "==", projectId),
+      where("conversationId", "==", conversationId),
       orderBy("createdAt", "asc")
     );
 
@@ -28,7 +28,7 @@ export const useChat = (projectId: string) => {
     });
 
     return () => unsubscribe();
-  }, [projectId]);
+  }, [conversationId]);
 
   return messages;
 };

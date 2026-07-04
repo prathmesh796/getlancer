@@ -6,13 +6,14 @@ import { ensureConversation } from "@/services/chat";
 import { Button } from "@/components/ui/button"; 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import MyPagination from './Pagination';
 
-const JobApplications = ({ applications }: {applications: Application[] | []}) => {
+const JobApplications = ({ applications,  }: {applications: Application[] | []}) => {
     const { data: session } = useSession();
 
     const router = useRouter();
-
-    const [loading, setLoading] = useState(false);
+    
+    const [currentPage, setCurrentPage] = useState<number>(1)
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
@@ -28,23 +29,27 @@ const JobApplications = ({ applications }: {applications: Application[] | []}) =
 
             {applications.length > 0 ? (
                 <div className="space-y-6">
-                    {applications.map((app: Application, index) => (
+                    {applications.slice((currentPage - 1) * 4, (currentPage * 4)).map((app: Application, index) => (
                         <div
                             key={index}
                             className="bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 border border-gray-100 dark:border-slate-700"
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-4">
-                                    <div className="bg-linear-to-br from-yellow to-light_yellow rounded-full flex items-center justify-center text-deep_blue font-bold text-xl">
-                                        {app.freelancerId}
+                                    <div className="bg-linear-to-br from-yellow to-light_yellow rounded-full flex items-center justify-center text-deep_blue font-bold text-xl w-12 h-12 overflow-hidden">
+                                        {app.freelancerProfileUrl ? (
+                                            <img src={app.freelancerProfileUrl} alt={app.freelancerName} className="w-full h-full object-cover" />
+                                        ) : (
+                                            app.freelancerName?.charAt(0)?.toUpperCase()
+                                        )}
                                     </div>
                                     <div>
                                         <h3 className="text-xl font-bold text-deep_blue dark:text-slate-50">
-                                            {app.freelancerId}
+                                            {app.freelancerName}
                                         </h3>
                                         <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
                                             <FontAwesomeIcon icon={faEnvelope} className="w-3 h-3" />
-                                            <span>{app.freelancerId}</span>
+                                            <span>{app.freelancerEmail }</span>
                                         </div>
                                     </div>
                                 </div>
@@ -74,7 +79,10 @@ const JobApplications = ({ applications }: {applications: Application[] | []}) =
                                         if (!currentUserId || !app?.freelancerId) return;
 
                                         ensureConversation({
-                                            participants: [currentUserId, app.freelancerId],
+                                            participants: [
+                                                { userId: currentUserId, userName: session?.user?.name },
+                                                { userId: app.freelancerId, userName: app.freelancerName },
+                                            ],
                                         })
                                             .then(({ conversationId }) => {
                                                 router.push(`/messages/${currentUserId}/${conversationId}`);
@@ -99,6 +107,8 @@ const JobApplications = ({ applications }: {applications: Application[] | []}) =
                             </div>
                         </div>
                     ))}
+
+                    <MyPagination totalItems={applications.length} limit={4} currentPage={currentPage} setCurrentPage={setCurrentPage} />
                 </div>
             ) : (
                 <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-3xl shadow-sm">

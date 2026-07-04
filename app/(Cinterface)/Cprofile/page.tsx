@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Link from 'next/link';
 import Image from 'next/image';
 import { MdOpenInNew, MdLocationOn, MdEdit } from "react-icons/md";
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaGithub, FaGlobe } from "react-icons/fa";
+import { FaTwitter, FaLinkedin, FaGithub, FaGlobe } from "react-icons/fa";
 import type { User, CprofileType } from "@/types/User";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button"

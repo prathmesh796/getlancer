@@ -27,23 +27,27 @@ export async function GET(req: NextRequest) {
     }
 
     const user = await User.findOne({ _id: userId })
-    const clientProfile = await Cprofile.findOne({ user: userId });
+    const profile = await Cprofile.findOne({ user: userId });
 
-    if (!clientProfile) {
+    if (!profile) {
       return NextResponse.json({ success: false, error: "Client profile not found" }, { status: 404 });
     }
 
-    if (clientProfile.logo?.key) {
+    if (!user) {
+      return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
+    }
+
+    if (profile.logo?.key) {
       const command = new GetObjectCommand({
         Bucket: "getlancer",
-        Key: clientProfile.logo.key,
+        Key: profile.logo.key,
       });
 
       const signedUrl = await getSignedUrl(r2, command, { expiresIn: 3600 });
-      clientProfile.logo.url = signedUrl;
+      profile.logo.url = signedUrl;
     }
 
-    return NextResponse.json({ success: true, user, clientProfile }, { status: 200 });
+    return NextResponse.json({ success: true, user, profile }, { status: 200 });
   } catch (err) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

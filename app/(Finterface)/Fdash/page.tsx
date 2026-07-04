@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Job } from '@/types/Jobs';
 import { Spinner } from '@/components/ui/spinner';
 import Navbar from '@/components/Navbar';
+import MyPagination from '@/components/Pagination';
 
 export default function Page() {
   const { data: session } = useSession();
@@ -19,6 +20,7 @@ export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState<number>(1)
 
   useEffect(() => {
     const fetchJobRecommendations = async () => {
@@ -147,11 +149,13 @@ export default function Page() {
             </div>
             <div className="space-y-4">
               {jobRecommendations.length > 0 ? (
-                jobRecommendations.map((job) => (
-                  <div key={job._id}>
-                    <Jobs job={job} />
-                  </div>
-                ))
+                <div>
+                  {jobRecommendations.slice((currentPage - 1) * 4, (currentPage * 4)).map((job) => (
+                    <Jobs key={job._id} job={job} />
+                  ))}
+
+                  <MyPagination totalItems={jobRecommendations.length} limit={4} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                </div>
               ) : (
                 <p className="text-gray-500 text-center py-8">
                   No recommendations available
@@ -160,7 +164,7 @@ export default function Page() {
             </div>
           </section>
         </div>
-      </main>
-    </div>
+      </main >
+    </div >
   )
 }
