@@ -12,26 +12,28 @@ import { useSession } from 'next-auth/react';
 export default function ViewProfilePage({ params }: { params: Promise<{ userId: string }> }) {
     const { userId } = use(params);
     const router = useRouter();
-    const { data: session } = useSession();
-    const role = session?.user.role;
+    const { data: session, status } = useSession();
+    const role = session?.user?.role;
     const [profile, setProfile] = useState(null);
+    const [user, setUser] = useState(null)
     const [userName, setUserName] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (userId) {
+        if (userId && status !== "loading") {
             setLoading(true);
             fetchProfile();
         }
-    }, [userId]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userId, status, role]);
 
     const fetchProfile = async () => {
         setLoading(true);
         setError(null);
         try {
             let apiUrl = '';
-            console.log(session?.user.role)
+            console.log("Current user role:", role);
 
             if (role === "Client") {
                 apiUrl = `/api/profile/FreelancerProfile/?userId=${encodeURIComponent(userId)}`;
@@ -52,6 +54,7 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
 
             const data = await response.json();
             setProfile(data.profile || {});
+            setUser(data.user)
 
             // Fetch user name
             const userResponse = await fetch(`/api/profile/user?userId=${encodeURIComponent(userId)}`);
@@ -97,9 +100,9 @@ export default function ViewProfilePage({ params }: { params: Promise<{ userId: 
             <main className="flex-1 min-h-screen">
                 <Navbar activeTab={"profile"} />
                 {role == "Client" ? (
-                    <Fprofile freelancerProfile={profile} />
+                    <Fprofile freelancerProfile={profile} user={user} />
                 ) : (
-                    <Cprofile clientProfile={profile} />
+                    <Cprofile clientProfile={profile} user={user} />
                 )}
             </main>
         </div>

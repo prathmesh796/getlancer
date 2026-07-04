@@ -33,6 +33,10 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Client profile not found" }, { status: 404 });
     }
 
+    if (!user) {
+      return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
+    }
+
     if (profile.logo?.key) {
       const command = new GetObjectCommand({
         Bucket: "getlancer",

@@ -1,6 +1,7 @@
 import { connect } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 import Fprofile from "@/models/Fprofile";
+import User from "@/models/User"
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { FprofileType } from "@/types/User";
@@ -28,9 +29,14 @@ export async function GET(req: NextRequest) {
 
         // Use 'user' field to match the Fprofile model schema
         const profile = await Fprofile.findOne({ user: userId });
+        const user = await User.findById(userId);
 
         if (!profile) {
             return NextResponse.json({ success: false, error: "Freelancer profile not found" }, { status: 404 });
+        }
+
+        if (!user) {
+            return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
         }
 
         // Generate signed URL for profile picture if it exists
@@ -46,7 +52,7 @@ export async function GET(req: NextRequest) {
 
         //console.log("Fetched freelancer profile:", profile);
 
-        return NextResponse.json({ success: true, profile }, { status: 200 });
+        return NextResponse.json({ success: true, profile, user }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ success: false, error: err.message }, { status: 500 });
     }

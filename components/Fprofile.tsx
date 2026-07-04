@@ -1,11 +1,11 @@
 import React from 'react'
 import Image from 'next/image';
-import { MdArrowBack, MdLocationOn, MdAttachMoney, MdWork } from "react-icons/md";
+import { MdLocationOn, MdAttachMoney, MdWork } from "react-icons/md";
 import { FaStar } from "react-icons/fa";
-import { FprofileType } from '@/types/User';
+import { User, FprofileType } from '@/types/User';
 import { getSocialIcon, getSocialName } from '@/lib/socialUtils';
 
-const Fprofile = ({ freelancerProfile }: { freelancerProfile: FprofileType }) => {
+const Fprofile = ({ freelancerProfile, user }: { freelancerProfile: FprofileType, user: User }) => {
 
     return (
         <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
@@ -30,7 +30,7 @@ const Fprofile = ({ freelancerProfile }: { freelancerProfile: FprofileType }) =>
                             {/* Profile Info */}
                             <div className="text-center md:text-left flex-1">
                                 <h1 className="text-4xl md:text-5xl font-bold mb-2">
-                                    {freelancerProfile?.user?.name || "Freelancer"}
+                                    {user?.name || "Freelancer"}
                                 </h1>
                                 <p className="text-xl md:text-2xl mb-4">
                                     {freelancerProfile?.title || "Professional Freelancer"}

@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { FaGlobe } from "react-icons/fa";
 import { MdLocationOn, MdOpenInNew } from "react-icons/md";
 import { getSocialIcon, getSocialName } from "@/lib/socialUtils";
-import { CprofileType } from '@/types/User';
+import { User, CprofileType } from '@/types/User';
 
-const Cprofile = ({ clientProfile }: { clientProfile: CprofileType }) => {
+const Cprofile = ({ clientProfile, user }: { clientProfile: CprofileType, user: User }) => {
     return (
         <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
             {/* Hero Section with Company Header */}
