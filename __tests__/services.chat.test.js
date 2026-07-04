@@ -43,7 +43,7 @@ describe("services/chat", () => {
         "participants must be an array of at least 2 userIds"
       );
       await expect(
-        ensureConversation({ participants: ["only-one"] })
+        ensureConversation({ participants: [{ userId: "only-one", userName: "One" }] })
       ).rejects.toThrow("participants must be an array of at least 2 userIds");
     });
 
@@ -51,7 +51,7 @@ describe("services/chat", () => {
       mockGetDoc.mockResolvedValueOnce({ exists: () => false });
 
       const result = await ensureConversation({
-        participants: ["user-b", "user-a"],
+        participants: [{ userId: "user-b", userName: "Bob" }, { userId: "user-a", userName: "Alice" }],
       });
 
       expect(result.conversationId).toBe("user-a__user-b");
@@ -60,6 +60,7 @@ describe("services/chat", () => {
         expect.objectContaining({ kind: "doc-ref" }),
         expect.objectContaining({
           participants: ["user-b", "user-a"],
+          participantDetails: [{ userId: "user-b", userName: "Bob" }, { userId: "user-a", userName: "Alice" }],
           lastMessage: null,
         })
       );
@@ -69,7 +70,9 @@ describe("services/chat", () => {
     it("returns existing conversation without writing", async () => {
       mockGetDoc.mockResolvedValueOnce({ exists: () => true });
 
-      const result = await ensureConversation({ participants: ["u1", "u2"] });
+      const result = await ensureConversation({ 
+        participants: [{ userId: "u1", userName: "User1" }, { userId: "u2", userName: "User2" }] 
+      });
 
       expect(result.conversationId).toBe("u1__u2");
       expect(mockSetDoc).not.toHaveBeenCalled();
