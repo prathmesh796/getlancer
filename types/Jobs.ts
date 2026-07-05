@@ -8,6 +8,7 @@ export type Job = {
     datePosted: Date,
     skills: string[],
     status: jobStatus,
+    assignedTo: string,
     applications: Array<Application>,
 }
 
@@ -31,6 +32,8 @@ enum jobStatus {
 
 enum applicationStatus {
     pending = "pending",
-    accepted = "accepted",
+    assigned = "assigned",
+    hold = "hold",
+    revoked = "revoked",
     rejected = "rejected"
 }

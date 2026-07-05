@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faEnvelope, faFileAlt, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import JobDesc from "@/components/JobDesc";
 import JobApplications from "@/components/JobApplications";
 import { Spinner } from "@/components/ui/spinner";
 import Navbar from "@/components/Navbar";
 import type { Job, Application } from "@/types/Jobs"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function JobPage({ params }: { params: Promise<{ jobId: string }> }) {
     const { jobId } = use(params);

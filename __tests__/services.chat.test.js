@@ -110,6 +110,7 @@ describe("services/chat", () => {
         {
           senderId: "u1",
           text: "hello world",
+          type: "text",
           createdAt: "SERVER_TS",
         }
       );
@@ -122,6 +123,7 @@ describe("services/chat", () => {
           lastMessage: {
             senderId: "u1",
             text: "hello world",
+            type: "text",
             createdAt: "SERVER_TS",
           },
         }

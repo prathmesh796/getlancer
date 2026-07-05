@@ -10,10 +10,11 @@ import { sendMessage } from "@/services/chat";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CheckIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Bubble, BubbleContent } from "@/components/ui/bubble"
 import { Message, MessageAvatar, MessageContent, MessageFooter } from "@/components/ui/message"
+import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker"
 
 export default function Page({ params }: { params: Promise<{ currentUserId: string; conversationId: string }> }) {
     const { currentUserId: userId, conversationId } = use(params);
@@ -28,7 +29,7 @@ export default function Page({ params }: { params: Promise<{ currentUserId: stri
         if (!conversation) return null;
         return conversation.participantDetails?.find((p: any) => p.userId !== userId) || null;
     }, [conversation, userId]);
- 
+
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     }, [messages.length]);
@@ -91,21 +92,30 @@ export default function Page({ params }: { params: Promise<{ currentUserId: stri
                                         typeof m?.createdAt?.toDate === "function" ? m.createdAt.toDate() : null;
 
                                     return (
-                                        <Message key={m.id} className={`w-full flex ${mine ? " justify-end" : "justify-start"}`}>
-                                            <MessageAvatar>
-                                                <Avatar>
-                                                    <AvatarImage src={mine ? `/profilepic.jpeg` : `/office-building.jpg`} className="w-full h-full object-cover" />
-                                                    <AvatarFallback>{mine ? "You" : "Other"}</AvatarFallback>
-                                                </Avatar>
-                                            </MessageAvatar>
-                                            <MessageContent>
-                                                <Bubble variant={mine ? "default" : "outline"} className={`whitespace-pre-wrap wrap-break-words text-sm leading-relaxed`}>
-                                                    <BubbleContent>{m.text}</BubbleContent>
-                                                </Bubble>
-                                                <MessageFooter className={`mt-2 text-[11px] ${mine ? "text-deep_blue/70" : "text-gray-500 dark:text-slate-400"}`}>
-                                                    {createdAt ? createdAt.toLocaleString() : ""}
-                                                </MessageFooter>
-                                            </MessageContent>
+                                        <Message key={m.id} align={mine ? "end" : "start"}>
+                                            {m.type === "mark" && <Marker variant="separator">
+                                                <MarkerIcon>
+                                                    <CheckIcon />
+                                                </MarkerIcon>
+                                                <MarkerContent>{m.text}</MarkerContent>
+                                            </Marker>}
+                                            {m.type !== "mark" && (
+                                                <>
+                                                    <MessageAvatar>
+                                                        <Avatar>
+                                                            <AvatarImage src={mine ? `/profilepic.jpeg` : `/office-building.jpg`} />
+                                                            <AvatarFallback>{mine ? "You" : "Other"}</AvatarFallback>
+                                                        </Avatar>
+                                                    </MessageAvatar>
+                                                    <MessageContent>
+                                                        <Bubble variant={mine ? "default" : "outline"}>
+                                                            <BubbleContent>{m.text}</BubbleContent>
+                                                        </Bubble>
+                                                        <MessageFooter>
+                                                            {createdAt ? createdAt.toLocaleString() : ""}
+                                                        </MessageFooter>
+                                                    </MessageContent>
+                                                </>)}
                                         </Message>
                                     );
                                 })}
