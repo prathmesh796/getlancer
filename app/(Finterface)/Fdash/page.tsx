@@ -15,10 +15,9 @@ import MyPagination from '@/components/Pagination';
 export default function Page() {
   const { data: session } = useSession();
 
-  const [jobRecommendations, setJobRecommendations] = useState<Job[]>([]);
+  const [jobRecommendations, setJobRecommendations] = useState([]);
   const [allJobs, setAllJobs] = useState<Job[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1)
 
@@ -26,7 +25,8 @@ export default function Page() {
     const fetchJobRecommendations = async () => {
       setLoading(true);
       try {
-        const response = await fetch('/api/jobs/recommendations', {
+        const params = { limit: 50, skip: 0 }
+        const response = await fetch(`/api/jobs/recommendations?${params.toString()}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -38,6 +38,7 @@ export default function Page() {
         }
 
         const data = await response.json();
+        console.log(data)
         setJobRecommendations(data);
       } catch (error) {
         console.error("Error fetching job recommendations:", error);
@@ -51,14 +52,11 @@ export default function Page() {
 
   // Fetch all jobs with filtering
   useEffect(() => {
-    const fetchAllJobs = async () => {
+    const fetchSearchJobs = async () => {
       setLoading(true);
       try {
         const params = new URLSearchParams();
         params.append('limit', '50');
-        if (statusFilter !== 'all') {
-          params.append('status', statusFilter);
-        }
 
         const response = await fetch(`/api/jobs?${params.toString()}`, {
           method: 'GET',
@@ -80,20 +78,8 @@ export default function Page() {
       }
     };
 
-    fetchAllJobs();
-  }, [statusFilter]);
-
-  // Filter jobs based on search query
-  const filteredJobs = allJobs.filter(job => {
-    if (!searchQuery) return true;
-    const query = searchQuery.toLowerCase();
-    return (
-      job.title?.toLowerCase().includes(query) ||
-      job.description?.toLowerCase().includes(query) ||
-      job.location?.toLowerCase().includes(query) ||
-      job.skills?.some(skill => skill.toLowerCase().includes(query))
-    );
-  });
+    fetchSearchJobs();
+  }, [searchQuery]);
 
   if (loading) {
     return (
@@ -124,18 +110,6 @@ export default function Page() {
                   placeholder="Search jobs by title, location, or skills..."
                 />
               </div>
-
-              <select
-                name="JobStatus"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className='px-4 py-2 w-full md:w-auto rounded-xl md:rounded-full border border-gray-300 dark:border-gray-600 focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm md:text-base'
-              >
-                <option value="all">All Jobs</option>
-                <option value="open">Open</option>
-                <option value="assigned">Assigned</option>
-                <option value="closed">Closed</option>
-              </select>
             </div>
           </div>
         </header>
@@ -151,7 +125,7 @@ export default function Page() {
               {jobRecommendations.length > 0 ? (
                 <div>
                   {jobRecommendations.slice((currentPage - 1) * 4, (currentPage * 4)).map((job) => (
-                    <Jobs key={job._id} job={job} />
+                    <Jobs key={job?.job?._id} job={job?.job} />
                   ))}
 
                   <MyPagination totalItems={jobRecommendations.length} limit={4} currentPage={currentPage} setCurrentPage={setCurrentPage} />

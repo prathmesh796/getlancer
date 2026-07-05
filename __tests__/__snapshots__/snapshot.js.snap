@@ -132,7 +132,7 @@ exports[`renders homepage unchanged 1`] = `
         >
           <img
             alt="freelancer-img"
-            class="w-full max-w-[400px] h-auto"
+            class="w-full max-w-[400px]"
             height="310"
             loading="eager"
             src="/home-img1.png"
@@ -151,8 +151,9 @@ exports[`renders homepage unchanged 1`] = `
         >
           <img
             alt="freelancer-img"
-            class="w-full max-w-[400px] h-auto"
+            class="w-full max-w-[400px] "
             height="310"
+            loading="eager"
             src="/home-img2.jpg"
             width="400"
           />
