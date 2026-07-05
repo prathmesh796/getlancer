@@ -46,6 +46,12 @@ export async function sendMessage({
   conversationId,
   senderId,
   text,
+  type = "text",
+}: {
+  conversationId: string;
+  senderId: string;
+  text: string;
+  type?: string;
 }) {
   if (!conversationId) throw new Error("conversationId is required");
   if (!senderId) throw new Error("senderId is required");
@@ -57,6 +63,7 @@ export async function sendMessage({
   await addDoc(messagesRef, {
     senderId,
     text: trimmed,
+    type,
     createdAt: serverTimestamp(),
   });
 
@@ -66,6 +73,7 @@ export async function sendMessage({
     lastMessage: {
       senderId,
       text: trimmed,
+      type,
       createdAt: serverTimestamp(),
     },
   });

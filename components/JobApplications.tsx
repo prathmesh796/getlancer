@@ -2,11 +2,12 @@ import { Application } from '@/types/Jobs';
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faFileAlt, faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { ensureConversation } from "@/services/chat";
+import { ensureConversation, sendMessage } from "@/services/chat";
 import { Button } from "@/components/ui/button"; 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import MyPagination from './Pagination';
+import { toast } from 'sonner';
 
 const JobApplications = ({ applications,  }: {applications: Application[] | []}) => {
     const { data: session } = useSession();
@@ -14,6 +15,147 @@ const JobApplications = ({ applications,  }: {applications: Application[] | []})
     const router = useRouter();
     
     const [currentPage, setCurrentPage] = useState<number>(1)
+
+    const handleAcceptApplication = async (app: Application) => {
+        try {
+            const res = await fetch(`/api/applications?appId=${encodeURIComponent(app._id)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    status: 'assigned',
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+            console.log(data);
+
+            if (session?.user?.id && app.freelancerId) {
+                try {
+                    const { conversationId } = await ensureConversation({
+                        participants: [
+                            { userId: session.user.id, userName: session.user.name || "" },
+                            { userId: app.freelancerId, userName: app.freelancerName || "" },
+                        ]
+                    });
+                    await sendMessage({
+                        conversationId,
+                        senderId: session.user.id,
+                        text: "Application assigned",
+                        type: "mark"
+                    });
+                } catch (e) {
+                    console.error("Error sending marker message", e);
+                }
+            }
+
+            toast.success("Application accepted successfully", {
+                description: "The application has been accepted.",
+            });
+        } catch (error) {
+            console.error("Error accepting application:", error);
+            toast.error("Failed to accept application");
+        }
+    }
+
+    const handleRejectApplication = async (app: Application) => {
+        try {
+            const res = await fetch(`/api/applications?appId=${encodeURIComponent(app._id)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    status: 'rejected',
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+            console.log(data);
+
+            if (session?.user?.id && app.freelancerId) {
+                try {
+                    const { conversationId } = await ensureConversation({
+                        participants: [
+                            { userId: session.user.id, userName: session.user.name || "" },
+                            { userId: app.freelancerId, userName: app.freelancerName || "" },
+                        ]
+                    });
+                    await sendMessage({
+                        conversationId,
+                        senderId: session.user.id,
+                        text: "Application rejected",
+                        type: "mark"
+                    });
+                } catch (e) {
+                    console.error("Error sending marker message", e);
+                }
+            }
+
+            toast.success("Application rejected successfully", {
+                description: "The application has been rejected.",
+            });
+        } catch (error) {
+            console.error("Error rejecting application:", error);
+            toast.error("Failed to reject application");
+        }
+    }
+
+    const handleRevokeApplication = async (app: Application) => {
+        try {
+            const res = await fetch(`/api/applications?appId=${encodeURIComponent(app._id)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    status: 'revoked',
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+            console.log(data);
+
+            if (session?.user?.id && app.freelancerId) {
+                try {
+                    const { conversationId } = await ensureConversation({
+                        participants: [
+                            { userId: session.user.id, userName: session.user.name || "" },
+                            { userId: app.freelancerId, userName: app.freelancerName || "" },
+                        ]
+                    });
+                    await sendMessage({
+                        conversationId,
+                        senderId: session.user.id,
+                        text: "Application revoked",
+                        type: "mark"
+                    });
+                } catch (e) {
+                    console.error("Error sending marker message", e);
+                }
+            }
+
+            toast.success("Application revoked successfully", {
+                description: "The application has been revoked.",
+            });
+        } catch (error) {
+            console.error("Error revoking application:", error);
+            toast.error("Failed to revoke application");
+        }
+    }
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
@@ -104,6 +246,30 @@ const JobApplications = ({ applications,  }: {applications: Application[] | []})
                                 >
                                     View Profile
                                 </Button>
+
+                                {app.status === "pending" && <Button
+                                    variant="default"
+                                    onClick={() => handleAcceptApplication(app)}
+                                    // className="w-full sm:w-auto rounded-full font-semibold bg-green-500 hover:bg-green-600 text-white"
+                                >
+                                    Accept
+                                </Button>}
+
+                                {app.status === "pending" && <Button
+                                    variant="destructive"
+                                    onClick={() => handleRejectApplication(app)}
+                                    // className="w-full sm:w-auto rounded-full font-semibold bg-red-500 hover:bg-red-600 text-white"
+                                >
+                                    Reject
+                                </Button>}
+
+                                {app.status === "assigned" && <Button
+                                    variant="destructive"
+                                    onClick={() => handleRevokeApplication(app)}
+                                    // className="w-full sm:w-auto rounded-full font-semibold bg-red-500 hover:bg-red-600 text-white"
+                                >
+                                    Revoke
+                                </Button>}
                             </div>
                         </div>
                     ))}
