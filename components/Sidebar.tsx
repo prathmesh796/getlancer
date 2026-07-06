@@ -96,7 +96,7 @@ export default function Sidebar({ userId }: { userId?: string }) {
                         isActive={isActive}
                         tooltip={label}
                         className={cn(
-                          "h-auto px-4 py-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0",
+                          "h-auto px-4 py-3 rounded-full group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0",
                           isActive
                             ? "border-l-4 border-yellow bg-linear-to-r from-yellow/20 to-light_yellow/20 font-semibold text-deep_blue dark:from-yellow/10 dark:to-light_yellow/10 dark:text-yellow group-data-[collapsible=icon]:border-l-0"
                             : "text-gray-600 dark:text-gray-400"

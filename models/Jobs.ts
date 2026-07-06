@@ -23,10 +23,6 @@ const jobsSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-        datePosted: {
-            type: Date,
-            default: Date.now,
-        },
         skills: {
             type: [String],
             required: true,
@@ -41,7 +37,7 @@ const jobsSchema = new mongoose.Schema(
             enum: ["open", "assigned", "closed"],
             default: "open",
         },
-    }
+    }, {timestamps: true}
 )
 
 const Jobs = mongoose.models.Jobs || mongoose.model("Jobs", jobsSchema)

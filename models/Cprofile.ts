@@ -29,10 +29,6 @@ const CprofileSchema = new mongoose.Schema(
       type: String,
       default: ""
     },
-    createdAt: {
-      type: Date,
-      default: Date.now
-    },
     logo: {
       type: Object,
       default: {
@@ -57,7 +53,7 @@ const CprofileSchema = new mongoose.Schema(
       ref: "Jobs",
       default: []
     },
-  }
+  }, {timestamps: true}
 )
 
 const Cprofile = mongoose.models.Cprofile || mongoose.model("Cprofile", CprofileSchema);

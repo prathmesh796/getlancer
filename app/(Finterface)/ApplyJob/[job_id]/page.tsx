@@ -28,12 +28,13 @@ export default function Page({ params }) {
     setLoading(true);
     e.preventDefault();
     try {
+      const jobName = jobDetails.title
       const response = await fetch(`/api/applications?jobId=${job_id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user, proposal }),
+        body: JSON.stringify({ user, jobName, proposal }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -125,7 +126,7 @@ export default function Page({ params }) {
             <div className="md:col-span-2 space-y-1">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Posted on</p>
               <p className="text-gray-500 text-sm">
-                {jobDetails?.datePosted ? new Date(jobDetails.datePosted).toLocaleDateString() : ""}
+                {jobDetails?.createdAt ? new Date(jobDetails.createdAt).toLocaleDateString() : ""}
               </p>
             </div>
           </section>

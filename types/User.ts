@@ -26,11 +26,11 @@ export type CprofileType = {
     location: string,
     bio: string,
     description: string,
-    createdAt: string,
-    updatedAt: string,
     logo: profilePic,
     socialLinks: string[],
-    postedJobs: User[]
+    postedJobs: User[],
+    createdAt: string,
+    updatedAt: string
 }
 
 export type FprofileType = {

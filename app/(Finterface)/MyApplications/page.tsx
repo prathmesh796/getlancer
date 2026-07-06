@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -77,21 +77,25 @@ export default function MyApplicationsPage() {
             <main className="flex-1 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
                 <Navbar activeTab="My Applications" />
 
-                <div className="max-w-7xl mx-auto px-4 py-8">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="w-1 h-6 md:h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
-                        <h2 className="text-xl md:text-2xl font-bold text-deep_blue dark:text-slate-50">
-                            Applications Submitted
-                        </h2>
+                <div className="max-w-7xl mx-auto px-4 py-8 mr-8">
+                    <div className="flex items-center justify-between gap-3 mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-1 h-6 md:h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
+                            <h2 className="text-xl md:text-2xl font-bold text-deep_blue dark:text-slate-50">
+                                Applications Submitted
+                            </h2>
+                        </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline">Filter</Button>
+                                <Button variant="outline" className="rounded-full">Filter <FontAwesomeIcon icon={faChevronDown} /></Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuItem onClick={() => setStatusFilter("all")}>All</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => setStatusFilter("pending")}>Pending</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setStatusFilter("accepted")}>Accepted</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setStatusFilter("assigned")}>Assigned</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => setStatusFilter("rejected")}>Rejected</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setStatusFilter("hold")}>Hold</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setStatusFilter("revoked")}>Revoked</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -106,14 +110,15 @@ export default function MyApplicationsPage() {
                                     <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4 sm:gap-0">
                                         <div className="flex-1">
                                             <h3 className="text-xl md:text-2xl font-bold text-deep_blue dark:text-slate-50 mb-2">
-                                                {app.jobId}
+                                                {app.jobName}
                                             </h3>
+                                            <p className="text-sm text-gray-500 dark:text-slate-400">Job ID: {app.jobId}</p>
                                         </div>
 
-                                        <div className={`px-4 py-2 rounded-full text-sm font-semibold self-start ${app.status === 'pending'
-                                            ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                                        <div className={`px-4 py-2 rounded-full text-sm self-start ${app.status === 'pending'
+                                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                                             : app.status === 'assigned'
-                                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                                                ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
                                                 : 'bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300'
                                             }`}>
                                             {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
@@ -125,7 +130,7 @@ export default function MyApplicationsPage() {
                                             <FontAwesomeIcon icon={faFileAlt} className="w-4 h-4 mt-1 text-gray-500 dark:text-slate-400" />
                                             <div className="flex-1">
                                                 <p className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Your Proposal:</p>
-                                                <p className="text-sm text-gray-600 dark:text-slate-400 bg-gray-50 dark:bg-slate-900 p-3 rounded-lg">
+                                                <p className="text-sm max-w-5xl max-h-12 truncate text-gray-600 dark:text-slate-400 bg-gray-50 dark:bg-slate-900 p-3 rounded-lg">
                                                     {app.proposal}
                                                 </p>
                                             </div>

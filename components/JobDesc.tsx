@@ -90,7 +90,7 @@ const JobDesc = ({ job }: { job: Job | null }) => {
                             </div>
                             <div>
                                 <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Posted On</p>
-                                <p className="font-medium text-slate-900 dark:text-slate-100">{new Date(job.datePosted).toLocaleDateString()}</p>
+                                <p className="font-medium text-slate-900 dark:text-slate-100">{new Date(job.createdAt).toLocaleDateString()}</p>
                             </div>
                         </div>
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSession } from "next-auth/react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link"
 import CJobs from '@/components/CJobs';
 import Sidebar from '@/components/Sidebar';
@@ -117,7 +117,9 @@ export default function Page() {
                         </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline">Filter</Button>
+                                <Button variant="outline" className="rounded-full">
+                                    Filter <FontAwesomeIcon icon={faChevronDown} />
+                                </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuItem onClick={() => setStatusFilter("all")}>All</DropdownMenuItem>
