@@ -7,7 +7,7 @@ import Jobs from '@/components/Jobs';
 import { useSession } from 'next-auth/react';
 import Sidebar from '@/components/Sidebar';
 import { Input } from '@/components/ui/input';
-import { Job } from '@/types/Jobs';
+import { Application, Job } from '@/types/Jobs';
 import { Spinner } from '@/components/ui/spinner';
 import Navbar from '@/components/Navbar';
 import MyPagination from '@/components/Pagination';
@@ -16,68 +16,102 @@ export default function Page() {
   const { data: session } = useSession();
 
   const [jobRecommendations, setJobRecommendations] = useState([]);
+  const [appliedJobs, setAppliedJobs] = useState<string[]>([])
   const [allJobs, setAllJobs] = useState<Job[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1)
 
-  useEffect(() => {
-    const fetchJobRecommendations = async () => {
-      setLoading(true);
-      try {
-        const params = { limit: 50, skip: 0 }
-        const response = await fetch(`/api/jobs/recommendations?${params.toString()}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+  const fetchAppliedJobs = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (session?.user?.id) params.append('freelancerId', session.user.id);
+      const response = await fetch(`/api/applications?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log(data)
-        setJobRecommendations(data);
-      } catch (error) {
-        console.error("Error fetching job recommendations:", error);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
 
-    fetchJobRecommendations();
-  }, []);
+      const data = await response.json();
+      console.log(data)
+
+      const jobIds = (data.applications || []).map((app: Application) => app.jobId);
+      setAppliedJobs(prev => [...prev, ...jobIds]);
+    } catch (error) {
+      console.error("Error fetching job recommendations:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchJobRecommendations = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.append('limit', '50');
+      params.append('skip', '0');
+      const response = await fetch(`/api/jobs/recommendations?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data)
+      setJobRecommendations(data);
+    } catch (error) {
+      console.error("Error fetching job recommendations:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSearchJobs = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.append('limit', '50');
+
+      const response = await fetch(`/api/jobs?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setAllJobs(data.jobs || []);
+    } catch (error) {
+      console.error("Error fetching all jobs:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetchJobRecommendations();
+      fetchAppliedJobs();
+    }
+  }, [session?.user?.id]);
 
   // Fetch all jobs with filtering
   useEffect(() => {
-    const fetchSearchJobs = async () => {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams();
-        params.append('limit', '50');
-
-        const response = await fetch(`/api/jobs?${params.toString()}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setAllJobs(data.jobs || []);
-      } catch (error) {
-        console.error("Error fetching all jobs:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchSearchJobs();
   }, [searchQuery]);
 
@@ -94,7 +128,7 @@ export default function Page() {
       {/* Sidebar */}
       <Sidebar userId={session?.user?.id} />
 
-      <main className="flex-1 min-w-0 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-gray-800 dark:to-gray-900">
+      <main className="flex-1 min-w-0 overflow-y-auto min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <Navbar activeTab={"Dashboard"} />
         <header className="border-b bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
@@ -125,7 +159,7 @@ export default function Page() {
               {jobRecommendations.length > 0 ? (
                 <div>
                   {jobRecommendations.slice((currentPage - 1) * 4, (currentPage * 4)).map((job) => (
-                    <Jobs key={job?.job?._id} job={job?.job} />
+                    <Jobs key={job?.job?._id} job={job?.job} isAppliedJob={appliedJobs.includes(job?.job?._id)} />
                   ))}
 
                   <MyPagination totalItems={jobRecommendations.length} limit={4} currentPage={currentPage} setCurrentPage={setCurrentPage} />

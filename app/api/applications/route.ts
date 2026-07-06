@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         }
 
         const postApplication = {
-            jobId: jobId,
+            jobId,
             jobName,
             freelancerId: user.id,
             freelancerName: user.name || "Unknown",

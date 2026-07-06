@@ -108,8 +108,8 @@ export default function Page({ params }: { params: Promise<{ currentUserId: stri
                                                         </Avatar>
                                                     </MessageAvatar>
                                                     <MessageContent>
-                                                        <Bubble variant={mine ? "default" : "outline"}>
-                                                            <BubbleContent>{m.text}</BubbleContent>
+                                                        <Bubble variant={mine ? "default" : "outline"} >
+                                                            <BubbleContent className='rounded-full'>{m.text}</BubbleContent>
                                                         </Bubble>
                                                         <MessageFooter>
                                                             {createdAt ? createdAt.toLocaleString() : ""}
@@ -140,13 +140,13 @@ export default function Page({ params }: { params: Promise<{ currentUserId: stri
                                 placeholder="Type a message… "
                                 rows={1}
                                 className={cn(
-                                    "flex-1 resize-none rounded-2xl border border-input bg-background px-4 py-2 text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                                    "flex-1 resize-none rounded-full border border-input bg-background px-4 py-2 text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                                 )}
                             />
                             <Button
                                 onClick={onSend}
                                 disabled={sending || !text.trim()}
-                                className="rounded-2xl px-5 py-3 font-semibold bg-yellow text-deep_blue hover:bg-light_yellow disabled:bg-muted disabled:text-muted-foreground"
+                                className="rounded-full h-10 px-5 py-3 font-semibold bg-yellow text-deep_blue hover:bg-light_yellow disabled:bg-muted disabled:text-muted-foreground"
                             >
                                 {sending ? "Sending…" : "Send"}
                             </Button>

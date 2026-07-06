@@ -2,20 +2,20 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card'
 import { Job } from '@/types/Jobs'
 
-const Jobs = ({ job }: { job: Job }) => {
+const Jobs = ({ job, isAppliedJob }: { job: Job, isAppliedJob: boolean }) => {
     const router = useRouter()
 
     const handleClick = () => {
         router.push(`/ApplyJob/${job._id}`)
-    }   
+    }
 
     return (
         <Card className="m-2 md:m-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-4 md:p-6 transition-all hover:shadow-md">
@@ -33,12 +33,21 @@ const Jobs = ({ job }: { job: Job }) => {
             </CardContent>
 
             <CardFooter className="border-0 bg-transparent p-0 w-full md:w-auto flex justify-end mt-2 md:mt-0">
-                <Button
-                    onClick={handleClick}
-                    className="w-full md:w-auto rounded-full bg-yellow text-black hover:bg-light_yellow font-medium px-6 py-2"
-                >
-                    Apply Now
-                </Button>
+                {isAppliedJob ? (
+                    <Button
+                        className="w-full md:w-auto rounded-full font-medium px-6 py-2"
+                        disabled
+                    >
+                        Applied
+                    </Button>
+                ) : (
+                    <Button
+                        onClick={handleClick}
+                        className="w-full md:w-auto rounded-full bg-yellow text-black hover:bg-light_yellow font-medium px-6 py-2"
+                    >
+                        Apply Now
+                    </Button>
+                )}
             </CardFooter>
         </Card>
     )
