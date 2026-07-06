@@ -198,7 +198,7 @@ const JobApplications = ({ applications,  }: {applications: Application[] | []})
 
                                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-slate-400">
                                     <FontAwesomeIcon icon={faCalendar} className="w-4 h-4" />
-                                    <span>Applied: {new Date(app.appliedAt).toLocaleDateString()}</span>
+                                    <span>Applied: {new Date(app.createdAt).toLocaleDateString()}</span>
                                 </div>
                             </div>
 

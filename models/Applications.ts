@@ -13,6 +13,10 @@ const applicationsSchema = new mongoose.Schema(
             ref: "Jobs",
             required: true,
         },
+        jobName: {
+            type: String,
+            required: true,
+        },
         freelancerName: {
             type: String,
             required: true,
@@ -33,10 +37,6 @@ const applicationsSchema = new mongoose.Schema(
             type: String,
             enum: ["pending", "assigned", "rejected", "revoked", "hold"],
             default: "pending",
-        },
-        datePosted: {
-            type: Date,
-            default: Date.now,
         }
     },
     { timestamps: true }

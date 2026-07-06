@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
         const query = status ? { status } : {};
 
         const jobs = await Jobs.find(query)
-            .sort({ datePosted: -1 }) // newest first
+            .sort({ createdAt: -1 }) // newest first
             .skip(skip)
             .limit(limit);
 

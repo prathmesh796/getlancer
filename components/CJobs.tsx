@@ -46,7 +46,7 @@ const CJobs = ({ jobid, job }: { jobid: string, job: Job }) => {
                             </div>
                             <div className="flex items-center gap-2">
                                 <FontAwesomeIcon icon={faCalendar} className="h-4" />
-                                <span>Posted: {new Date(job.datePosted).toLocaleDateString()}</span>
+                                <span>Posted: {new Date(job.createdAt).toLocaleDateString()}</span>
                             </div>
                         </div>
 

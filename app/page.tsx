@@ -44,7 +44,7 @@ export default function Home() {
             </Button>
           </div>
           <div className="img flex-1 w-full flex justify-center md:justify-end">
-            <Image src={currentTheme === `light` ? `/home-img1.png` : `/home-img1-dark.png`} width={400} height={310} alt='freelancer-img' loading="eager" className="w-full max-w-[400px]" />
+            <Image src={currentTheme === `light` ? `/home-img1.png` : `/home-img1-dark.png`} width={400} height={310} alt='freelancer-img' loading="eager" />
           </div>
         </div>
 
@@ -52,7 +52,7 @@ export default function Home() {
 
         <div className='flex flex-col-reverse md:flex-row justify-between items-center px-2 md:px-10 gap-8 md:gap-0'>
           <div className="img flex-1 w-full flex justify-center md:justify-start">
-            <Image src={currentTheme === `light` ? `/home-img2.jpg` : `/home-img2-dark.png`} width={400} height={310} alt='freelancer-img' loading="eager" className="w-full max-w-[400px] " />
+            <Image src={currentTheme === `light` ? `/home-img2.jpg` : `/home-img2-dark.png`} width={400} height={310} alt='freelancer-img' loading="eager" />
           </div>
           <div className='pt-10 md:pt-20 text-center md:text-left flex-1 md:pl-10'>
             <h1 className='text-4xl md:text-5xl font-semibold p-2'>Have <span className='text-yellow'>Company...</span></h1>

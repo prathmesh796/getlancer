@@ -3,6 +3,7 @@ import Applications from "@/models/Applications";
 import Jobs from "@/models/Jobs";
 import { NextResponse, NextRequest } from "next/server";
 import type { Application } from "@/types/Jobs";
+import nodemailer from "nodemailer";
 
 //fetch by job id or freelancerId
 export async function GET(req: NextRequest) {
@@ -40,14 +41,15 @@ export async function POST(req: NextRequest) {
         await connect();
 
         const body = await req.json();
-        const { user, proposal } = body;
+        const { user, jobName, proposal } = body;
 
-        if (!user?.id || !proposal) {
-            return NextResponse.json({ error: "Missing user or proposal" }, { status: 400 });
+        if (!user?.id || !proposal ||  !jobName) {
+            return NextResponse.json({ error: "Missing user or proposal or jobname" }, { status: 400 });
         }
 
         const postApplication = {
             jobId: jobId,
+            jobName,
             freelancerId: user.id,
             freelancerName: user.name || "Unknown",
             freelancerEmail: user.email || "",
@@ -106,6 +108,25 @@ export async function PUT(req: NextRequest) {
         if (!result) {
             return NextResponse.json({ error: "Application not found" }, { status: 404 });
         }
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.WEBSITE_EMAIL,
+                pass: process.env.WEBSITE_EMAIL_PASSWORD,
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.WEBSITE_EMAIL,
+            to: result.freelancerEmail,
+            subject: `Getlancer - Application ${status.toUpperCase()}`,
+            html: `<p>Your application has been ${status.toUpperCase()} for the job</p>
+                    <p>Job Id: ${result.jobId}</p>
+                    <a href="${process.env.NEXTAUTH_URL}/jobs/${result.jobId}">View Job</a>`,
+        };
+
+        const sendMail = await transporter.sendMail(mailOptions);
 
         return NextResponse.json({ application: result, success: true }, { status: 200 });
     } catch (error) {

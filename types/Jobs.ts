@@ -5,23 +5,26 @@ export type Job = {
     company: string,
     bounty: string,
     location: string,
-    datePosted: Date,
     skills: string[],
     status: jobStatus,
     assignedTo: string,
     applications: Array<Application>,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export type Application = {
     _id: string,
     jobId: string,
+    jobName: string,
     freelancerId: string,
     freelancerName: string,
     freelancerEmail: string,
     freelancerProfileUrl: string,
     proposal: string,
-    status: applicationStatus
-    appliedAt: Date,
+    status: applicationStatus,
+    createdAt: Date,
+    updatedAt: Date
 }
 
 enum jobStatus {
