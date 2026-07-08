@@ -34,8 +34,16 @@ describe("api/applications", () => {
 
   describe("GET", () => {
     it("returns applications by jobId successfully", async () => {
-      const mockApps = [{ _id: "app1", jobId: "job1" }];
-      Applications.find.mockResolvedValue(mockApps);
+      const mockApps = [{ 
+        _id: "app1", 
+        jobId: { _id: "job1", title: "Test Job" },
+        freelancerId: { _id: "free1", name: "John Doe", email: "john@example.com" }
+      }];
+      const mockQuery = {
+        populate: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockResolvedValue(mockApps),
+      };
+      Applications.find.mockReturnValue(mockQuery);
 
       const request = {
         url: "http://localhost:3000/api/applications?jobId=job1",
@@ -44,15 +52,32 @@ describe("api/applications", () => {
       const response = await GET(request);
       const data = await response.json();
 
+      const expectedApps = [{
+        _id: "app1",
+        jobId: "job1",
+        jobName: "Test Job",
+        freelancerId: "free1",
+        freelancerName: "John Doe",
+        freelancerEmail: "john@example.com",
+      }];
+
       expect(connect).toHaveBeenCalled();
       expect(Applications.find).toHaveBeenCalledWith({ jobId: "job1" });
-      expect(data.applications).toEqual(mockApps);
+      expect(data.applications).toEqual(expectedApps);
       expect(response.status).toBe(200);
     });
 
     it("returns applications by freelancerId successfully", async () => {
-      const mockApps = [{ _id: "app1", freelancerId: "free1" }];
-      Applications.find.mockResolvedValue(mockApps);
+      const mockApps = [{ 
+        _id: "app1", 
+        jobId: { _id: "job2", title: "Another Job" },
+        freelancerId: { _id: "free1", name: "John Doe", email: "john@example.com" }
+      }];
+      const mockQuery = {
+        populate: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockResolvedValue(mockApps),
+      };
+      Applications.find.mockReturnValue(mockQuery);
 
       const request = {
         url: "http://localhost:3000/api/applications?freelancerId=free1",
@@ -61,14 +86,23 @@ describe("api/applications", () => {
       const response = await GET(request);
       const data = await response.json();
 
+      const expectedApps = [{
+        _id: "app1",
+        jobId: "job2",
+        jobName: "Another Job",
+        freelancerId: "free1",
+        freelancerName: "John Doe",
+        freelancerEmail: "john@example.com",
+      }];
+
       expect(connect).toHaveBeenCalled();
       expect(Applications.find).toHaveBeenCalledWith({ freelancerId: "free1" });
-      expect(data.applications).toEqual(mockApps);
+      expect(data.applications).toEqual(expectedApps);
       expect(response.status).toBe(200);
     });
 
     it("handles errors and returns 500 status", async () => {
-      Applications.find.mockRejectedValue(new Error("DB Error"));
+      Applications.find.mockImplementation(() => { throw new Error("DB Error") });
 
       const request = {
         url: "http://localhost:3000/api/applications?jobId=job1",
@@ -85,19 +119,14 @@ describe("api/applications", () => {
   describe("POST", () => {
     it("creates a new application successfully", async () => {
       const mockBody = {
-        user: { id: "free1", name: "John", email: "john@test.com", image: "pic.jpg" },
-        jobName: "Developer",
+        user: { id: "free1" },
         proposal: "I want this job",
       };
       
       const mockSavedApp = {
         _id: "app1",
         jobId: "job1",
-        jobName: "Developer",
         freelancerId: "free1",
-        freelancerName: "John",
-        freelancerEmail: "john@test.com",
-        freelancerProfileUrl: "pic.jpg",
         proposal: "I want this job",
       };
 
@@ -114,11 +143,7 @@ describe("api/applications", () => {
       expect(connect).toHaveBeenCalled();
       expect(Applications.create).toHaveBeenCalledWith({
         jobId: "job1",
-        jobName: "Developer",
         freelancerId: "free1",
-        freelancerName: "John",
-        freelancerEmail: "john@test.com",
-        freelancerProfileUrl: "pic.jpg",
         proposal: "I want this job",
       });
       expect(data.success).toBe(true);
@@ -151,7 +176,6 @@ describe("api/applications", () => {
         _id: "app1",
         jobId: "job1",
         freelancerId: "free1",
-        freelancerEmail: "free1@test.com",
         status: "assigned",
       };
 
@@ -181,7 +205,6 @@ describe("api/applications", () => {
         _id: "app1",
         jobId: "job1",
         freelancerId: "free1",
-        freelancerEmail: "free1@test.com",
         status: "revoked",
       };
 
