@@ -36,7 +36,7 @@ export default function Page() {
       res.then(response => response.json())
         .then(data => {
           if (data.success) {
-            setProfile(data.freelancerProfile);
+            setProfile(data.profile);
           } else {
             console.error("Error fetching profile:", data.error);
           }
@@ -109,14 +109,14 @@ export default function Page() {
 
                   {/* Profile Info */}
                   <div className="text-center md:text-left">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-2">
-                      {session?.user?.name || "Freelancer"}
+                    <h1 className="text-2xl md:text-3xl font-bold mb-2">
+                      {session?.user?.name}
                     </h1>
-                    <p className="text-xl md:text-2xl mb-4">
-                      {profile?.title || "Professional Freelancer"}
+                    <p className="text-sm font-light text-gray-400 md:text-lg mb-4">
+                      {profile?.title}
                     </p>
-                    <p className="text-lg md:text-xl mb-4">
-                      {profile?.bio || "Professional Freelancer bio"}
+                    <p className="text-lg text-gray-600 dark:text-gray-300 md:text-xl mb-4">
+                      {profile?.bio}
                     </p>
 
                     {/* Quick Info */}
@@ -134,35 +134,16 @@ export default function Page() {
                         </div>
                       )}
                     </div>
-
-                    {/* Top Skills Preview */}
-                    {profile?.skills && profile.skills.length > 0 && (
-                      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                        {profile.skills.slice(0, 4).map((skill, index) => (
-                          <span
-                            key={index}
-                            className="px-4 py-2 bg-gray-200 backdrop-blur-sm border border-white/30 rounded-full text-sm font-semibold"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                        {profile.skills.length > 4 && (
-                          <span className="px-4 py-2 bg-gray-200 backdrop-blur-sm border border-white/30 rounded-full text-sm font-semibold">
-                            +{profile.skills.length - 4} more
-                          </span>
-                        )}
-                      </div>
-                    )}
                   </div>
                 </div>
 
                 {/* Update Button */}
-                <Link href="/Fprofile/updateFprofile">
+                {/* <Link href="/Fprofile/updateFprofile">
                   <Button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform">
                     <MdEdit size={20} />
                     Update Profile
                   </Button>
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>

@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from 'next/link';
 import Image from 'next/image';
-import { MdOpenInNew, MdLocationOn, MdEdit } from "react-icons/md";
-import { FaTwitter, FaLinkedin, FaGithub, FaGlobe } from "react-icons/fa";
+import { MdOpenInNew, MdLocationOn } from "react-icons/md";
+import { FaGlobe } from "react-icons/fa";
 import type { User, CprofileType } from "@/types/User";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button"
@@ -14,6 +14,7 @@ import { AboutDialog } from "@/components/profile/about";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar"
 import { SocialDialog } from "@/components/profile/social";
+import { getSocialIcon, getSocialName } from "@/lib/socialUtils";
 
 const Cprofile = () => {
   const { data: session } = useSession();
@@ -32,9 +33,9 @@ const Cprofile = () => {
       })
         .then(res => res.json())
         .then(data => {
-          console.log(data)
+          //console.log(data)
           const user: User = data.user
-          const clientProfile: CprofileType = data.clientProfile;
+          const clientProfile: CprofileType = data.profile;
 
           setUser(user)
           setClientProfile(clientProfile);
@@ -66,33 +67,6 @@ const Cprofile = () => {
       setLoading(false)
     }
   }
-
-  const getSocialIcon = (link: string) => {
-    const iconProps = { size: 20, className: "" };
-    if (link.toLowerCase().includes("twitter") || link.toLowerCase().includes("x.com")) {
-      return <FaTwitter {...iconProps} />;
-    }
-    if (link.toLowerCase().includes("linkedin")) {
-      return <FaLinkedin {...iconProps} />;
-    }
-    if (link.toLowerCase().includes("github")) {
-      return <FaGithub {...iconProps} />;
-    }
-    return <FaGlobe {...iconProps} />;
-  };
-
-  const getSocialName = (link: string) => {
-    if (link.toLowerCase().includes("twitter") || link.toLowerCase().includes("x.com")) {
-      return "Twitter";
-    }
-    if (link.toLowerCase().includes("linkedin")) {
-      return "LinkedIn";
-    }
-    if (link.toLowerCase().includes("github")) {
-      return "GitHub";
-    }
-    return link;
-  };
 
   if (loading) {
     return (
@@ -157,13 +131,13 @@ const Cprofile = () => {
                           <MdOpenInNew size={20} />
                         </button>
                       )}
-                      <Link
+                      {/*<Link
                         href="/Cprofile/updateCprofile"
                         className="flex items-center gap-2 bg-gray-600 backdrop-blur-sm px-8 py-3 rounded-full font-semibold hover:scale-105 transition-all duration-300 transform"
                       >
                         <MdEdit size={20} />
                         Update Profile
-                      </Link>
+                      </Link>*/}
 
                       {user && user.isVerified == false && (
                         <Button className="items-center bg-gray-600 backdrop-blur-sm px-8 py-6 rounded-full font-semibold hover:scale-105 transition-all duration-300 transform" onClick={handleVerification}>
@@ -200,7 +174,7 @@ const Cprofile = () => {
               <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white to-gray-50 dark:from-slate-800 dark:to-slate-700 shadow-xl p-8 md:p-10 transform hover:scale-[1.01] transition-all duration-300">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
-                  <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">Connect With Us</h2>
+                  <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">Socials</h2>
                   <SocialDialog userId={user?._id} userRole='Client' socialData={clientProfile?.socialLinks || []} />
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
