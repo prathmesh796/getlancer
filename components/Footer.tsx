@@ -9,12 +9,12 @@ const Footer = () => {
         <h2 className='text-md font-normal'>Connect with us</h2>
         <ul className='flex justify-center md:justify-start gap-1 pt-1'>
           <li>
-            <Link href='#' className='hover:text-yellow transition shrink-0'>
+            <Link href='#' aria-label="Twitter" className='hover:text-yellow transition shrink-0'>
             <FontAwesomeIcon icon={faXTwitter}  style={{ fontSize: '1px', width: '30px', height: '20px' }}  />
             </Link>
           </li>
           <li>
-            <Link href='#' className='hover:text-yellow transition shrink-0'>
+            <Link href='#' aria-label="LinkedIn" className='hover:text-yellow transition shrink-0'>
               <FontAwesomeIcon icon={faLinkedin} style={{ fontSize: '20px', width: '30px', height: '20px' }} />
             </Link>
           </li>
@@ -23,17 +23,17 @@ const Footer = () => {
 
       <Link href='/' className='flex flex-col items-center justify-center'>
           <div className='flex items-center'>
-            <h1 className='text-2xl md:text-3xl font-bold'>getLancer</h1>
-            <h4 className='text-light_yellow pt-1 md:pt-2 font-semibold text-sm md:text-base'>.com</h4>
+            <span className='text-2xl md:text-3xl font-bold'>getLancer</span>
+            <span className='text-light_yellow pt-1 md:pt-2 font-semibold text-sm md:text-base'>.com</span>
           </div>
-          <h1 className='text-gray-500 pt-2 text-xs md:text-sm'>All rights reserved | 2026</h1>
+          <p className='text-gray-400 pt-2 text-xs md:text-sm'>All rights reserved | 2026</p>
       </Link>
 
       <div className='flex justify-center md:justify-end text-center md:text-right'>
-        <h3 className='font-medium'>
+        <p className='font-medium'>
           <span className='text-sm font-normal'>Our mail:</span> <br />
           <span className='text-yellow text-sm md:text-base font-semibold'>getlancer796@gmail.com</span>
-        </h3>
+        </p>
       </div> 
     </footer>
   );
