@@ -14,17 +14,23 @@ export async function GET(req: NextRequest) {
     try {
         await connect()
 
-        let applications: Application[];
+        let query: any = {};
+        if (jobId) query.jobId = jobId;
+        if (freelancerId) query.freelancerId = freelancerId;
 
-        if (jobId) {
-            applications = await Applications.find({
-                jobId: jobId
-            })
-        } else if (freelancerId) {
-            applications = await Applications.find({
-                freelancerId: freelancerId
-            })
-        }
+        const rawApplications = await Applications.find(query)
+            .populate("jobId", "title")
+            .populate("freelancerId", "name email")
+            .lean();
+
+        const applications: Application[] = rawApplications.map((app: any) => ({
+            ...app,
+            jobName: app.jobId?.title || "Unknown Job",
+            jobId: app.jobId?._id || app.jobId,
+            freelancerName: app.freelancerId?.name || "Unknown Freelancer",
+            freelancerEmail: app.freelancerId?.email || "",
+            freelancerId: app.freelancerId?._id || app.freelancerId,
+        }));
 
         return NextResponse.json({ applications })
     } catch (err) {
@@ -41,19 +47,15 @@ export async function POST(req: NextRequest) {
         await connect();
 
         const body = await req.json();
-        const { user, jobName, proposal } = body;
+        const { user, proposal } = body;
 
-        if (!user?.id || !proposal ||  !jobName) {
+        if (!user?.id || !proposal) {
             return NextResponse.json({ error: "Missing user or proposal or jobname" }, { status: 400 });
         }
 
         const postApplication = {
             jobId,
-            jobName,
             freelancerId: user.id,
-            freelancerName: user.name || "Unknown",
-            freelancerEmail: user.email || "",
-            freelancerProfileUrl: user.image || "/profilepic.jpeg",
             proposal: proposal,
         }
 

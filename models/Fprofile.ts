@@ -40,14 +40,7 @@ const FprofileSchema = new mongoose.Schema({
     type: Object,
   },
   socialLinks: {
-    type: Object,
-    default: {
-      facebook: "",
-      twitter: "",
-      linkedin: "",
-      instagram: "",
-      github: ""
-    }
+    type: [String]
   },
   projects: {
     type: [Object],

@@ -39,14 +39,7 @@ const CprofileSchema = new mongoose.Schema(
       }
     },
     socialLinks: {
-      type: Object,
-      default: {
-        facebook: "",
-        twitter: "",
-        linkedin: "",
-        instagram: "",
-        github: ""
-      }
+      type: [String]
     },
     postedJobs: {
       type: [mongoose.Schema.Types.ObjectId],

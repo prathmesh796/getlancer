@@ -13,22 +13,6 @@ const applicationsSchema = new mongoose.Schema(
             ref: "Jobs",
             required: true,
         },
-        jobName: {
-            type: String,
-            required: true,
-        },
-        freelancerName: {
-            type: String,
-            required: true,
-        },
-        freelancerEmail: {
-            type: String,
-            required: true,
-        },
-        freelancerProfileUrl: {
-            type: String,
-            required: true,
-        },
         proposal: {
             type: String,
             required: true,
