@@ -12,6 +12,7 @@ WORKDIR /app
 # Accept NEXT_PUBLIC_* build-time variables so Next.js can embed them
 # into the client bundle during `npm run build`. These are intentionally
 # public values (see .env.example) and are safe to pass as build args.
+ARG NEXTAUTH_SECRET
 ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY
 ARG NEXT_PUBLIC_FIREBASE_API_KEY
 ARG NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
@@ -19,6 +20,8 @@ ARG NEXT_PUBLIC_FIREBASE_PROJECT_ID
 ARG NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
 ARG NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 ARG NEXT_PUBLIC_FIREBASE_APP_ID
+
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
