@@ -13,7 +13,7 @@ const Banner = () => {
     <nav className="flex flex-col md:flex-row h-auto md:h-24 justify-between items-center bg-black px-4 md:px-10 py-4 text-white gap-4 md:gap-0">
       <Link href="/" className="flex outline-none items-end">
         <h1 className="text-3xl md:text-5xl font-bold">getLancer</h1>
-        <h4 className="pb-0 md:pb-1 font-semibold text-light_yellow text-sm md:text-base">.com</h4>
+        <span className="pb-0 md:pb-1 font-semibold text-light_yellow text-sm md:text-base">.com</span>
       </Link>
 
       <ul className="flex items-center gap-4 md:gap-8 text-sm md:text-base flex-wrap justify-center">
@@ -39,7 +39,7 @@ const Banner = () => {
         {session ? (
           <div className="flex items-center gap-3 md:gap-5">
             <p className="hidden sm:block text-light_yellow text-sm md:text-base">Hello, {session.user.name}</p>
-            <Link href={session.user.role === "Client" ? "/Cprofile" : "/Fprofile"}>
+            <Link href={session.user.role === "Client" ? "/Cprofile" : "/Fprofile"} aria-label="Profile">
               <CgProfile className="h-6 w-6 md:h-8 md:w-8" />
             </Link>
             <Button

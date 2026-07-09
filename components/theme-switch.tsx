@@ -8,7 +8,7 @@ import { IoSunny } from "react-icons/io5";
 function Tab() {
   const { setTheme, theme } = useTheme();
   return (
-    <button onClick={() => {
+    <button aria-label="Toggle theme" onClick={() => {
       setTheme(theme === 'light' ? 'dark' : 'light');
     }}>
       {theme === 'light' ? (
