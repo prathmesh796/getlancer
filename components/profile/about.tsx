@@ -23,6 +23,7 @@ export function AboutDialog({ userId, userRole, about }: { userId: string, userR
     else apiUrl = '/api/profile/FreelancerProfile'
 
     const [newAbout, setNewAbout] = useState(about);
+    const [open, setOpen] = useState(false);
 
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -37,7 +38,8 @@ export function AboutDialog({ userId, userRole, about }: { userId: string, userR
             .then((data) => {
                 console.log("Profile updated:", data);
                 toast("About updated successfully!");
-                DialogClose
+                setOpen(false);
+                setTimeout(() => window.location.reload(), 1000);
             })
             .catch((error) => {
                 console.error("Error updating profile:", error);
@@ -46,7 +48,7 @@ export function AboutDialog({ userId, userRole, about }: { userId: string, userR
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" className="rounded-full">
                     <FaRegEdit className="mr-2" />

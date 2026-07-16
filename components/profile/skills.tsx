@@ -16,10 +16,10 @@ import { FaRegEdit } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useState } from "react"
 import { toast } from "sonner"
-import { Role } from "@/types/User"
 
 export function SkillsDialog({ userId, skillsData }: { userId: string, skillsData: string[] }) {
-    const [skills, setSkills] = useState<string[]>(skillsData);
+    const [skills, setSkills] = useState(skillsData);
+    const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
 
     const handleKeyDown = (e) => {
@@ -43,7 +43,8 @@ export function SkillsDialog({ userId, skillsData }: { userId: string, skillsDat
             .then((data) => {
                 console.log("Profile updated:", data);
                 toast("Skills updated successfully!");
-                DialogClose
+                setOpen(false);
+                setTimeout(() => window.location.reload(), 1000);
             })
             .catch((error) => {
                 console.error("Error updating profile:", error);
@@ -52,7 +53,7 @@ export function SkillsDialog({ userId, skillsData }: { userId: string, skillsDat
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" className="rounded-full">
                     <FaRegEdit className="mr-2" />

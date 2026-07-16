@@ -221,13 +221,64 @@ export async function PATCH(req: NextRequest) {
     await connect();
 
     try {
-        const body = await req.json();
-        const { userId, updateFields } = body;
-
-        console.log("Received PATCH request with body:", body);
+        const formData = await req.formData();
+        const userId = formData.get("userId") as string | null;
 
         if (!userId) {
             return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
+        }
+
+        const updateFields: any = {};
+        const name = formData.get("name") as string | null;
+        const title = formData.get("title") as string | null;
+        const bio = formData.get("bio") as string | null;
+        const location = formData.get("location") as string | null;
+        const hourlyRate = formData.get("hourlyRate") as string | null;
+
+        if (name) updateFields.name = name;
+        if (title) updateFields.title = title;
+        if (bio) updateFields.bio = bio;
+        if (location) updateFields.location = location;
+        if (hourlyRate) updateFields.hourlyRate = Number(hourlyRate);
+
+        const existingProfile = await Fprofile.findOne({ user: userId });
+        const profilePic = formData.get("profilePic");
+
+        if (profilePic && typeof profilePic === "object") {
+            const file = profilePic as File;
+            if (existingProfile?.profilePic?.key) {
+                try {
+                    await r2.send(
+                        new DeleteObjectCommand({
+                            Bucket: "getlancer",
+                            Key: existingProfile.profilePic.key,
+                        })
+                    );
+                } catch (err) {
+                    console.warn("Failed to delete old profile picture:", err.message);
+                }
+            }
+
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+            const fileName = `freelancer-${userId}-${Date.now()}-${file.name}`;
+            const bucketName = "getlancer";
+
+            await r2.send(
+                new PutObjectCommand({
+                    Bucket: bucketName,
+                    Key: fileName,
+                    Body: buffer,
+                    ContentType: file.type,
+                })
+            );
+
+            updateFields.profilePic = {
+                url: `${process.env.R2_ENDPOINT}/${fileName}`,
+                key: fileName,
+                name: file.name,
+                type: file.type,
+            };
         }
 
         const updated = await Fprofile.findOneAndUpdate(

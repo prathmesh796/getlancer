@@ -89,7 +89,7 @@ export default function Page() {
                 {/* Header */}
                 <header className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
                     <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
-                        <h1 className="text-2xl md:text-4xl font-semibold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent text-center md:text-left">Let&apos;s get some work done...</h1>
+                        <h1 className="h-12 flex items-center text-2xl md:text-4xl font-semibold bg-linear-to-r from-deep_blue to-marine_blue dark:from-yellow dark:to-light_yellow bg-clip-text text-transparent text-center md:text-left">Let&apos;s get some work done...</h1>
                         <div className="flex items-center space-x-4">
                             <Link href="/NewJob" className="flex justify-center items-center">
                                 <button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-6 py-2 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform text-sm md:text-base">

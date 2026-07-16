@@ -85,7 +85,6 @@ Open `.env.local` and set each variable. The table below describes every variabl
 | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | ✅ | Firebase storage bucket |
 | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | ✅ | Firebase messaging sender ID |
 | `NEXT_PUBLIC_FIREBASE_APP_ID` | ✅ | Firebase app ID |
-| `REDIS_URL` | ❌ | Redis URL (optional, for Redis-based OTP storage) |
 
 #### Setting up Google OAuth
 
@@ -147,7 +146,7 @@ The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please read [CONTRIBUTION.md](CONTRIBUTION.md) for guidelines.
 
 ## License
 

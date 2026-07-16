@@ -26,12 +26,12 @@ const SignIn = () => {
 
   const role = searchParams.get('role')
 
-  const isValidEmail = (email) => {
+  const isValidEmail = (email: string) => {
     const emailRegex = /[a-z0-9\._%+!$&*=^|~#%'`?{}/\-]+@([a-z0-9\-]+\.){1,}([a-z]{2,16})/
     return emailRegex.test(email)
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!email || !password || !Name || !role) {

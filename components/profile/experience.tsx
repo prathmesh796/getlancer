@@ -24,7 +24,8 @@ import MonthYearDatePicker from "../ui/datepicker";
 import { toast } from "sonner"
 
 export function ExperienceDialog({ userId, experienceData }: { userId: string, experienceData: experience[] }) {
-    const [experience, setExperience] = useState<experience[]>(experienceData);
+    const [experience, setExperience] = useState(experienceData);
+    const [open, setOpen] = useState(false);
     const [editingExperienceIndex, setEditingExperienceIndex] = useState(null);
     const [newExperience, setNewExperience] = useState<Partial<experience>>({ title: "", company: "", startDate: new Date(), endDate: new Date(), description: "" });
 
@@ -40,17 +41,18 @@ export function ExperienceDialog({ userId, experienceData }: { userId: string, e
             .then((res) => res.json())
             .then((data) => {
                 console.log("Profile updated:", data);
-                toast("Experience updated successfully!");
-                DialogClose
+                toast.success("Experience updated successfully!");
+                setOpen(false);
+                setTimeout(() => window.location.reload(), 1000);
             })
             .catch((error) => {
                 console.error("Error updating profile:", error);
-                toast("Failed to update experience");
+                toast.error("Failed to update experience!");
             });
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button variant="outline" size="sm" className="rounded-full">
                         <FaRegEdit className="mr-2" />
