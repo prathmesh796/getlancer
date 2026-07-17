@@ -133,7 +133,7 @@ const Fprofile = ({ freelancerProfile, user }: { freelancerProfile: FprofileType
                                                 className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-gray-100 to-gray-200 dark:from-slate-700 dark:to-slate-600 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
                                             >
                                                 <div className="p-6">
-                                                    <h3 className="text-xl font-bold text-deep_blue dark:text-slate-50 mb-2">{project.title || "Project"}</h3>
+                                                    <h3 className="text-xl font-bold text-deep_blue dark:text-slate-50 mb-2">{project.name || "Project"}</h3>
                                                     {project.description && (
                                                         <p className="text-gray-700 dark:text-slate-300 text-sm">{project.description}</p>
                                                     )}
