@@ -4,11 +4,10 @@ import { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react";
 import Image from 'next/image';
 import Link from 'next/link';
-import { MdWork, MdEdit, MdLocationOn, MdAttachMoney } from "react-icons/md";
-import { FaTwitter, FaLinkedin, FaGithub, FaGlobe, FaStar } from "react-icons/fa";
+import { MdWork, MdLocationOn, MdAttachMoney } from "react-icons/md";
+import { FaStar } from "react-icons/fa";
 import { Spinner } from "@/components/ui/spinner"
 import { FprofileType } from '@/types/User';
-import { Button } from '@/components/ui/button';
 import { SkillsDialog } from '@/components/profile/skills';
 import { ProjectsDialog } from '@/components/profile/projects';
 import { ExperienceDialog } from '@/components/profile/experience';
@@ -16,6 +15,8 @@ import { SocialDialog } from '@/components/profile/social';
 import { AboutDialog } from '@/components/profile/about';
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
+import { FHeroDialog } from '@/components/profile/Fhero';
+import { getSocialIcon, getSocialName } from '@/lib/socialUtils';
 
 export default function Page() {
   const { data: session } = useSession();
@@ -47,34 +48,7 @@ export default function Page() {
           setLoading(false);
         });
     }
-  }, [session]);
-
-  const getSocialIcon = (link: string) => {
-    const iconProps = { size: 20, className: "" };
-    if (link.toLowerCase().includes("twitter") || link.toLowerCase().includes("x.com")) {
-      return <FaTwitter {...iconProps} />;
-    }
-    if (link.toLowerCase().includes("linkedin")) {
-      return <FaLinkedin {...iconProps} />;
-    }
-    if (link.toLowerCase().includes("github")) {
-      return <FaGithub {...iconProps} />;
-    }
-    return <FaGlobe {...iconProps} />;
-  };
-
-  const getSocialName = (link: string) => {
-    if (link.toLowerCase().includes("twitter") || link.toLowerCase().includes("x.com")) {
-      return "Twitter";
-    }
-    if (link.toLowerCase().includes("linkedin")) {
-      return "LinkedIn";
-    }
-    if (link.toLowerCase().includes("github")) {
-      return "GitHub";
-    }
-    return link;
-  };
+  }, [session?.user?.id]);
 
   if (loading) {
     return (
@@ -91,62 +65,54 @@ export default function Page() {
         <Navbar activeTab={'Profile'} />
         <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
           {/* Profile Header */}
-          <div className="relative overflow-hidden rounded-3xl p-1 sm:p-2 mb-8 shadow-2xl transform hover:scale-[1.01] transition-all duration-300">
-            <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-12">
-              <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                <div className="flex flex-col md:flex-row items-center gap-8">
-                  {/* Profile Picture */}
-                  <div className="relative group">
-                    <div className="absolute -inset-1 bg-linear-to-r from-yellow via-light_yellow to-yellow rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                    <Image
-                      src={profile?.profilePic?.url || "/profilepic.jpeg"}
-                      alt="Profile"
-                      width={160}
-                      height={160}
-                      className="relative rounded-full object-cover border-4 border-white shadow-xl"
-                    />
-                  </div>
-
-                  {/* Profile Info */}
-                  <div className="text-center md:text-left">
-                    <h1 className="text-2xl md:text-3xl font-bold mb-2">
-                      {session?.user?.name}
-                    </h1>
-                    <p className="text-sm font-light text-gray-400 md:text-lg mb-4">
-                      {profile?.title}
-                    </p>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 md:text-xl mb-4">
-                      {profile?.bio}
-                    </p>
-
-                    {/* Quick Info */}
-                    <div className="flex flex-wrap gap-4 justify-center md:justify-start mb-4">
-                      {profile?.location && (
-                        <div className="flex items-center gap-2">
-                          <MdLocationOn size={20} className="text-yellow" />
-                          <span>{profile.location}</span>
-                        </div>
-                      )}
-                      {profile?.hourlyRate > 0 && (
-                        <div className="flex items-center gap-2">
-                          <MdAttachMoney size={20} className="text-yellow" />
-                          <span>${profile.hourlyRate}/hr</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+          <section className="relative overflow-hidden rounded-3xl p-1 sm:p-2 mb-8 shadow-2xl transform hover:scale-[1.01] transition-all duration-300">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-8 bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-12">
+              <div className='flex justify-between items-center gap-10'>
+                {/* Profile Picture */}
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-linear-to-r from-yellow via-light_yellow to-yellow rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                  <Image
+                    src={profile?.profilePic?.url || "/profilepic.jpeg"}
+                    alt="Profile"
+                    width={160}
+                    height={160}
+                    className="relative rounded-full object-cover border-4 border-white shadow-xl"
+                  />
                 </div>
 
-                {/* Update Button */}
-                {/* <Link href="/Fprofile/updateFprofile">
-                  <Button className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform">
-                    <MdEdit size={20} />
-                    Update Profile
-                  </Button>
-                </Link> */}
+                {/* Profile Info */}
+                <div className="text-center md:text-left">
+                  <h1 className="text-4xl md:text-5xl font-bold mb-2">
+                    {session?.user?.name}
+                  </h1>
+                  <p className="text-lg font-light text-gray-800 md:text-xl mb-4">
+                    {profile?.title}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 md:text-lg mb-4">
+                    {profile?.bio}
+                  </p>
+
+                  {/* Quick Info */}
+                  <div className="flex flex-wrap gap-4 justify-center md:justify-start mb-4">
+                    {profile?.location && (
+                      <div className="flex items-center gap-2">
+                        <MdLocationOn size={20} className="text-yellow" />
+                        <span>{profile.location}</span>
+                      </div>
+                    )}
+                    {profile?.hourlyRate > 0 && (
+                      <div className="flex items-center gap-2">
+                        <MdAttachMoney size={20} className="text-yellow" />
+                        <span>${profile.hourlyRate}/hr</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
+
+              <FHeroDialog userId={session.user.id} hero={{ name: session.user.name, title: profile?.title, bio: profile?.bio, location: profile?.location, hourlyRate: profile?.hourlyRate, profilePic: profile?.profilePic as any }} />
             </div>
-          </div>
+          </section>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
@@ -213,10 +179,10 @@ export default function Page() {
                       profile.projects.map((project, index) => (
                         <div
                           key={index}
-                          className="group relative overflow-hidden rounded-2xl"
+                          className="group relative overflow-hidden rounded-2xl border hover:shadow-xl hover:scale-101 transition-all duration-300 transform"
                         >
                           <div className="p-6">
-                            <h3 className="text-xl font-bold text-deep_blue mb-2">{project.title || "Project"}</h3>
+                            <h3 className="text-xl font-bold text-deep_blue mb-2">{project.name || ""}</h3>
                             {project.description && (
                               <p className="text-gray-700 text-sm">{project.description}</p>
                             )}

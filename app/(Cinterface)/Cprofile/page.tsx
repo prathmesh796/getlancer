@@ -5,16 +5,16 @@ import { useSession } from "next-auth/react";
 import Link from 'next/link';
 import Image from 'next/image';
 import { MdOpenInNew, MdLocationOn } from "react-icons/md";
-import { FaGlobe } from "react-icons/fa";
 import type { User, CprofileType } from "@/types/User";
-import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
-import { AboutDialog } from "@/components/profile/about";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar"
+import { toast } from "sonner"
+import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button"
+import { AboutDialog } from "@/components/profile/about";
 import { SocialDialog } from "@/components/profile/social";
 import { getSocialIcon, getSocialName } from "@/lib/socialUtils";
+import { CHeroDialog } from "@/components/profile/Chero";
 
 const Cprofile = () => {
   const { data: session } = useSession();
@@ -25,6 +25,7 @@ const Cprofile = () => {
 
   useEffect(() => {
     if (session?.user?.id) {
+      setLoading(true)
       fetch(`/api/profile/ClientProfile/?userId=${encodeURIComponent(session.user.id)}`, {
         method: "GET",
         headers: {
@@ -39,15 +40,15 @@ const Cprofile = () => {
 
           setUser(user)
           setClientProfile(clientProfile);
-
-          setLoading(false);
         })
         .catch(error => {
           console.error("Error fetching profile:", error);
+        })
+        .finally(() => {
           setLoading(false);
         });
     }
-  }, [session]);
+  }, [session?.user?.id]);
 
   const handleVerification = async () => {
     const response = await fetch("/api/verify", {
@@ -82,14 +83,14 @@ const Cprofile = () => {
       <Sidebar userId={session?.user?.id} />
       {/* Main Content */}
       <main className="flex-1 min-h-screen">
-        <Navbar activeTab={"profile"} />
+        <Navbar activeTab={"Profile"} />
         <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
           {/* Hero Section with Company Header */}
-          <section className="relative overflow-hidden rounded-3xl p-1 shadow-2xl transform hover:scale-[1.01] transition-all duration-300">
+          <section className="relative overflow-hidden rounded-3xl p-1 shadow-xl transform hover:scale-[1.01] transition-all duration-300">
             <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-12">
-              <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                {/* Company Info */}
-                <div className='flex flex-col md:flex-row items-center md:items-start gap-8 flex-1'>
+              {/* Company Info */}
+              <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
+                <div className="flex justify-between items-center gap-10">
                   {/* Logo */}
                   <div className="relative group">
                     <div className="absolute -inset-1 bg-linear-to-r from-yellow via-light_yellow to-yellow rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
@@ -105,39 +106,37 @@ const Cprofile = () => {
                   </div>
 
                   {/* Company Details */}
-                  <div className='flex flex-col justify-center items-center md:items-start text-center md:text-left'>
+                  <div className='flex-col justify-center items-center md:items-start text-center md:text-left'>
                     <h1 className="text-4xl md:text-5xl font-bold mb-3 bg-clip-text bg-linear-to-r from-white to-gray-200">
-                      {clientProfile?.companyName}
+                      {session?.user?.name}
                     </h1>
-                    <p className="text-lg md:text-xl mb-3 max-w-2xl leading-relaxed">
-                      {clientProfile?.bio}
+                    <p className="text-lg font-light text-gray-800 md:text-xl mb-4">
+                      {clientProfile?.companyName}
                     </p>
-                    {clientProfile?.location && (
-                      <div className="flex items-center gap-2 mb-4">
-                        <MdLocationOn size={20} className="text-yellow" />
-                        <span className="text-md">{clientProfile?.location}</span>
-                      </div>
-                    )}
+                    <div className="flex flex-col md:flex-row gap-10">
+                      <p className="text-md md:text-lg mb-3 max-w-2xl text-gray-400 leading-relaxed">
+                        {clientProfile?.bio}
+                      </p>
+                      {clientProfile?.location && (
+                        <div className="flex items-center gap-2 mb-3">
+                          <MdLocationOn size={20} className="text-yellow" />
+                          <span className="text-md">{clientProfile?.location}</span>
+                        </div>
+                      )}
+                    </div>
+
 
                     {/* Action Buttons */}
                     <div className="flex flex-wrap gap-4 mt-4">
                       {clientProfile?.website && (
                         <button
-                          className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 transform"
+                          className="flex items-center gap-2 bg-linear-to-r from-yellow to-light_yellow text-deep_blue px-8 py-3 rounded-full font-semibold hover:shadow-xl hover:scale-101 transition-all duration-300 transform"
                           onClick={() => window.open(clientProfile.website, "_blank")}
                         >
-                          <FaGlobe size={20} />
                           Visit Website
                           <MdOpenInNew size={20} />
                         </button>
                       )}
-                      {/*<Link
-                        href="/Cprofile/updateCprofile"
-                        className="flex items-center gap-2 bg-gray-600 backdrop-blur-sm px-8 py-3 rounded-full font-semibold hover:scale-105 transition-all duration-300 transform"
-                      >
-                        <MdEdit size={20} />
-                        Update Profile
-                      </Link>*/}
 
                       {user && user.isVerified == false && (
                         <Button className="items-center bg-gray-600 backdrop-blur-sm px-8 py-6 rounded-full font-semibold hover:scale-105 transition-all duration-300 transform" onClick={handleVerification}>
@@ -147,6 +146,8 @@ const Cprofile = () => {
                     </div>
                   </div>
                 </div>
+
+                <CHeroDialog userId={session.user.id} hero={{ name: session.user.name, companyName: clientProfile?.companyName, bio: clientProfile?.bio, location: clientProfile?.location, website: clientProfile?.website, logo: clientProfile?.logo as any }} />
               </div>
             </div>
           </section>
@@ -154,8 +155,7 @@ const Cprofile = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
               {/* Description Section */}
-              <section className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-800 shadow-xl p-1 transform hover:scale-[1.01] transition-all duration-300">
-                <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-yellow via-light_yellow to-yellow"></div>
+              <section className="relative overflow-hidden rounded-3xl bg-white/5 shadow-xl p-1 transform hover:scale-[1.01] transition-all duration-300">
                 <div className="p-8 md:p-10">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
@@ -171,7 +171,7 @@ const Cprofile = () => {
 
             <div className="space-y-8">
               {/* Social Links Section */}
-              <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white to-gray-50 dark:from-slate-800 dark:to-slate-700 shadow-xl p-8 md:p-10 transform hover:scale-[1.01] transition-all duration-300">
+              <section className="relative overflow-hidden rounded-3xl bg-white/5 shadow-xl p-8 md:p-10 transform hover:scale-[1.01] transition-all duration-300">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="w-1 h-8 bg-linear-to-b from-yellow to-light_yellow rounded-full"></div>
                   <h2 className="text-3xl font-bold text-deep_blue dark:text-slate-50">Socials</h2>

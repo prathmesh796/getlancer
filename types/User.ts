@@ -50,9 +50,8 @@ export type FprofileType = {
     updatedAt: string
 }
 
-
 export type projects = {
-    title: string,
+    name: string,
     description: string,
     link: string,
     tags: string[]

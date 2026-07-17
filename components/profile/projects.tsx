@@ -24,9 +24,10 @@ import { FiEdit3 } from "react-icons/fi";
 import { toast } from "sonner"
 
 export function ProjectsDialog({ userId, projectsData }: { userId: string, projectsData: projects[] }) {
-    const [projects, setProjects] = useState<projects[]>(projectsData );
+    const [projects, setProjects] = useState(projectsData);
+    const [open, setOpen] = useState(false);
     const [editingIndex, setEditingIndex] = useState(null);
-    const [newProject, setNewProject] = useState<projects>({ title: "", description: "", link: "", tags: [] } as projects);
+    const [newProject, setNewProject] = useState<projects>({ name: "", description: "", link: "", tags: [] } as projects);
     const [projectTagsInput, setProjectTagsInput] = useState<string>("");
 
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,7 +43,8 @@ export function ProjectsDialog({ userId, projectsData }: { userId: string, proje
             .then((data) => {
                 console.log("Profile updated:", data);
                 toast("Projects updated successfully!");
-                DialogClose
+                setOpen(false);
+                setTimeout(() => window.location.reload(), 1000);
             })
             .catch((error) => {
                 console.error("Error updating profile:", error);
@@ -51,78 +53,76 @@ export function ProjectsDialog({ userId, projectsData }: { userId: string, proje
     };
 
     return (
-        <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="rounded-full">
-                        <FaRegEdit className="mr-2" />
-                        Edit
-                    </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-sm">
-                    <DialogHeader>
-                        <DialogTitle>Edit Projects</DialogTitle>
-                        <DialogDescription>
-                            Make changes to your projects here. Click save when you&apos;re
-                            done.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <FieldGroup>
-                        <Field>
-                            <Label htmlFor="skills">Projects</Label>
-                            <Input
-                                type="text"
-                                placeholder="Project Name"
-                                value={newProject.title}
-                                onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
-                                className="w-full border p-2 rounded mb-2 border-gray-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-yellow-400 transition"
-                            />
-                            <Textarea
-                                name="description"
-                                placeholder="Description"
-                                value={newProject.description}
-                                onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                                className="w-full border p-2 rounded mb-2 border-gray-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-yellow-400 transition"
-                                rows={2}
-                            />
-                            <Input
-                                type="url"
-                                placeholder="Link"
-                                value={newProject.link}
-                                onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
-                                className="w-full border p-2 rounded mb-2 border-gray-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-yellow-400 transition"
-                            />
-                            <Input
-                                type="text"
-                                placeholder="Tags (comma-separated)"
-                                value={projectTagsInput}
-                                onChange={(e) => setProjectTagsInput(e.target.value)}
-                                className="w-full border p-2 rounded mb-2 border-gray-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-yellow-400 transition"
-                            />
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" size="sm" className="rounded-full">
+                    <FaRegEdit className="mr-2" />
+                    Edit
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-sm">
+                <DialogHeader>
+                    <DialogTitle>Edit Projects</DialogTitle>
+                    <DialogDescription>
+                        Make changes to your projects here. Click save when you&apos;re
+                        done.
+                    </DialogDescription>
+                </DialogHeader>
+                <FieldGroup>
+                    <Field>
+                        <Label htmlFor="skills">Projects</Label>
+                        <Input
+                            type="text"
+                            placeholder="Project Name"
+                            value={newProject.name}
+                            onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+                            className="w-full border p-2 rounded mb-2 border-gray-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                        />
+                        <Textarea
+                            name="description"
+                            placeholder="Description"
+                            value={newProject.description}
+                            onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                            className="w-full border p-2 rounded mb-2 border-gray-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                            rows={2}
+                        />
+                        <Input
+                            type="url"
+                            placeholder="Link"
+                            value={newProject.link}
+                            onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
+                            className="w-full border p-2 rounded mb-2 border-gray-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                        />
+                        <Input
+                            type="text"
+                            placeholder="Tags (comma-separated)"
+                            value={projectTagsInput}
+                            onChange={(e) => setProjectTagsInput(e.target.value)}
+                            className="w-full border p-2 rounded mb-2 border-gray-300 dark:border-slate-700 outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                        />
 
-                            <Button
-                                type="button"
-                                onClick={() => {
-                                    const tags = projectTagsInput.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0);
-                                    if (newProject.title || newProject.description || newProject.link) {
-                                        if (editingIndex !== null) {
-                                            const updated = [...projects];
-                                            updated[editingIndex] = { ...newProject, tags };
-                                            setProjects(updated);
-                                            setEditingIndex(null);
-                                        } else {
-                                            setProjects([...projects, { ...newProject, tags }]);
-                                        }
+                        <Button
+                            type="button"
+                            onClick={() => {
+                                const tags = projectTagsInput.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0);
+                                if (newProject.name || newProject.description || newProject.link) {
+                                    if (editingIndex !== null) {
+                                        const updated = [...projects];
+                                        updated[editingIndex] = { ...newProject, tags };
+                                        setProjects(updated);
+                                        setEditingIndex(null);
+                                    } else {
+                                        setProjects([...projects, { ...newProject, tags }]);
                                     }
-                                    setNewProject({ title: "", description: "", link: "", tags: [] });
-                                    setProjectTagsInput("");
-                                }}
-                                className="self-end mt-2 bg-yellow-400 hover:bg-yellow-500 text-black p-2 rounded-full shadow transition"
-                                title={editingIndex !== null ? "Save Project" : "Add Project"}
-                            >
-                                {editingIndex !== null ? <MdOutlineSaveAs className="w-6 h-6" /> : <IoAddCircleOutline className="w-6 h-6" />}
-                            </Button>
-
-
+                                }
+                                setNewProject({ name: "", description: "", link: "", tags: [] });
+                                setProjectTagsInput("");
+                            }}
+                            className="self-end mt-2 bg-yellow-400 hover:bg-yellow-500 text-black p-2 rounded-full shadow transition"
+                            title={editingIndex !== null ? "Save Project" : "Add Project"}
+                        >
+                            {editingIndex !== null ? <MdOutlineSaveAs className="w-6 h-6" /> : <IoAddCircleOutline className="w-6 h-6" />}
+                        </Button>
                     </Field>
                     {projects.length > 0 && (
                         <ul className="space-y-3">
@@ -135,7 +135,7 @@ export function ProjectsDialog({ userId, projectsData }: { userId: string, proje
                                         <div className="font-semibold mb-1">
                                             <span>Project Name: </span>
                                             <Link href={proj.link} target="_blank" className="underline text-marine_blue hover:text-blue-800 dark:text-yellow-300">
-                                                {proj.title}
+                                                {proj.name}
                                             </Link>
                                         </div>
                                         <div className="text-sm mt-1 mb-1">
@@ -168,7 +168,7 @@ export function ProjectsDialog({ userId, projectsData }: { userId: string, proje
                                                 const updated = projects.filter((_, i) => i !== index);
                                                 setProjects(updated);
                                                 if (editingIndex === index) {
-                                                    setNewProject({ title: "", description: "", link: "", tags: [] });
+                                                    setNewProject({ name: "", description: "", link: "", tags: [] });
                                                     setEditingIndex(null);
                                                     setProjectTagsInput("");
                                                 }

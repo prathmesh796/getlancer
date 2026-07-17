@@ -23,7 +23,8 @@ export function SocialDialog({ userId, userRole, socialData }: { userId: string,
     if(userRole === 'Client') apiUrl = '/api/profile/ClientProfile'
     else apiUrl = '/api/profile/FreelancerProfile'
     
-    const [socialLinks, setSocialLinks] = useState<string[]>(socialData);
+    const [socialLinks, setSocialLinks] = useState(socialData);
+    const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -53,7 +54,8 @@ export function SocialDialog({ userId, userRole, socialData }: { userId: string,
             const data = await response.json();
             console.log("Profile updated:", data);
             toast("Social links updated successfully!");
-            DialogClose
+            setOpen(false);
+            setTimeout(() => window.location.reload(), 1000);
         } catch (error) {
             console.error("Error updating profile:", error);
             toast("Failed to update social links");
@@ -61,7 +63,7 @@ export function SocialDialog({ userId, userRole, socialData }: { userId: string,
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" className="rounded-full">
                     <FaRegEdit className="mr-2" />

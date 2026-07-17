@@ -4,7 +4,7 @@ import Fprofile from "@/models/Fprofile";
 import User from "@/models/User"
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import type { FprofileType } from "@/types/User";
+import type { FprofileType, projects } from "@/types/User";
 
 const r2 = new S3Client({
     region: "auto",
@@ -221,10 +221,93 @@ export async function PATCH(req: NextRequest) {
     await connect();
 
     try {
-        const body = await req.json();
-        const { userId, updateFields } = body;
+        const contentType = req.headers.get("content-type") || "";
+        let userId: string | null = null;
+        let updateFields: any = {};
 
-        console.log("Received PATCH request with body:", body);
+        if (contentType.includes("application/json")) {
+            const body = await req.json();
+            userId = body.userId;
+            if (body.updateFields) {
+                updateFields = body.updateFields;
+            } else {
+                const { name, title, bio, location, hourlyRate, projects, socialLinks, experience, skills } = body;
+                if (name) updateFields.name = name;
+                if (title) updateFields.title = title;
+                if (bio) updateFields.bio = bio;
+                if (location) updateFields.location = location;
+                if (hourlyRate) updateFields.hourlyRate = Number(hourlyRate);
+                if (projects) updateFields.projects = projects;
+                if (socialLinks) updateFields.socialLinks = socialLinks;
+                if (experience) updateFields.experience = experience;
+                if (skills) updateFields.skills = skills;
+            }
+        } else {
+            const formData = await req.formData();
+            userId = formData.get("userId") as string | null;
+
+            const name = formData.get("name") as string | null;
+            const title = formData.get("title") as string | null;
+            const bio = formData.get("bio") as string | null;
+            const location = formData.get("location") as string | null;
+            const hourlyRate = formData.get("hourlyRate") as string | null;
+            const projects = formData.get("projects") as object;
+            const socialLinks = formData.get("socialLinks") as object;
+            const experience = formData.get("experience") as object;
+            const skills = formData.get("skills");
+
+            if (name) updateFields.name = name;
+            if (title) updateFields.title = title;
+            if (bio) updateFields.bio = bio;
+            if (location) updateFields.location = location;
+            if (hourlyRate) updateFields.hourlyRate = Number(hourlyRate);
+            if (projects) updateFields.projects = projects;
+            if (socialLinks) updateFields.socialLinks = socialLinks;
+            if (experience) updateFields.experience = experience;
+            if (skills) updateFields.skills = skills;
+
+            const existingProfile = await Fprofile.findOne({ user: userId });
+            const profilePic = formData.get("profilePic");
+
+            if (profilePic && typeof profilePic === "object") {
+                const file = profilePic as File;
+                if (existingProfile?.profilePic?.key) {
+                    try {
+                        await r2.send(
+                            new DeleteObjectCommand({
+                                Bucket: "getlancer",
+                                Key: existingProfile.profilePic.key,
+                            })
+                        );
+                    } catch (err) {
+                        console.warn("Failed to delete old profile picture:", err.message);
+                    }
+                }
+
+                const bytes = await file.arrayBuffer();
+                const buffer = Buffer.from(bytes);
+                const fileName = `freelancer-${userId}-${Date.now()}-${file.name}`;
+                const bucketName = "getlancer";
+
+                await r2.send(
+                    new PutObjectCommand({
+                        Bucket: bucketName,
+                        Key: fileName,
+                        Body: buffer,
+                        ContentType: file.type,
+                    })
+                );
+
+                updateFields.profilePic = {
+                    url: `${process.env.R2_ENDPOINT}/${fileName}`,
+                    key: fileName,
+                    name: file.name,
+                    type: file.type,
+                };
+            }
+        }
+
+        console.log(updateFields)
 
         if (!userId) {
             return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });

@@ -85,7 +85,6 @@ Open `.env.local` and set each variable. The table below describes every variabl
 | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | ✅ | Firebase storage bucket |
 | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | ✅ | Firebase messaging sender ID |
 | `NEXT_PUBLIC_FIREBASE_APP_ID` | ✅ | Firebase app ID |
-| `REDIS_URL` | ❌ | Redis URL (optional, for Redis-based OTP storage) |
 
 #### Setting up Google OAuth
 
@@ -137,17 +136,15 @@ The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ## Screenshots
 
-![Landing page](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202025-04-30%20000107.png)
+![Landing page](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202026-07-17%20155059.png)
 
-![Sign up](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202025-04-30%20000122.png)
+![Client Dashboard](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202026-07-17%20155138.png)
 
-![Dashboard](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202025-04-30%20000239.png)
-
-![Profile](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202025-04-30%20000252.png)
+![Freelancer Dashboard](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202026-07-17%20155205.png)
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please read [CONTRIBUTION.md](CONTRIBUTION.md) for guidelines.
 
 ## License
 
