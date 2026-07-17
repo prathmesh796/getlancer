@@ -15,7 +15,7 @@ import { SocialDialog } from '@/components/profile/social';
 import { AboutDialog } from '@/components/profile/about';
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
-import { FHeroDialog } from '@/components/profile/Fhero'; 
+import { FHeroDialog } from '@/components/profile/Fhero';
 import { getSocialIcon, getSocialName } from '@/lib/socialUtils';
 
 export default function Page() {
@@ -179,10 +179,10 @@ export default function Page() {
                       profile.projects.map((project, index) => (
                         <div
                           key={index}
-                          className="group relative overflow-hidden rounded-2xl hover:shadow-xl hover:scale-101 transition-all duration-300 transform"
+                          className="group relative overflow-hidden rounded-2xl border hover:shadow-xl hover:scale-101 transition-all duration-300 transform"
                         >
                           <div className="p-6">
-                            <h3 className="text-xl font-bold text-deep_blue mb-2">{project.title || ""}</h3>
+                            <h3 className="text-xl font-bold text-deep_blue mb-2">{project.name || ""}</h3>
                             {project.description && (
                               <p className="text-gray-700 text-sm">{project.description}</p>
                             )}

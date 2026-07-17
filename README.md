@@ -136,11 +136,11 @@ The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ## Screenshots
 
-![Landing page](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202025-04-30%20000107.png)
+![Landing page](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202026-07-17%20155059.png)
 
-![Sign up](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202025-04-30%20000122.png)
+![Sign up](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202026-07-17%20155138.png)
 
-![Dashboard](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202025-04-30%20000239.png)
+![Dashboard](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202026-07-17%20155205.png)
 
 ![Profile](https://github.com/prathmesh796/getlancer/blob/main/public/Screenshot%202025-04-30%20000252.png)
 

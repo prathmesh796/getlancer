@@ -137,65 +137,83 @@ export async function PATCH(req: NextRequest) {
   await connect();
 
   try {
-    const formData = await req.formData();
-    const userId = formData.get("userId") as string | null;
+    const contentType = req.headers.get("content-type") || "";
+    let userId: string | null = null;
+    let updateFields: any = {};
+
+    if (contentType.includes("application/json")) {
+        const body = await req.json();
+        userId = body.userId;
+        if (body.updateFields) {
+            updateFields = body.updateFields;
+        } else {
+            const { name, companyName, bio, location, website } = body;
+            if (name) updateFields.name = name;
+            if (companyName) updateFields.companyName = companyName;
+            if (bio) updateFields.bio = bio;
+            if (location) updateFields.location = location;
+            if (website) updateFields.website = website;
+        }
+    } else {
+        const formData = await req.formData();
+        userId = formData.get("userId") as string | null;
+
+        const name = formData.get("name") as string | null;
+        const companyName = formData.get("companyName") as string | null;
+        const bio = formData.get("bio") as string | null;
+        const location = formData.get("location") as string | null;
+        const website = formData.get("website") as string | null;
+
+        if (name) updateFields.name = name;
+        if (companyName) updateFields.companyName = companyName;
+        if (bio) updateFields.bio = bio;
+        if (location) updateFields.location = location;
+        if (website) updateFields.website = website;
+
+        const existingProfile = await Cprofile.findOne({ user: userId });
+
+        const logo = formData.get("logo");
+        if (logo && typeof logo === "object") {
+          const file = logo as File;
+          if (existingProfile?.logo?.key) {
+            try {
+              await r2.send(
+                new DeleteObjectCommand({
+                  Bucket: "getlancer",
+                  Key: existingProfile.logo.key,
+                })
+              );
+            } catch (err) {
+              console.warn("Failed to delete old logo:", err.message);
+            }
+          }
+
+          const bytes = await file.arrayBuffer();
+          const buffer = Buffer.from(bytes);
+          const fileName = `${userId}-${Date.now()}-${file.name}`;
+          const bucketName = "getlancer";
+
+          await r2.send(
+            new PutObjectCommand({
+              Bucket: bucketName,
+              Key: fileName,
+              Body: buffer,
+              ContentType: file.type,
+            })
+          );
+
+          // Store the R2 URL or key in your DB
+          updateFields.logo = {
+            url: `${process.env.R2_ENDPOINT}/${fileName}`,
+            key: fileName,
+            type: file.type,
+            name: file.name
+          };
+        }
+    }
 
     if (!userId) {
       return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
-    }
-
-    const updateFields: any = {};
-    const name = formData.get("name") as string | null;
-    const companyName = formData.get("companyName") as string | null;
-    const bio = formData.get("bio") as string | null;
-    const location = formData.get("location") as string | null;
-    const website = formData.get("website") as string | null;
-
-    if (name) updateFields.name = name;
-    if (companyName) updateFields.companyName = companyName;
-    if (bio) updateFields.bio = bio;
-    if (location) updateFields.location = location;
-    if (website) updateFields.website = website;
-
-    const existingProfile = await Cprofile.findOne({ user: userId });
-
-    const logo = formData.get("logo");
-    if (logo && typeof logo === "object") {
-      const file = logo as File;
-      if (existingProfile?.logo?.key) {
-        try {
-          await r2.send(
-            new DeleteObjectCommand({
-              Bucket: "getlancer",
-              Key: existingProfile.logo.key,
-            })
-          );
-        } catch (err) {
-          console.warn("Failed to delete old logo:", err.message);
-        }
-      }
-
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const fileName = `${userId}-${Date.now()}-${file.name}`;
-      const bucketName = "getlancer";
-
-      await r2.send(
-        new PutObjectCommand({
-          Bucket: bucketName,
-          Key: fileName,
-          Body: buffer,
-          ContentType: file.type,
-        })
-      );
-
-      // Store the R2 URL or key in your DB
-      updateFields.logo = {
-        url: `${process.env.R2_ENDPOINT}/${fileName}`,
-        key: fileName,
-        type: file.type,
-        name: file.name
-      };
     }
 
     const updated = await Cprofile.findOneAndUpdate(
