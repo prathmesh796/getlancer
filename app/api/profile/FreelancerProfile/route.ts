@@ -4,7 +4,7 @@ import Fprofile from "@/models/Fprofile";
 import User from "@/models/User"
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import type { FprofileType, projects } from "@/types/User";
+import type { FprofileType } from "@/types/User";
 
 const r2 = new S3Client({
     region: "auto",
@@ -62,41 +62,51 @@ export async function POST(req: NextRequest) {
     await connect();
 
     try {
-        const body = await req.json();
-        const { userId, title, skills, bio, hourlyRate, experience, location, profilePic, socialLinks, projects } = body;
+        const formData = await req.formData();
+        const userId = formData.get("userId");
+        const title = formData.get("title");
+        const bio = formData.get("bio");
+        const hourlyRate = formData.get("hourlyRate");
+        const location = formData.get("location");
+        const profilePic = formData.get("profilePic");
 
         if (!userId) {
             return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
         }
 
         const updateFields: Partial<FprofileType> = {
+            user: userId.toString(),
             title: title?.toString(),
             bio: bio?.toString(),
-            skills: skills,
             hourlyRate: Number(hourlyRate),
-            experience: experience,
             location: location?.toString(),
-            socialLinks: socialLinks,
-            projects: projects
         };
 
-        // Handle base64 profile picture if provided
-        if (profilePic && typeof profilePic === 'string' && profilePic.startsWith('data:')) {
-            // This is a base64 image, store it as-is for now
-            // In production, you'd want to upload this to S3/R2
+        if (profilePic && typeof profilePic === "object") {
+            const file = profilePic as File;
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+            const fileName = `freelancer-${userId}-${Date.now()}-${file.name}`;
+            const bucketName = "getlancer";
+
+            await r2.send(
+                new PutObjectCommand({
+                    Bucket: bucketName,
+                    Key: fileName,
+                    Body: buffer,
+                    ContentType: file.type,
+                })
+            );
+
             updateFields.profilePic = {
-                url: profilePic,
-                name: "",
-                type: "",
-                key: ""
+                url: `${process.env.R2_ENDPOINT}/${fileName}`,
+                key: fileName,
+                name: file.name,
+                type: file.type,
             };
         }
 
-        const updated = await Fprofile.findOneAndUpdate(
-            { user: userId },
-            { $set: updateFields },
-            { new: true, upsert: true }
-        );
+        const updated = await Fprofile.create(updateFields);
 
         return NextResponse.json({ success: true, updated }, { status: 200 });
     } catch (err) {

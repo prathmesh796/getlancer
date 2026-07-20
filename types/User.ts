@@ -20,7 +20,7 @@ export type UserSession = {
 }
 
 export type CprofileType = {
-    user: User,
+    user: string,
     companyName: string,
     website: string,
     location: string,
@@ -34,7 +34,7 @@ export type CprofileType = {
 }
 
 export type FprofileType = {
-    user: User,
+    user: string,
     title: string,
     bio: string,
     description: string,
