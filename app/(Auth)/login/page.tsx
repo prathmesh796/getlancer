@@ -25,7 +25,6 @@ declare global {
       render: (container: string, options: { sitekey: string, callback: (token: string) => void }) => void;
     };
     onTurnstileSuccess: (token: string) => void;
-    __turnstileRendered: boolean;
   }
 }
 
@@ -36,6 +35,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const tokenRef = useRef('');
+  const widgetRendered = useRef(false);
 
   useEffect(() => {
     const existingScript = document.querySelector('script[src="https://challenges.cloudflare.com/turnstile/v0/api.js"]');
@@ -115,8 +115,8 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (window.__turnstileRendered) return;
-    window.__turnstileRendered = true;
+    if (widgetRendered.current) return;
+    widgetRendered.current = true;
 
     const renderTurnstile = () => {
       if (!window.turnstile) return;

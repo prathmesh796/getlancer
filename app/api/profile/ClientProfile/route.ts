@@ -53,6 +53,66 @@ export async function GET(req: NextRequest) {
   }
 }
 
+export async function POST(req: NextRequest) {
+  await connect();
+
+  try {
+    const formData = await req.formData();
+    const userId = formData.get("userId");
+    const companyName = formData.get("companyName");
+    const description = formData.get("description");
+    const website = formData.get("website");
+    const location = formData.get("location");
+    const logo = formData.get("logo");
+
+    if (!userId) {
+      return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
+    }
+
+    const updateFields: Partial<CprofileType> = {
+      user: userId.toString(),
+      companyName: companyName?.toString(),
+      description: description?.toString(),
+      website: website?.toString(),
+      location: location?.toString(),
+    };
+
+    if (logo && typeof logo === "object") {
+      const file = logo as File;
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const fileName = `client-${userId}-${Date.now()}-${file.name}`;
+      const bucketName = "getlancer";
+
+      await r2.send(
+        new PutObjectCommand({
+          Bucket: bucketName,
+          Key: fileName,
+          Body: buffer,
+          ContentType: file.type,
+        })
+      );
+
+      updateFields.logo = {
+        url: `${process.env.R2_ENDPOINT}/${fileName}`,
+        key: fileName,
+        name: file.name,
+        type: file.type,
+      };
+    }
+
+    console.log(updateFields)
+
+    const updated = await Cprofile.create(updateFields);
+
+    console.log(updated)
+
+    return NextResponse.json({ success: true, updated }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
 export async function PUT(req: NextRequest) {
   await connect();
 
@@ -142,74 +202,74 @@ export async function PATCH(req: NextRequest) {
     let updateFields: any = {};
 
     if (contentType.includes("application/json")) {
-        const body = await req.json();
-        userId = body.userId;
-        if (body.updateFields) {
-            updateFields = body.updateFields;
-        } else {
-            const { name, companyName, bio, location, website } = body;
-            if (name) updateFields.name = name;
-            if (companyName) updateFields.companyName = companyName;
-            if (bio) updateFields.bio = bio;
-            if (location) updateFields.location = location;
-            if (website) updateFields.website = website;
-        }
-    } else {
-        const formData = await req.formData();
-        userId = formData.get("userId") as string | null;
-
-        const name = formData.get("name") as string | null;
-        const companyName = formData.get("companyName") as string | null;
-        const bio = formData.get("bio") as string | null;
-        const location = formData.get("location") as string | null;
-        const website = formData.get("website") as string | null;
-
+      const body = await req.json();
+      userId = body.userId;
+      if (body.updateFields) {
+        updateFields = body.updateFields;
+      } else {
+        const { name, companyName, bio, location, website } = body;
         if (name) updateFields.name = name;
         if (companyName) updateFields.companyName = companyName;
         if (bio) updateFields.bio = bio;
         if (location) updateFields.location = location;
         if (website) updateFields.website = website;
+      }
+    } else {
+      const formData = await req.formData();
+      userId = formData.get("userId") as string | null;
 
-        const existingProfile = await Cprofile.findOne({ user: userId });
+      const name = formData.get("name") as string | null;
+      const companyName = formData.get("companyName") as string | null;
+      const bio = formData.get("bio") as string | null;
+      const location = formData.get("location") as string | null;
+      const website = formData.get("website") as string | null;
 
-        const logo = formData.get("logo");
-        if (logo && typeof logo === "object") {
-          const file = logo as File;
-          if (existingProfile?.logo?.key) {
-            try {
-              await r2.send(
-                new DeleteObjectCommand({
-                  Bucket: "getlancer",
-                  Key: existingProfile.logo.key,
-                })
-              );
-            } catch (err) {
-              console.warn("Failed to delete old logo:", err.message);
-            }
+      if (name) updateFields.name = name;
+      if (companyName) updateFields.companyName = companyName;
+      if (bio) updateFields.bio = bio;
+      if (location) updateFields.location = location;
+      if (website) updateFields.website = website;
+
+      const existingProfile = await Cprofile.findOne({ user: userId });
+
+      const logo = formData.get("logo");
+      if (logo && typeof logo === "object") {
+        const file = logo as File;
+        if (existingProfile?.logo?.key) {
+          try {
+            await r2.send(
+              new DeleteObjectCommand({
+                Bucket: "getlancer",
+                Key: existingProfile.logo.key,
+              })
+            );
+          } catch (err) {
+            console.warn("Failed to delete old logo:", err.message);
           }
-
-          const bytes = await file.arrayBuffer();
-          const buffer = Buffer.from(bytes);
-          const fileName = `${userId}-${Date.now()}-${file.name}`;
-          const bucketName = "getlancer";
-
-          await r2.send(
-            new PutObjectCommand({
-              Bucket: bucketName,
-              Key: fileName,
-              Body: buffer,
-              ContentType: file.type,
-            })
-          );
-
-          // Store the R2 URL or key in your DB
-          updateFields.logo = {
-            url: `${process.env.R2_ENDPOINT}/${fileName}`,
-            key: fileName,
-            type: file.type,
-            name: file.name
-          };
         }
+
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const fileName = `${userId}-${Date.now()}-${file.name}`;
+        const bucketName = "getlancer";
+
+        await r2.send(
+          new PutObjectCommand({
+            Bucket: bucketName,
+            Key: fileName,
+            Body: buffer,
+            ContentType: file.type,
+          })
+        );
+
+        // Store the R2 URL or key in your DB
+        updateFields.logo = {
+          url: `${process.env.R2_ENDPOINT}/${fileName}`,
+          key: fileName,
+          type: file.type,
+          name: file.name
+        };
+      }
     }
 
     if (!userId) {

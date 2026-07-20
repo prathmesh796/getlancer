@@ -130,7 +130,7 @@ const Fprofile = ({ freelancerProfile, user }: { freelancerProfile: FprofileType
                                         {freelancerProfile.projects.map((project, index) => (
                                             <div
                                                 key={index}
-                                                className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-gray-100 to-gray-200 dark:from-slate-700 dark:to-slate-600 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                                                className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-slate-600 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
                                             >
                                                 <div className="p-6">
                                                     <h3 className="text-xl font-bold text-deep_blue dark:text-slate-50 mb-2">{project.name || "Project"}</h3>

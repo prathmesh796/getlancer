@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
@@ -16,6 +16,16 @@ import {
 } from '@/components/ui/card';
 import Banner from '@/components/Banner';
 
+declare global {
+  interface Window {
+    turnstile: {
+      render: (container: string, options: { sitekey: string, callback: (token: string) => void }) => void;
+    };
+    onTurnstileSuccess: (token: string) => void;
+  }
+}
+
+
 const SignIn = () => {
   const router = useRouter();
   const searchParams = useSearchParams()
@@ -23,6 +33,51 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, seterror] = useState("")
+  const tokenRef = useRef('');
+  const widgetRendered = useRef(false);
+
+  useEffect(() => {
+    const existingScript = document.querySelector('script[src="https://challenges.cloudflare.com/turnstile/v0/api.js"]');
+
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    window.onTurnstileSuccess = (token: string) => {
+      tokenRef.current = token;
+    };
+
+    return () => {
+      delete window.onTurnstileSuccess;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (widgetRendered.current) return;
+    widgetRendered.current = true;
+
+    const renderTurnstile = () => {
+      if (!window.turnstile) return;
+
+      window.turnstile.render("#turnstile-container", {
+        sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+        callback: (token) => (tokenRef.current = token),
+      });
+    };
+
+    if (!window.turnstile) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      script.onload = renderTurnstile;
+      document.body.appendChild(script);
+    } else {
+      renderTurnstile();
+    }
+  }, []);
 
   const role = searchParams.get('role')
 
@@ -50,6 +105,8 @@ const SignIn = () => {
     }
 
     try {
+      console.log("Turnstile Token before /api/signin:", tokenRef.current);
+
       const res = await fetch('/api/signin', {
         method: "POST",
         headers: {
@@ -72,20 +129,25 @@ const SignIn = () => {
       else if (res.status === 200) {
         seterror("")
 
+        console.log("Turnstile token passed to signIn:", tokenRef.current);
         const loginResult = await signIn("credentials", {
           redirect: false,
           email,
           password,
+          'cf-turnstile-response': tokenRef.current,
         });
 
-        if (loginResult.ok) {
+        console.log("loginResult:", loginResult);
+
+        if (loginResult?.ok) {
           if (role === "Client") {
-            router.replace("/Cdash");
+            router.replace("/Cprofile/completeProfile");
           } else {
-            router.replace("/Fdash");
+            router.replace("/Fprofile/completeProfile");
           }
         } else {
-          router.push("/login");
+          console.error("signIn error:", loginResult?.error);
+          seterror(loginResult?.error || 'Authentication failed after sign-in');
         }
       }
       else {
@@ -148,6 +210,9 @@ const SignIn = () => {
                   required
                 />
               </div>
+
+              <div id="turnstile-container" className="my-4"></div>
+
               {error && <p className='text-destructive'>{error}</p>}
               <Button
                 type='submit'

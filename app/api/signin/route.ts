@@ -7,7 +7,8 @@ export async function POST(request) {
     try {
         let conn = await connect()
         const req = await request.json()
-        const {Name: name, email, password, roleName: role} = req
+        const {Name: name, email, password, role} = req
+        //console.log(role)
 
         const user = await User.findOne({email})
         if(user){
@@ -24,11 +25,14 @@ export async function POST(request) {
             role,
         })
 
-        const savedUser = await newUser.save()
-        console.log(savedUser)
+        //console.log(newUser)
+
+        const savedUser = await User.create(newUser)
+        //console.log(savedUser)
 
         return NextResponse.json({message: "New User created successfully", success: true}, {status: 200})
     } catch (error) {
+        console.error(error )
         return NextResponse.json({error: error.message}, {status: 500})
     }
 }
