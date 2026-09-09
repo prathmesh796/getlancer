@@ -233,24 +233,25 @@ export async function PATCH(req: NextRequest) {
     try {
         const contentType = req.headers.get("content-type") || "";
         let userId: string | null = null;
-        let updateFields: any = {};
+        let updateProfileFields: any = {};
+        let updateUserFields: any = {};
 
         if (contentType.includes("application/json")) {
             const body = await req.json();
             userId = body.userId;
             if (body.updateFields) {
-                updateFields = body.updateFields;
+                updateProfileFields = body.updateFields;
             } else {
                 const { name, title, bio, location, hourlyRate, projects, socialLinks, experience, skills } = body;
-                if (name) updateFields.name = name;
-                if (title) updateFields.title = title;
-                if (bio) updateFields.bio = bio;
-                if (location) updateFields.location = location;
-                if (hourlyRate) updateFields.hourlyRate = Number(hourlyRate);
-                if (projects) updateFields.projects = projects;
-                if (socialLinks) updateFields.socialLinks = socialLinks;
-                if (experience) updateFields.experience = experience;
-                if (skills) updateFields.skills = skills;
+                if (name) updateUserFields.name = name;
+                if (title) updateProfileFields.title = title;
+                if (bio) updateProfileFields.bio = bio;
+                if (location) updateProfileFields.location = location;
+                if (hourlyRate) updateProfileFields.hourlyRate = Number(hourlyRate);
+                if (projects) updateProfileFields.projects = projects;
+                if (socialLinks) updateProfileFields.socialLinks = socialLinks;
+                if (experience) updateProfileFields.experience = experience;
+                if (skills) updateProfileFields.skills = skills;
             }
         } else {
             const formData = await req.formData();
@@ -266,15 +267,15 @@ export async function PATCH(req: NextRequest) {
             const experience = formData.get("experience") as object;
             const skills = formData.get("skills");
 
-            if (name) updateFields.name = name;
-            if (title) updateFields.title = title;
-            if (bio) updateFields.bio = bio;
-            if (location) updateFields.location = location;
-            if (hourlyRate) updateFields.hourlyRate = Number(hourlyRate);
-            if (projects) updateFields.projects = projects;
-            if (socialLinks) updateFields.socialLinks = socialLinks;
-            if (experience) updateFields.experience = experience;
-            if (skills) updateFields.skills = skills;
+            if (name) updateUserFields.name = name;
+            if (title) updateProfileFields.title = title;
+            if (bio) updateProfileFields.bio = bio;
+            if (location) updateProfileFields.location = location;
+            if (hourlyRate) updateProfileFields.hourlyRate = Number(hourlyRate);
+            if (projects) updateProfileFields.projects = projects;
+            if (socialLinks) updateProfileFields.socialLinks = socialLinks;
+            if (experience) updateProfileFields.experience = experience;
+            if (skills) updateProfileFields.skills = skills;
 
             const existingProfile = await Fprofile.findOne({ user: userId });
             const profilePic = formData.get("profilePic");
@@ -308,7 +309,7 @@ export async function PATCH(req: NextRequest) {
                     })
                 );
 
-                updateFields.profilePic = {
+                updateProfileFields.profilePic = {
                     url: `${process.env.R2_ENDPOINT}/${fileName}`,
                     key: fileName,
                     name: file.name,
@@ -317,7 +318,8 @@ export async function PATCH(req: NextRequest) {
             }
         }
 
-        console.log(updateFields)
+        console.log(updateProfileFields)
+        console.log(updateUserFields)
 
         if (!userId) {
             return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
@@ -325,9 +327,13 @@ export async function PATCH(req: NextRequest) {
 
         const updated = await Fprofile.findOneAndUpdate(
             { user: userId },
-            { $set: updateFields },
+            { $set: updateProfileFields },
             { new: true }
         );
+
+        if (Object.keys(updateUserFields).length > 0) {
+            await User.findByIdAndUpdate(userId, { $set: updateUserFields }, { new: true });
+        }
 
         if (!updated) {
             return NextResponse.json({ success: false, error: "Freelancer profile not found" }, { status: 404 });

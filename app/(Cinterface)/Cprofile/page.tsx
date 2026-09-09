@@ -208,7 +208,7 @@ const Cprofile = () => {
             <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 p-8 shadow-xl transform hover:scale-105 transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
               <h3 className="text-sm font-semibold uppercase tracking-wide mb-2">Member Since</h3>
-              <p className="text-3xl font-bold">{user?.createdAt || "N/A"}</p>
+              <p className="text-3xl font-bold">{user?.createdAt.split('T')[0] || "N/A"}</p>
             </div>
 
             <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-yellow to-light_yellow p-8 shadow-xl transform hover:scale-105 transition-all duration-300">
