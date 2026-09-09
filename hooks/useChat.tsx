@@ -19,13 +19,19 @@ export const useChat = (conversationId: string) => {
       orderBy("createdAt", "asc")
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const msgs = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setMessages(msgs);
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const msgs = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setMessages(msgs);
+      },
+      (error) => {
+        console.error("Unable to listen for chat messages", error);
+      }
+    );
 
     return () => unsubscribe();
   }, [conversationId]);

@@ -18,14 +18,20 @@ export function useMessages(conversationId: string) {
       orderBy("createdAt", "asc")
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setMessages(
-        snapshot.docs.map((d) => ({
-          id: d.id,
-          ...d.data(),
-        }))
-      );
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        setMessages(
+          snapshot.docs.map((d) => ({
+            id: d.id,
+            ...d.data(),
+          }))
+        );
+      },
+      (error) => {
+        console.error("Unable to listen for messages", error);
+      }
+    );
 
     return () => unsubscribe();
   }, [conversationId]);
