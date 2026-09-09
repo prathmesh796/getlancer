@@ -2,7 +2,7 @@
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
-    value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://getlancer.1a3c2f86a3386038e3a37e793a2777b5.r2.cloudflarestorage.com; font-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com; frame-src 'self' https://challenges.cloudflare.com; object-src 'none'; base-uri 'self';",
+    value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://getlancer.1a3c2f86a3386038e3a37e793a2777b5.r2.cloudflarestorage.com; font-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://firestore.googleapis.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://firebaselogging.googleapis.com; frame-src 'self' https://challenges.cloudflare.com; object-src 'none'; base-uri 'self';",
   },
   {
     key: 'Cross-Origin-Opener-Policy',

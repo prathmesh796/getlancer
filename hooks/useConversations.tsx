@@ -19,14 +19,20 @@ export function useConversations(userId: string) {
       orderBy("updatedAt", "desc")
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setConversations(
-        snapshot.docs.map((d) => ({
-          id: d.id,
-          ...d.data(),
-        }))
-      );
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        setConversations(
+          snapshot.docs.map((d) => ({
+            id: d.id,
+            ...d.data(),
+          }))
+        );
+      },
+      (error) => {
+        console.error("Unable to listen for conversations", error);
+      }
+    );
 
     return () => unsubscribe();
   }, [userId]);

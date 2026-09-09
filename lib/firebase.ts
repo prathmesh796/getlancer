@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+import { initializeFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,8 +13,10 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 
-// Firestore instance used across the app (realtime chat, etc.)
-export const db = getFirestore(app);
+// Long-polling fallback handles networks and proxies that block WebChannel.
+export const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true,
+});
 // Analytics should only run in the browser.
 // In SSR/Node contexts, `getAnalytics` can throw due to missing browser globals.
 if (typeof window !== "undefined") {
