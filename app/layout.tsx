@@ -4,11 +4,11 @@ import "./globals.css";
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/utils/SessionProvider";
 
-import { GoogleAnalytics } from '@next/third-parties/google'
 import Footer from "@/components/Footer";
 import { cookies } from "next/headers";
 import Script from "next/script";
 import AppThemeProvider from "@/components/theme";
+import AnalyticsProvider from "@/utils/AnalyticsProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
@@ -56,7 +56,7 @@ export default async function RootLayout({ children }) {
           />
         )}
       </body>
-      <GoogleAnalytics gaId="G-EB4WH5BSHM" />
+      <AnalyticsProvider />
     </html>
   );
 }
