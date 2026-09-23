@@ -11,7 +11,7 @@ const AnalyticsProvider = () => {
 
     return (
         <>
-            {shouldTrack && process.env.NODE_ENV === "production" && process.env.E2E_TEST !== "1" && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_TRACKING_ID} />}
+            {shouldTrack && process.env.NODE_ENV === "production" && process.env.E2E_TEST !== "1" && <GoogleAnalytics gaId={process.env.GA_TRACKING_ID} />}
         </>
     )
 }
