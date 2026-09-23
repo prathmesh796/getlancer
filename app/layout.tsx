@@ -4,15 +4,15 @@ import "./globals.css";
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/utils/SessionProvider";
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { cookies } from "next/headers";
 import Script from "next/script";
 import AppThemeProvider from "@/components/theme";
+import AnalyticsProvider from "@/utils/AnalyticsProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 const popins = Poppins({
   weight: '500',
@@ -34,29 +34,29 @@ export default async function RootLayout({ children }) {
   return (
     <html className={cn(theme, "font-sans", geist.variable)} lang="en" style={theme !== "system" ? { colorScheme: theme } : {}} suppressHydrationWarning>
       <body className={popins.className}>
-          <AppThemeProvider
-            attribute="class"
-            defaultTheme={theme}
-            enableSystem
-          >
-            <SessionProvider session={session}>
-              {/* <Navbar activeTab={"profile"} /> */}
-              <div className=" mx-auto min-h-screen">
-                {children}
+        <AppThemeProvider
+          attribute="class"
+          defaultTheme={theme}
+          enableSystem
+        >
+          <SessionProvider session={session}>
+            {/* <Navbar activeTab={"profile"} /> */}
+            <div className=" mx-auto min-h-screen">
+              {children}
+            </div>
+            <Footer />
+            <Toaster />
+          </SessionProvider>
+        </AppThemeProvider>
 
-              </div>
-              <Footer />
-              <Toaster />
-            </SessionProvider>
-          </AppThemeProvider>
-
-          {process.env.E2E_TEST !== "1" && (
-            <Script
-              src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-              strategy="afterInteractive"
-            />
-          )}
+        {process.env.E2E_TEST !== "1" && (
+          <Script
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
+      <AnalyticsProvider />
     </html>
   );
 }
